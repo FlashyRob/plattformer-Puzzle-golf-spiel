@@ -6,7 +6,7 @@ public class Updates : MonoBehaviour
 
     public connectionData[] blocks = new connectionData[20];
     public int[,] activeSides = new int[20,4];
-    public int[]
+    public blockData[] blockData = new blockData[20];
 
 
     
@@ -79,7 +79,11 @@ public struct connections
 
 public struct blockData
 {
-    public string meta;
+    public string type;
+    public string typetype;
+    public int direction;
     public byte directions;
-    public int height;
+    public int state;
+    public string meta;
+    public int visualActive;
 }
