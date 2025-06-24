@@ -42,7 +42,18 @@ public class Updates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        for (int i = 0; i < blockData.Length; i++)
+        {
+            blockData block = blockData[i];
+
+            switch  (block.type)
+            {
+                case "wire":
+                    handleWire(i, block);
+                    break;
+
+            }
+        }
     }
 
     public void AddConnection(int blockIndex, int side, connections connection)
@@ -59,9 +70,52 @@ public class Updates : MonoBehaviour
         return (l);
     }
 
-    public int isActive(int index, int side)
+    public bool isActive(int index, int side)
     {
-        return (activeSides[index, side]);
+        return (activeSides[index, side] == 1);
+    }
+
+    public bool checkActive(List<connections> sources)
+    {
+        for (int i = 0; i < sources.Count; i++)
+        {
+            connections source = sources[i];
+            if (isActive(source.outputIndex, source.outputSide))
+                return true;
+
+        }
+        return false;
+    }
+
+    private void handleWire(int i, blockData block)
+    {
+        switch (block.typetype)
+        {
+            case "wire_straight":
+                int[] activeConnections = checkConnectionSides(block.inputDirections, GetConnections(i, 0));
+                if (activeConnections == 1)
+                    {
+                        
+                    }
+                break;
+        } 
+    }
+
+
+    private int[] checkConnectionSides(int[] connectionSides, List<connections> sources)
+    {
+        int[] activeConnectionSides = new int[4] {0,0,0,0};
+        for (int side = 0; side < 4; side++)
+        {
+            if (connectionSides[side] == 1)
+            {
+                if (checkActive(sources))
+                {
+                    activeConnectionSides[side] = 1;
+                }
+            }
+        }
+        return (activeConnectionSides);
     }
 }
 
@@ -82,7 +136,8 @@ public struct blockData
     public string type;
     public string typetype;
     public int direction;
-    public byte directions;
+    public int[] outputDirections;
+    public int[] inputDirections;
     public int state;
     public string meta;
     public int visualActive;
