@@ -38,14 +38,14 @@ public class NewMonoBehaviourScript : MonoBehaviour
             jumpVelocity = 14;
         }
 
-        verticalVelocity = jumpVelocity * verticalMultiplier;
+        verticalVelocity = (jumpVelocity * verticalMultiplier) / 30 + rb2d.linearVelocity.y;
 
         rb2d.linearVelocity = new Vector2(horizontal, verticalVelocity);
     }
 
-
-    void OnCollisionEnter(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
+        Debug.Log("CollisionEnter");
         if (other.gameObject.CompareTag("Ground"))
         {
             Grounded = true;
@@ -54,6 +54,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+        Debug.Log("CollisionExit");
         if (collision.gameObject.CompareTag("Ground"))
         {
             Grounded = false;
