@@ -93,10 +93,6 @@ public class Updates : MonoBehaviour
         {
             case "wire_straight":
                 int[] activeConnections = checkConnectionSides(block.inputDirections, GetConnections(i, 0));
-                if (activeConnections == 1)
-                    {
-                        
-                    }
                 break;
         } 
     }
