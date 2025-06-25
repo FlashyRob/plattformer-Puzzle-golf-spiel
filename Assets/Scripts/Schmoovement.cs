@@ -8,6 +8,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     public new GameObject camera;
     public LayerMask groundLayer;
     public bool Grounded = false;
+    public bool secondJump = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,7 +36,10 @@ public class NewMonoBehaviourScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Grounded)
         {
             jumpVelocity = 10;
+            secondJump = true;
         }
+
+
 
         Debug.Log(rb2d.linearVelocity.y);
         verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y); 
