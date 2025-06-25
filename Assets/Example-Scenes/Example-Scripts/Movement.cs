@@ -37,6 +37,7 @@ public class Movement : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground"))
         {
+            Debug.Log("Grounded!", collision.gameObject);
             grounded = true;
         }
     }
@@ -45,6 +46,7 @@ public class Movement : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground"))
         {
+            Debug.Log("Nicht Grounded!", collision.gameObject);
             grounded = false;
         }
     }

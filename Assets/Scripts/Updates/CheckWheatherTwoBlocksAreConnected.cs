@@ -4,8 +4,8 @@ using UnityEngine;
 public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 {
 
-    int worldX = 100;
-    int worldY = 100;
+    public int worldX = 100;
+    public int worldY = 100;
     int Index = 789;
 
 
