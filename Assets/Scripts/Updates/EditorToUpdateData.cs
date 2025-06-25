@@ -8,7 +8,7 @@ public class EditorToUpdateData : MonoBehaviour
     {
 
         int[] inputDirections = new int[4] { 0, 0, 1, 1 }; // directions from editor e.g. {1,0,1,0} for "straight wire"
-        int direction = 2; // direction from editor e.g. 1 for rotated 90 degrees to the right
+        // int direction = 2; // direction from editor e.g. 1 for rotated 90 degrees to the right
 
         /*
         int[] Test = directions1AndDirectionToDirection2(inputDirections, direction);
@@ -29,6 +29,30 @@ public class EditorToUpdateData : MonoBehaviour
         for (int i = 0; i < Test2.inputDirections.Length; i++)
         {
             Debug.Log(Test2.inputDirections[i]);
+        }
+
+        editorData loadedData = new editorData();
+        loadedData.blockNames = new string[] {"And", "Or"};
+        loadedData.directions = new int[] {0,1 };
+        loadedData.state = new int[] {0,1};
+
+
+        blockData[] blocks = new blockData[4];
+        for (int i = 0; i < blocks.Length; i++)
+        {
+
+            blockData b = new blockData();
+            b.typetype = loadedData.blockNames[i];
+            b.direction = loadedData.directions[i];
+            b.state = loadedData.state[i];
+            connectors inAndOutPutDirectionsAtI = BlockNamesToDirections(loadedData.blockNames[i]);
+            b.inputDirections = directions1AndDirectionToDirection2(inAndOutPutDirectionsAtI.inputDirections, loadedData.directions[i]);
+            b.outputDirections = directions1AndDirectionToDirection2(inAndOutPutDirectionsAtI.outputDirections, loadedData.directions[i]);
+            b.meta = "0"; // evtl später relevant
+            b.visualActive = 0;
+
+
+            blocks[i] = b;
         }
     }
     public connectors BlockNamesToDirections(string blockName)
@@ -84,6 +108,8 @@ public class EditorToUpdateData : MonoBehaviour
         }
 
         return (outputDirections);
+
+
     }
 
     // Update is called once per frame
@@ -103,7 +129,7 @@ public class EditorToUpdateData : MonoBehaviour
     {
         public string[] blockNames;
         public int[] directions;
+        public int[] state;
     }
-
 
 
