@@ -8,7 +8,6 @@ public class EditorToUpdateData : MonoBehaviour
     {
 
         int[] inputDirections = new int[4] { 0, 0, 1, 1 }; // directions from editor e.g. {1,0,1,0} for "straight wire"
-        int direction = 2; // direction from editor e.g. 1 for rotated 90 degrees to the right
         // int direction = 2; // direction from editor e.g. 1 for rotated 90 degrees to the right
 
         // List<string> wireNames = new List<string>() { "wire_straight" , "wire_curve" , "wire_t" , "wire_cross" , "lever" };
@@ -102,6 +101,20 @@ public class EditorToUpdateData : MonoBehaviour
         return (outputDirections);
 
 
+    }
+
+    public void addDataToBlockData(int x, int y, string blockName, int direction = 0, int state = 0)
+    {
+        blockData b = new blockData();
+
+        b.typetype = blockName;
+        b.direction = direction;
+        b.state = state;
+        connectors inAndOutPutDirectionsAtI = BlockNamesToDirections(blockName);
+        b.inputDirections = directions1AndDirectionToDirection2(inAndOutPutDirectionsAtI.inputDirections, direction);
+        b.outputDirections = directions1AndDirectionToDirection2(inAndOutPutDirectionsAtI.outputDirections, direction);
+        b.meta = "0"; // evtl sp?ter relevant
+        b.visualActive = 0;
     }
 
     // Update is called once per frame
