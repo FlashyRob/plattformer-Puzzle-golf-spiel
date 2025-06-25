@@ -36,11 +36,11 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
         {
-            jumpVelocity = 0.01f;
+            verticalMultiplier = 12;
         }
         else
         {
-            jumpVelocity = 0;
+            verticalMultiplier = 10;
         }
 
 
@@ -61,6 +61,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
             jumpVelocity = 9;
         }
 
+        verticalVelocity = jumpVelocity * verticalMultiplier;
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump &&! Walled)
         {
@@ -99,7 +100,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
    
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("CollisionEnter");
         if (other.gameObject.CompareTag("Ground"))
         {
             Grounded = true;
@@ -116,7 +116,6 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("CollisionExit");
         if (collision.gameObject.CompareTag("Ground"))
         {
             Grounded = false;
