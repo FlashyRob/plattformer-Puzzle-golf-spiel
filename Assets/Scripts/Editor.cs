@@ -7,7 +7,7 @@ public class Editor : MonoBehaviour
     private GameObject[] block;
     public GameObject hud;
     public string editorMode = "place";
-    public string[] materials = new string[] {"Grass", "Dirt", "Water"};
+    private string[] materials = new string[] {"Grass", "Dirt", "Water", "Terrain (16x16) 1_0" };
     public Vector3 mousePos;
     List<string> blockName = new List<string>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -64,17 +64,19 @@ public class Editor : MonoBehaviour
 
         for (int i = 0; i < materials.Length; i++)
         {
-            var block = new GameObject();
-            block.name = materials[i];
-            block.transform.parent = blockSelectorParent.transform;
-            rt = block.AddComponent<RectTransform>();
+            var blockSelector = new GameObject();
+            blockSelector.name = materials[i];
+            blockSelector.transform.parent = blockSelectorParent.transform;
+            rt = blockSelector.AddComponent<RectTransform>();
             rt.localScale = new Vector3(1, 1, 1);
             rt.anchoredPosition = new Vector2(45, -40);
             rt.sizeDelta = new Vector2(50, 50);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            block.AddComponent<ClickTest>();
-            im = block.AddComponent<Image>();
-
+            blockSelector.AddComponent<ClickTest>();
+            im = blockSelector.AddComponent<Image>();
+            var oc = block[blockName.IndexOf(materials[i])].GetComponent<SpriteRenderer>();
+            im.sprite = oc.sprite;
+            im.color = oc.color;
         }
     }
 
