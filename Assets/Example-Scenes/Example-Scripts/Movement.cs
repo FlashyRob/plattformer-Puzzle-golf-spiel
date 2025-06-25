@@ -5,7 +5,7 @@ public class Movement : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
 
-    private float Move;
+    public float Move;
 
     public float speed;
     public float jump;

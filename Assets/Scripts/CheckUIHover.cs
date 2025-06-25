@@ -9,7 +9,7 @@ public class CheckUIHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         hoverUI = true;
     }
 
-
+    
 
     //Detect when Cursor leaves the GameObject
     public void OnPointerExit(PointerEventData pointerEventData)
