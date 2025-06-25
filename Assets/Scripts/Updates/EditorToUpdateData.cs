@@ -40,7 +40,7 @@ public class EditorToUpdateData : MonoBehaviour
         loadedData.state = new int[] { 0, 1 };
 
 
-        blockData[] blocks = new blockData[4];
+        blockData[] blocks = new blockData[2];
         for (int i = 0; i < blocks.Length; i++)
         {
 

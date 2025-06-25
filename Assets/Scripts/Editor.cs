@@ -19,8 +19,9 @@ public class Editor : MonoBehaviour
     };
     public Vector3 mousePos;
     List<string> blockName = new List<string>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private GameObject createdBlocks;
+    void Awake()
     {
         block = Resources.LoadAll<GameObject>("Blocks");
         for (int i = 0; i < block.Length; i++)
@@ -36,6 +37,11 @@ public class Editor : MonoBehaviour
         {
             Destroy(hud.transform.GetChild(0).gameObject);
         } catch { }
+        if (createdBlocks != null)
+        {
+            Destroy(createdBlocks);
+        }
+        createdBlocks = new GameObject("Created Blocks");
 
         RectTransform rt;
         HorizontalLayoutGroup lg;
@@ -88,7 +94,13 @@ public class Editor : MonoBehaviour
             rt.pivot = new Vector2(0.5f, 0.5f);
             blockSelector.AddComponent<ClickTest>();
             im = blockSelector.AddComponent<Image>();
-            var oc = block[blockName.IndexOf(materials[i])].GetComponent<SpriteRenderer>();
+            var materialPrefabIdx = blockName.IndexOf(materials[i]);
+            if (materialPrefabIdx == -1)
+            {
+                Debug.LogError("Could not find blockName index for for material " + materials[i], blockSelector);
+                continue;
+            }
+            var oc = block[materialPrefabIdx].GetComponent<SpriteRenderer>();
             im.sprite = oc.sprite;
             im.color = oc.color;
         }
@@ -118,6 +130,10 @@ public class Editor : MonoBehaviour
             );
 
             string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
+            if (ClickTest.selectedMaterial == "Nothing")
+            {
+                return;
+            }
             GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
             GameObject currentBlockObject = GameObject.Find(currentBlockName);
 
@@ -125,11 +141,20 @@ public class Editor : MonoBehaviour
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
             }
                         
-            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity);
+            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
 
+            var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = 1; // show on top of other elements
+
             EditorToUpdateData.Instance.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
         }
+    }
+
+    public void SetMaterial(string[] newMaterials)
+    {
+        materials = newMaterials;
+        Initialize();
     }
 }

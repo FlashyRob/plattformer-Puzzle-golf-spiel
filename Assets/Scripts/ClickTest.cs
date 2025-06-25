@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class ClickTest : MonoBehaviour, IPointerClickHandler
 {
-    public static string selectedMaterial = "Dirt";
+    public static string selectedMaterial = "Nothing";
     //Detect if a click occurs
     public void OnPointerClick(PointerEventData pointerEventData)
     {

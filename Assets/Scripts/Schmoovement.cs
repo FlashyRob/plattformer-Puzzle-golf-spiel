@@ -1,12 +1,11 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class Schmoovement : MonoBehaviour
 
 {   
 
     private Rigidbody2D rb2d;
-    private CapsuleCollider2D capsule2d;
-    public LayerMask groundLayer;
+    private Collider2D capsule2d;
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
@@ -18,7 +17,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
        
         rb2d = GetComponent<Rigidbody2D>();
-        capsule2d = GetComponent<CapsuleCollider2D>();
+        capsule2d = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -61,15 +60,17 @@ public class NewMonoBehaviourScript : MonoBehaviour
             {
                 if (collidex > myx && !Grounded)
                 {
+                    // The wall is to the left
                     jumpVelocity = 8;
-                    horizontalPush = 3;
+                    horizontalPush = -3;
                     Walled = false;
                 }
 
                 if (collidex < myx && !Grounded)
                 {
+                    // The wall is to the right
                     jumpVelocity = 8;
-                    horizontalPush = -3;
+                    horizontalPush = 3;
                     Walled = false;
                 }
             }
@@ -83,7 +84,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
 
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
-        Debug.Log(rb2d.linearVelocity);
+        // Debug.Log(rb2d.linearVelocity);
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
     }
 
@@ -93,18 +94,24 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         if (coll.gameObject.tag == "Ground") 
         {
-            if (this.transform.position.y > coll.collider.transform.position.y)
+            ContactPoint2D contact = coll.contacts[0];
+            Vector2 normal = contact.normal; // has length of 1
+            // we check the collision normal to see which direction the ground hit us from
+
+            if(normal.y > 0.5f)
             {
+                // the normal vector mostly points up. The ground has hit us from below.
                 Grounded = true;
                 secondJump = false;
-                collidex = coll.collider.transform.position.x;
-                myx = this.transform.position.x;
+            }
+            else if (Mathf.Abs(normal.x) > 0.5f)
+            {
+                // The vector mostly points in x or -x direction. So we've hit a wall
+                Walled = true;
+                collidex = contact.point.x; // remeber the contact point for walljump
+                myx = transform.position.x;
             }
 
-            else
-            {
-                Walled = true;
-            }
         }
     }
 

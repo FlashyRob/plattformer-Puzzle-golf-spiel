@@ -67,7 +67,7 @@ public class Updates : MonoBehaviour
                     HandleDoor(i, block);
                     break;
                 case "flip_flop":
-                    HandleFlipFlopint(i, block);
+                    HandleFlipFlop(i, block);
                     break;
                 case "toggle":
                     HandleToggle(i, block);
@@ -334,7 +334,7 @@ public class Updates : MonoBehaviour
         }
     }
 
-    private void HandleFlipFlopint(int i, blockData block)
+    private void HandleFlipFlop(int i, blockData block)
     {
         if (IsAnyConnectionActive(block.inputDirections, i, 0))
         {
