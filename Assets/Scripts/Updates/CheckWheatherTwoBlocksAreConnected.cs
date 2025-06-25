@@ -6,25 +6,45 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 
     int worldX = 100;
     int worldY = 100;
-    int Index = 231;
+    int Index = 789;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log(GetXY(Index).x);
-        Debug.Log(GetXY(Index).y);
+        int testX = (int)GetXY(Index).x;
+        int testY = (int)GetXY(Index).y;
+
+        
+
+        Debug.Log(testX);
+        Debug.Log(testY);
+
+        Debug.Log(GetIndexFromXY(testX, testY));
+        
     }
 
 
     public xy GetXY(int index)
     {
         xy xy;
-        xy.x = (index % worldX) - 1;
+        xy.x = (index % worldX);
         decimal dX = (index/ worldY);
         xy.y = Math.Floor(dX);
 
+        int x = (int)Math.Round(xy.x);
+        int y = (int)Math.Round(xy.y);
+
+        xy.x = (int)x;
+        xy.y = (int)y;
+
         return (xy);
+    }
+
+    public int GetIndexFromXY(int x, int y)
+    {
+        int index = x + y * worldX;
+        return (index);
     }
 
     public bool CheckIfTwoBlocksAreNextToEachother(int index1, int index2)
@@ -65,6 +85,13 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         }
 
         return (connected);
+    }
+
+
+    public int getDirectionFromXY(int x, int y) // Die müsste man mal bauen
+    {
+        int direction = 0;
+        return (direction);
     }
 
 
