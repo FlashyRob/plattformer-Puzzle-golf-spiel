@@ -7,7 +7,16 @@ public class Editor : MonoBehaviour
     private GameObject[] block;
     public GameObject hud;
     public string editorMode = "place";
-    private string[] materials = new string[] {"Grass", "Dirt", "Water", "Terrain (16x16) 1_0" };
+    private string[] materials = new string[] {
+        "Terrain (16x16) 1_46",
+        "Terrain (16x16) 1_47",
+        "Terrain (16x16) 1_48",
+        "Terrain (16x16) 1_65",
+        "Terrain (16x16) 1_67",
+        "Terrain (16x16) 1_68",
+        "Terrain (16x16) 1_69",
+        "Terrain (16x16) 1_66"
+    };
     public Vector3 mousePos;
     List<string> blockName = new List<string>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,6 +32,11 @@ public class Editor : MonoBehaviour
 
     private void Initialize()
     {
+        try
+        {
+            Destroy(hud.transform.GetChild(0).gameObject);
+        } catch { }
+
         RectTransform rt;
         HorizontalLayoutGroup lg;
         Image im;
@@ -83,6 +97,11 @@ public class Editor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Initialize();
+        }
+
         if (
             (
                 (Input.GetKey(KeyCode.Mouse0) && editorMode == "drag") ||
