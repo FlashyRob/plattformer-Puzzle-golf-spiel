@@ -97,17 +97,20 @@ public class Editor : MonoBehaviour
                 Mathf.Round(mousePos.y),
                 0
             );
+
             string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
+            GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
             GameObject currentBlockObject = GameObject.Find(currentBlockName);
+
             if (currentBlockObject != null) {
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
             }
-            Debug.Log(blockName);
-            Debug.Log(blockName.IndexOf(ClickTest.selectedMaterial));
-            
-            GameObject newBlock = Instantiate(block[blockName.IndexOf(ClickTest.selectedMaterial)], mousePos, Quaternion.identity);
+                        
+            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
+
+            EditorToUpdateData.Instance.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
         }
     }
 }
