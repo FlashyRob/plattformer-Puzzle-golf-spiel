@@ -52,7 +52,36 @@ public class Updates : MonoBehaviour
                 case "wire":
                     handleWire(i, block);
                     break;
-
+                case "and_gate":
+                    HandleAndGate(i, block);
+                    break;
+                case "or_gate":
+                    HandleOrGate(i, block);
+                    break;
+                case "xor_gate":
+                    HandleXorGate(i, block);
+                    break;
+                case "not_gate":
+                    HandleNotGate(i, block);
+                    break;
+                case "lamp":
+                    HandleLamp(i, block);
+                    break;
+                case "door":
+                    HandleDoor(i, block);
+                    break;
+                case "flip_flop":
+                    HandleFlipFlopint(i, block);
+                    break;
+                case "toggle":
+                    HandleToggle(i, block);
+                    break;
+                case "pulse":
+                    HandlePulse(i, block);
+                    break;
+                case "condensator":
+                    HandleCondensator(i, block);
+                    break;
             }
         }
     }
@@ -377,7 +406,6 @@ public class Updates : MonoBehaviour
         blockData block = blockData[index];
         return block;
     }
-
 
     private int[] CheckConnectionSides(int[] connectionSides, List<connections> sources)
     {
