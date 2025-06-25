@@ -20,27 +20,27 @@ public class NewMonoBehaviourScript : MonoBehaviour
     void Update()
     {
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-        float verticalVelocity; 
-        float jumpVelocity;
+        float verticalVelocity = rb2d.linearVelocity.y;
+        float jumpVelocity = 0;
+        float verticalMultiplier;
 
         if (Input.GetKey(KeyCode.Space))
         {
-            jumpVelocity = 0.01f;
+            verticalMultiplier = 12;
         }
         else
         {
-            jumpVelocity = 0;
+            verticalMultiplier = 10;
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && Grounded)
         {
-            jumpVelocity = 10;
+            jumpVelocity = 14;
         }
 
-        Debug.Log(rb2d.linearVelocity.y);
-        verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y); 
+        verticalVelocity = (jumpVelocity * verticalMultiplier) / 30 + rb2d.linearVelocity.y;
 
-        rb2d.linearVelocity = new Vector2(horizontal * 5, verticalVelocity); 
+        rb2d.linearVelocity = new Vector2(horizontal, verticalVelocity);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
