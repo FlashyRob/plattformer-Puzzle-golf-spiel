@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class EditorToUpdateData : MonoBehaviour
 {
+    private static EditorToUpdateData instance;
+    public static EditorToUpdateData Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindAnyObjectByType<EditorToUpdateData>();
+            }
+            return instance;
+        }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
