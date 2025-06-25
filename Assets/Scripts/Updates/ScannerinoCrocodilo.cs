@@ -24,27 +24,58 @@ public class ScannerinoCrocodilo : MonoBehaviour
         //}
     }
 
-    public void Scanner(int index)
+    public void Scanner(int index, int side)
     {
-        nextScanns.Clear();
-        nextScanns.Add(index);
+        string[] sides = new string[4] {"top", "right", "bootom", "left"};
 
-        for (int i = 0; i < nextScanns.Count; i++)
+        nextScanns.Clear();
+
+        string sideName = sides[side];
+        var n = ScannNeighbours(index);
+
+        var sidePropertyField = typeof(tiles).GetField(sideName);
+        int sidePropertyValue = (int)sidePropertyField.GetValue(n);
+        nextScanns.Add(sidePropertyValue);
+
+        while (true)
         {
-            int tileIndex = nextScanns[i];
-            tiles neightbours = ScannNeighbours(index);
-            scannedBlockIndexes.Add(neightbours.myself);
-            if (powerSources.Contains(neightbours.top))
-            {
-                nextScanns.Add(neightbours.top);
-            }
+             for (int i = 0; i < nextScanns.Count; i++)
+                    {
+                        int tileIndex = nextScanns[i];
+                        tiles neightbours = ScannNeighbours(index);
+                        var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
+
+                        foreach(var nDir in neighbourDir)
+                        {
+                            scannedBlockIndexes.Add(neightbours.myself);
+                            if (StringContains(update.blockData[nDir].type, powerSources))
+                            {
+
+                            }
+                            else
+                            {
+                                nextScanns.Add(nDir);
+                            }
+                        }
+        }
+       
             
-            nextScanns.Add(neightbours.bottom);
-            nextScanns.Add(neightbours.left);
-            nextScanns.Add(neightbours.right);
+            
         }
 
 
+    }
+
+    public bool StringContains(string item, string[] array)
+    {
+        foreach (string arrayItem in array)
+        {
+            if (arrayItem == item)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public tiles ScannNeighbours(int index)
