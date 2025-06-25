@@ -8,10 +8,6 @@ public class Updates : MonoBehaviour
     public connectionData[] blocks = new connectionData[20];
     public int[,] activeSides = new int[20, 4];
     public blockData[] blockData = new blockData[20];
-
-
-    
-
     
 
 
