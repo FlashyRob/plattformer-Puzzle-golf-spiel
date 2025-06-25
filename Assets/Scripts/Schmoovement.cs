@@ -10,7 +10,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
-    float otherx = 0;
+    float collidex = 0;
     float myx = 0;
     private float horizontaly = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,57 +34,47 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
 
 
-            if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            verticalMultiplier = 12;
+            jumpVelocity = 0.01f;
         }
         else
         {
-            verticalMultiplier = 10;
+            jumpVelocity = 0;
         }
 
 
-        //if (Input.GetKey(KeyCode.Space))
-        //{ 
-          //  if (Grounded)
-            //{
-            //    jumpVelocity = 9;
-            //}
-            
-            //if walled
-        
-        //}
-
-
-            if (Input.GetKeyDown(KeyCode.Space) && Grounded)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            jumpVelocity = 9;
+            if (Grounded)
+            {
+                jumpVelocity = 9;
+            }
+
+            if (secondJump && !Walled)
+            {
+                jumpVelocity = 7;
+                secondJump = false;
+            }
+
+            if (Walled)
+            {
+                if (collidex > myx && !Grounded)
+                {
+                    jumpVelocity = 8;
+                    horizontalPush = 3;
+                    Walled = false;
+                }
+
+                if (collidex < myx && !Grounded)
+                {
+                    jumpVelocity = 8;
+                    horizontalPush = -3;
+                    Walled = false;
+                }
+            }
         }
-
-        verticalVelocity = jumpVelocity * verticalMultiplier;
-
-        if (Input.GetKeyDown(KeyCode.Space) && secondJump &&! Walled)
-        {
-            jumpVelocity = 7;
-            secondJump = false;
-        }
-
-       
-        if (Input.GetKeyDown(KeyCode.Space) && Walled && otherx > myx && !Grounded)
-        {
-            Debug.Log("Walled && otherx > myx");
-            jumpVelocity =10;
-            horizontalPush = -4;
-            Walled = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && Walled && otherx < myx &&! Grounded)
-        {
-            jumpVelocity = 10;
-            horizontalPush = 4;
-            Walled = false;
-        }
-
+     
         
         verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y); 
 
@@ -97,36 +87,75 @@ public class NewMonoBehaviourScript : MonoBehaviour
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
     }
 
-   
-    private void OnCollisionEnter2D(Collision2D other)
+
+
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (coll.gameObject.tag == "Ground") 
         {
-            Grounded = true;
-            secondJump = false;
+            if (this.transform.position.y > coll.collider.transform.position.y)
+            {
+                Grounded = true;
+                secondJump = false;
+                collidex = coll.collider.transform.position.x;
+                myx = this.transform.position.x;
+            }
+
+            else
+            {
+                Walled = true;
+            }
         }
-        
-        if (other.gameObject.CompareTag("Wall") && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
-        {
-            Walled = true;
-            otherx = other.transform.position.x;
-            myx = transform.position.x;
-        }   
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    void OnCollisionExit2D(Collision2D coll)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (coll.gameObject.tag == "Ground")
         {
-            Grounded = false;
-            secondJump = true;
-        }
+            if(Grounded)
+            {
+                Grounded = false;
+                secondJump = true;
+            }
+
+            if (Walled)
+            {
+                Walled = false;
+            }
         
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Walled = false;
         }
     }
+
+
+    //    private void OnCollisionEnter2D(Collision2D other)
+    //    {
+    //        if (other.gameObject.CompareTag("Ground"))
+    //        {
+    //            Grounded = true;
+    //            secondJump = false;
+}
+        
+//        if (other.gameObject.CompareTag("Wall") && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
+//       {
+//            Walled = true;
+//            otherx = other.transform.position.x;
+//           myx = transform.position.x;
+//        }   
+//    }
+
+//    private void OnCollisionExit2D(Collision2D collision)
+//    {
+//        if (collision.gameObject.CompareTag("Ground"))
+//        {
+//            Grounded = false;
+//            secondJump = true;
+//        }
+        
+//        if (collision.gameObject.CompareTag("Wall"))
+//        {
+//            Walled = false;
+//        }
+//    }
    
    
 
@@ -136,5 +165,10 @@ public class NewMonoBehaviourScript : MonoBehaviour
    
 
    
+<<<<<<< Updated upstream
     
 }
+=======
+
+
+>>>>>>> Stashed changes
