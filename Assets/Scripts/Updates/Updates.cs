@@ -10,19 +10,19 @@ public class Updates : MonoBehaviour
     public blockData[] blockData = new blockData[20];
 
 
+    
 
-
-
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        for (int i = 0; i < blocks.Length; i++)
+        for(int i = 0; i < blocks.Length; i++)
         {
             var c = new connectionData();
             c.sides = new int[] { 0, 1, 2, 3 };
-            c.data = new Dictionary<int, List<connections>> { { 0, new List<connections>() }, { 1, new List<connections>() }, { 2, new List<connections>() }, { 3, new List<connections>() } };
+            c.data = new Dictionary<int, List<connections>> { { 0, new List<connections>() }, { 1, new List<connections>()}, { 2, new List<connections>()}, { 3, new List<connections>()} };
 
             blocks[i] = c;
         }
@@ -31,13 +31,13 @@ public class Updates : MonoBehaviour
         AddConnection(0, 0, new connections { outputIndex = 7, outputSide = 3 });
 
 
-        var l = GetConnections(0, 0);
-        for (int i = 0; i < l.Count; i++)
+        var l = GetConnections(0,0);
+        for(int i= 0; i < l.Count; i++)
         {
-            Debug.Log(l[i].outputIndex + " " + l[i].outputSide);
+            Debug.Log(l[i].outputIndex+ " " +l[i].outputSide);
         }
 
-
+        
     }
 
     // Update is called once per frame
@@ -47,10 +47,10 @@ public class Updates : MonoBehaviour
         {
             blockData block = blockData[i];
 
-            switch (block.type)
+            switch  (block.type)
             {
                 case "wire":
-                    HandleWire(i, block);
+                    handleWire(i, block);
                     break;
 
             }
@@ -61,7 +61,7 @@ public class Updates : MonoBehaviour
     {
         connectionData currentConnection = blocks[blockIndex];
         currentConnection.data[side].Add(connection);
-
+        
 
     }
 
@@ -71,41 +71,29 @@ public class Updates : MonoBehaviour
         return (l);
     }
 
-    public bool IsActive(int index, int side)
+    public bool isActive(int index, int side)
     {
         return (activeSides[index, side] == 1);
     }
 
-    public bool CheckActive(List<connections> sources)
+    public bool checkActive(List<connections> sources)
     {
         for (int i = 0; i < sources.Count; i++)
         {
             connections source = sources[i];
-            if (IsActive(source.outputIndex, source.outputSide))
+            if (isActive(source.outputIndex, source.outputSide))
                 return true;
 
         }
         return false;
     }
 
-    private void HandleWire(int i, blockData block)
+    private void handleWire(int i, blockData block)
     {
-
         switch (block.typetype)
         {
             case "wire_straight":
-                if (IsAnyConnectionActive(block.inputDirections, i, 1))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-
-                if (IsAnyConnectionActive(block.inputDirections, i, 3))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                EditVisualActive(i, 0);
+                int[] activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 0));
                 break;
 
             case "wire_curve":
@@ -398,7 +386,7 @@ public class Updates : MonoBehaviour
         {
             if (connectionSides[side] == 1)
             {
-                if (CheckActive(sources))
+                if (checkActive(sources))
                 {
                     activeConnectionSides[side] = 1;
                 }
