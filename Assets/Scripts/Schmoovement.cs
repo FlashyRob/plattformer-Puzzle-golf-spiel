@@ -157,18 +157,5 @@ public class NewMonoBehaviourScript : MonoBehaviour
 //        }
 //    }
    
-   
-
-   
-
   
-   
-
-   
-<<<<<<< Updated upstream
-    
-}
-=======
-
-
->>>>>>> Stashed changes
+  
