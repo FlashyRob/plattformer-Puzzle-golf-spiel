@@ -90,21 +90,17 @@ public class Updates : MonoBehaviour
 
     private void HandleWire(int i, blockData block)
     {
-        int[] activeConnections;
 
         switch (block.typetype)
         {
             case "wire_straight":
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 1));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 1))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
 
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 3));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 3))
                 {
                     EditVisualActive(i, 1);
                     break;
@@ -113,69 +109,71 @@ public class Updates : MonoBehaviour
                 break;
 
             case "wire_curve":
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 0));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 0))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
-
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 1));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 1))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
+                EditVisualActive(i, 0);
                 break;
 
             case "wire_t":
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 0));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 0))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 1));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 1))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 3));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 3))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
+                EditVisualActive(i, 0);
                 break;
 
             case "wire_cross":
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 0));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 0))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 1));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 1))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
-
-                activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 3));
-                if (activeConnections.Contains(1))
+                if (IsAnyConnectionActive(block.inputDirections, i, 2))
                 {
                     EditVisualActive(i, 1);
                     break;
                 }
+                if (IsAnyConnectionActive(block.inputDirections, i, 3))
+                {
+                    EditVisualActive(i, 1);
+                    break;
+                }
+                EditVisualActive(i, 0);
                 break;
 
         }
+    }
+
+    private void HandleAndGate(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block.inputDirections, i, 0) && IsAnyConnectionActive(block.inputDirections, i, 3))
+        {
+            EditVisualActive(i, 1);
+        } else EditVisualActive(i, 0);
     }
 
     public bool IsAnyConnectionActive(int[] directions, int blockIndex, int side)
