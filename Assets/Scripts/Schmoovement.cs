@@ -3,14 +3,13 @@ using UnityEngine;
 public class Schmoovement : MonoBehaviour
 
 {
-
     private Rigidbody2D rb2d;
     private Collider2D capsule2d;
     private Animator animator;
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
-
+    public float horizontalPush = 0;
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
@@ -19,7 +18,7 @@ public class Schmoovement : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {
+    {	
         isFacingRight = true;
         rb2d = GetComponent<Rigidbody2D>();
         capsule2d = GetComponent<Collider2D>();
@@ -34,7 +33,6 @@ public class Schmoovement : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
         float jumpVelocity;
         float verticalVelocity;
-        float horizontalPush = 0;
         float horizontalVelocity;
         bool slideVel;
 
@@ -73,14 +71,13 @@ public class Schmoovement : MonoBehaviour
                 {
                     // The wall is to the left
 
-                    horizontalPush = -3;
+                    horizontalPush = -4;
                 }
-
-                if (collidex < myx)
+		else
                 {
                     // The wall is to the right
 
-                    horizontalPush = 3;
+                    horizontalPush = 4;
                 }
             }
         }
@@ -110,17 +107,21 @@ public class Schmoovement : MonoBehaviour
         {
             verticalVelocity = -4;
         }
+	
+	horizontalPush = horizontalPush * 0.95f;
 
+	if (horizontalPush < 1 && horizontalPush > -1) 
+	{
+	horizontalPush = 0;
+	}
 
-        horizontalVelocity = rb2d.linearVelocity.x + horizontalPush + horizontal * 5;
-
+        horizontalVelocity = horizontal * controldamper + horizontalPush;
 
         /*
-        horizontaly = (horizontaly + horizontalPush) * 0.99f;
+        horizontaly = (horizontaly + horizontalPush) * 0.95f;
         horizontalVelocity = horizontaly + horizontal * controldamper;
         */
-        Debug.Log("verticalVelocity "+verticalVelocity);
-        Debug.Log("jumpVelocity " +jumpVelocity);
+        Debug.Log(horizontalVelocity);
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
 
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
