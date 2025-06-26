@@ -5,6 +5,7 @@ using System.Linq;
 public class Updates : MonoBehaviour
 {
     private CheckWheatherTwoBlocksAreConnected position;
+    private JSONReader reader;
 
     public connectionData[] blocks;
     public int[,] activeSides;
@@ -15,6 +16,7 @@ public class Updates : MonoBehaviour
     void Start()
     {
         position = FindAnyObjectByType <CheckWheatherTwoBlocksAreConnected>();
+        reader = FindAnyObjectByType<JSONReader>();
 
         int worldTotalSize = position.worldX * position.worldY;
 
@@ -47,9 +49,9 @@ public class Updates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < blockData.Length; i++)
+        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
         {
-            blockData block = blockData[i];
+            blockData block = reader.BlockSafeFile[i];
 
             switch  (block.type)
             {
@@ -407,8 +409,17 @@ public class Updates : MonoBehaviour
         
     public blockData GetBlock(int index)
     {
-        blockData block = blockData[index];
-        return block;
+        blockData thisBlock = new blockData();
+        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        {
+            if (reader.BlockSafeFile[i].index == index)
+            {
+                thisBlock = reader.BlockSafeFile[i];
+                return thisBlock;
+            }
+        }
+        return thisBlock;
+        
     }
 
     private int[] CheckConnectionSides(int[] connectionSides, List<connections> sources)
@@ -442,6 +453,7 @@ public struct connections
 
 public struct blockData
 {
+    public int index;
     public string type;
     public string typetype;
     public int direction;

@@ -6,6 +6,8 @@ public class ScannerinoCrocodilo : MonoBehaviour
 {
     public List<int> scannedBlockIndexes;
     public List<int> nextScanns;
+    public List<int> foundPowerssources;
+    public List<int> visitedBlocks;
 
     public string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "toggle"};
 
@@ -24,11 +26,13 @@ public class ScannerinoCrocodilo : MonoBehaviour
         //}
     }
 
-    public void Scanner(int index, int side)
+    public void ScannFromBlock(int index, int side)
     {
         string[] sides = new string[4] {"top", "right", "bootom", "left"};
 
         nextScanns.Clear();
+        foundPowerssources.Clear();
+        visitedBlocks.Clear();
 
         string sideName = sides[side];
         var n = ScannNeighbours(index);
@@ -37,17 +41,53 @@ public class ScannerinoCrocodilo : MonoBehaviour
         int sidePropertyValue = (int)sidePropertyField.GetValue(n);
         nextScanns.Add(sidePropertyValue);
 
+        List<int> thisScann = new List<int>();
+
+        int safetyBreak = 0;
+
         while (true)
         {
-             for (int i = 0; i < nextScanns.Count; i++)
-                    {
-                        int tileIndex = nextScanns[i];
-                        tiles neightbours = ScannNeighbours(index);
-                        var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
+            thisScann = nextScanns;
+            nextScanns.Clear();
 
-                        foreach(var nDir in neighbourDir)
+            if (thisScann.Count == 0 || safetyBreak > 1000)
+            {
+                break;
+            }
+
+             for (int i = 0; i < thisScann.Count; i++)
+             {
+                 int tileIndex = thisScann[i];
+                 tiles neightbours = ScannNeighbours(tileIndex);
+                 var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
+
+                visitedBlocks.Add(tileIndex);
+
+                 foreach(var nIndex in neighbourDir)
+                 {
+                    if (general.CheckIfTwoBlocksAreConnected(tileIndex, update.GetBlock(tileIndex).inputDirections, nIndex, update.GetBlock(nIndex).outputDirections) && !(nIndex == index) && !visitedBlocks.Contains(nIndex))
+                    {
+                        if (StringContains(update.GetBlock(tileIndex).type, powerSources))
                         {
-                            scannedBlockIndexes.Add(neightbours.myself);
+                            foundPowerssources.Add(nIndex);
+                        }
+                        else
+                        {
+                            nextScanns.Add(nIndex);
+                        }
+                    }
+                 }
+             }
+        }
+    }
+
+    public void Scanner()
+    {
+
+    }
+
+    /*
+    scannedBlockIndexes.Add(neightbours.myself);
                             if (StringContains(update.blockData[nDir].type, powerSources))
                             {
 
@@ -56,17 +96,9 @@ public class ScannerinoCrocodilo : MonoBehaviour
                             {
                                 nextScanns.Add(nDir);
                             }
-                        }
-        }
-       
-            
-            
-        }
+    */
 
-
-    }
-
-    public bool StringContains(string item, string[] array)
+public bool StringContains(string item, string[] array)
     {
         foreach (string arrayItem in array)
         {
@@ -107,5 +139,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
         public int bottom;
         public int left;
     }
+
+    
     
 }
