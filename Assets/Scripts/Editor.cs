@@ -165,24 +165,30 @@ public class Editor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
+        /*
             Initialize();
         }
+        */
 
         mousePos = GetMousePos();
-        if (!CheckValid(mousePos)) { return; }
-        if (ClickTest.selectedMaterial == "Nothing") { return; }
-        if (!CheckUIHover.hoverUI) { return; }
+        if (!CheckValid(mousePos)) return;
+        if (ClickTest.selectedMaterial == "Nothing") return;
+        if (CheckUIHover.hoverUI) return;
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
         GameObject currentBlockObject = GameObject.Find(currentBlockName);
         GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
 
-        if (reader.BlockExists(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y))) {
-        editorMode = "delete";
-        } else {
-        editorMode = "place";
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y)))
+            {
+                editorMode = "delete";
+            }
+            else
+            {
+                editorMode = "place";
+            }
         }
 
         GameObject oldSelect = GameObject.Find("select");
@@ -195,11 +201,15 @@ public class Editor : MonoBehaviour
         newSelect.name = "select";
         newSelect.AddComponent<RemoveBlock>();
 
-        if ((Input.GetKey(KeyCode.Mouse0)) && editorMode == "place")
+        if (Input.GetKey(KeyCode.Mouse0) && editorMode == "place")
         {
+            int posIndex = position.GetIndexFromXY((int) mousePos.x, (int)mousePos.y);
+            blockData previousBlock = update.GetBlock(posIndex);
+            if (previousBlock.type == currentBlockName) return;
             if (currentBlockObject != null)
             {
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
+                reader.RemoveBlock(posIndex);
             }
 
             GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
@@ -209,7 +219,11 @@ public class Editor : MonoBehaviour
             var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = 1; // show on top of other elements
 
-            editorToUpdate.addDataToBlockData((int)mousePos.x, (int)mousePos.y, currentBlockPrefab.name);
+            blockData prototypeBlock = new blockData();
+            prototypeBlock.type = currentBlockPrefab.name;
+            prototypeBlock.direction = 0;
+            prototypeBlock.index = posIndex;
+            reader.AddBlock(prototypeBlock);
         }
         else if (Input.GetKey(KeyCode.Mouse0) && editorMode == "delete")
         {
@@ -222,20 +236,8 @@ public class Editor : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            if (currentBlockObject != null)
-            {
-                currentBlockObject.GetComponent<RemoveBlock>().kill();
-            }
-
             blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
-            GameObject selectedBlockPrefab = block[blockName.IndexOf(getBlock.type)];
-
-            GameObject newBlock = Instantiate(selectedBlockPrefab, mousePos, new Quaternion(0, 0, getBlock.direction * 90, 0), createdBlocks.transform);
-            newBlock.name = currentBlockName;
-            newBlock.AddComponent<RemoveBlock>();
-
-            var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
-            spriteRenderer.sortingOrder = 1; // show on top of other elements
+            currentBlockObject.transform.Rotate(new Vector3(0, 0, 90));
             reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
     }
