@@ -185,7 +185,7 @@ public class Editor : MonoBehaviour
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
             }
             
-            reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+            //reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
         }
     }
 
