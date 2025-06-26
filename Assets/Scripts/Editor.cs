@@ -23,6 +23,7 @@ public class Editor : MonoBehaviour
     private Updates update;
     private EditorToUpdateData editorToUpdate;
     private CheckWheatherTwoBlocksAreConnected position;
+    private JSONReader reader;
 
 
 
@@ -32,6 +33,7 @@ public class Editor : MonoBehaviour
         update = FindAnyObjectByType<Updates>();
         editorToUpdate =  FindAnyObjectByType<EditorToUpdateData>();
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+        reader = FindAnyObjectByType<JSONReader>();
 
         block = Resources.LoadAll<GameObject>("Blocks");
         for (int i = 0; i < block.Length; i++)
@@ -116,6 +118,22 @@ public class Editor : MonoBehaviour
         }
     }
 
+    Vector3 GetMousePos()
+    {
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = new Vector3(
+            Mathf.Round(mousePos.x),
+            Mathf.Round(mousePos.y),
+            0
+        );
+        return mousePos;
+    }
+    bool CheckValid(Vector3 mousePos)
+    {
+        return mousePos.x < 0 || mousePos.y < 0 ? false : true;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -132,12 +150,8 @@ public class Editor : MonoBehaviour
             !CheckUIHover.hoverUI
         )
         {
-            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos = new Vector3(
-                Mathf.Round(mousePos.x),
-                Mathf.Round(mousePos.y),
-                0
-            );
+            mousePos = GetMousePos();
+            if (!CheckValid(mousePos)) { return; }
 
             string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
             if (ClickTest.selectedMaterial == "Nothing")
@@ -159,6 +173,19 @@ public class Editor : MonoBehaviour
             spriteRenderer.sortingOrder = 1; // show on top of other elements
 
             editorToUpdate.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0) && editorMode == "delete" && !CheckUIHover.hoverUI)
+        {
+            mousePos = GetMousePos();
+            if (!CheckValid(mousePos)) { return; }
+
+            string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
+            GameObject currentBlockObject = GameObject.Find(currentBlockName);
+            if (currentBlockObject != null) {
+                currentBlockObject.GetComponent<RemoveBlock>().kill();
+            }
+            
+            reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
         }
     }
 
