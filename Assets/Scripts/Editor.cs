@@ -20,9 +20,19 @@ public class Editor : MonoBehaviour
     public Vector3 mousePos;
     List<string> blockName = new List<string>();
 
+    private Updates update;
+    private EditorToUpdateData editorToUpdate;
+    private CheckWheatherTwoBlocksAreConnected position;
+
+
+
     private GameObject createdBlocks;
     void Awake()
     {
+        update = FindAnyObjectByType<Updates>();
+        editorToUpdate =  FindAnyObjectByType<EditorToUpdateData>();
+        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+
         block = Resources.LoadAll<GameObject>("Blocks");
         for (int i = 0; i < block.Length; i++)
         {
@@ -148,7 +158,7 @@ public class Editor : MonoBehaviour
             var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = 1; // show on top of other elements
 
-            EditorToUpdateData.Instance.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
+            editorToUpdate.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
         }
     }
 
@@ -156,5 +166,12 @@ public class Editor : MonoBehaviour
     {
         materials = newMaterials;
         Initialize();
+    }
+
+    public blockData GetBlockAt(int x, int y)
+    {
+        blockData blockData = new blockData();
+        blockData = (update.GetBlock(position.GetIndexFromXY(x, y)));
+        return blockData;
     }
 }
