@@ -4,17 +4,27 @@ using System.Linq;
 
 public class Updates : MonoBehaviour
 {
+    private CheckWheatherTwoBlocksAreConnected position;
+    private JSONReader reader;
 
-    public connectionData[] blocks = new connectionData[20];
-    public int[,] activeSides = new int[20, 4];
-    public blockData[] blockData = new blockData[20];
-    
+    public connectionData[] blocks;
+    public int[,] activeSides;
+    public blockData[] blockData;    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        for(int i = 0; i < blocks.Length; i++)
+        position = FindAnyObjectByType <CheckWheatherTwoBlocksAreConnected>();
+        reader = FindAnyObjectByType<JSONReader>();
+
+        int worldTotalSize = position.worldX * position.worldY;
+
+        activeSides = new int[worldTotalSize, 4];
+        blocks = new connectionData[worldTotalSize];
+        blockData = new blockData[worldTotalSize];
+
+        for (int i = 0; i < blocks.Length; i++)
         {
             var c = new connectionData();
             c.sides = new int[] { 0, 1, 2, 3 };
@@ -39,9 +49,9 @@ public class Updates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < blockData.Length; i++)
+        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
         {
-            blockData block = blockData[i];
+            blockData block = reader.BlockSafeFile[i];
 
             switch  (block.type)
             {
@@ -399,8 +409,17 @@ public class Updates : MonoBehaviour
         
     public blockData GetBlock(int index)
     {
-        blockData block = blockData[index];
-        return block;
+        blockData thisBlock = new blockData();
+        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        {
+            if (reader.BlockSafeFile[i].index == index)
+            {
+                thisBlock = reader.BlockSafeFile[i];
+                return thisBlock;
+            }
+        }
+        return thisBlock;
+        
     }
 
     private int[] CheckConnectionSides(int[] connectionSides, List<connections> sources)
@@ -434,6 +453,7 @@ public struct connections
 
 public struct blockData
 {
+    public int index;
     public string type;
     public string typetype;
     public int direction;

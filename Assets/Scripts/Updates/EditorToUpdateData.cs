@@ -4,6 +4,8 @@ using UnityEngine;
 public class EditorToUpdateData : MonoBehaviour
 {
     private static EditorToUpdateData instance;
+    private CheckWheatherTwoBlocksAreConnected position;
+    private Updates update;
     public static EditorToUpdateData Instance
     {
         get
@@ -14,10 +16,14 @@ public class EditorToUpdateData : MonoBehaviour
             }
             return instance;
         }
+
+
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+        update = FindAnyObjectByType<Updates>();
 
         int[] inputDirections = new int[4] { 0, 0, 1, 1 }; // directions from editor e.g. {1,0,1,0} for "straight wire"
         // int direction = 2; // direction from editor e.g. 1 for rotated 90 degrees to the right
@@ -67,18 +73,22 @@ public class EditorToUpdateData : MonoBehaviour
         if (blockName == "wire_straight")
         {
             directionsInput = new int[4] { 0, 1, 0, 1 };
+            directionsOutput =  new int[4] { 0, 1, 0, 1 };
         }
         else if (blockName == "wire_curve")
         {
             directionsInput = new int[4] { 1, 1, 0, 0 };
+            directionsOutput = new int[4] { 1, 1, 0, 0 };
         }
         else if (blockName == "wire_t")
         {
             directionsInput = new int[4] { 1, 1, 0, 1 };
+            directionsOutput = new int[4] { 1, 1, 0, 1 };
         }
         else if (blockName == "wire_cross")
         {
             directionsInput = new int[4] { 1, 1, 1, 1 };
+            directionsOutput = new int[4] { 1, 1, 1, 1 };
         }
         else if (blockName == "lever")
         {
@@ -118,6 +128,8 @@ public class EditorToUpdateData : MonoBehaviour
     public void addDataToBlockData(int x, int y, string blockName, int direction = 0, int state = 0)
     {
         blockData b = new blockData();
+        
+        int index = position.GetIndexFromXY(x, y);
 
         b.typetype = blockName;
         b.direction = direction;
@@ -127,6 +139,8 @@ public class EditorToUpdateData : MonoBehaviour
         b.outputDirections = directions1AndDirectionToDirection2(inAndOutPutDirectionsAtI.outputDirections, direction);
         b.meta = "0"; // evtl sp?ter relevant
         b.visualActive = 0;
+        Debug.Log(index + " " + x + " " + y);
+        //update.blockData[index] = b;
     }
 
     // Update is called once per frame

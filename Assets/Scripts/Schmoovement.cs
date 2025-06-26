@@ -6,10 +6,12 @@ public class Schmoovement : MonoBehaviour
 
     private Rigidbody2D rb2d;
     private Collider2D capsule2d;
+    private Animator animator;
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
     public bool Slide = false;
+    private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
     private float horizontaly = 0;
@@ -18,9 +20,10 @@ public class Schmoovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        isFacingRight = true;
         rb2d = GetComponent<Rigidbody2D>();
         capsule2d = GetComponent<Collider2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -35,7 +38,10 @@ public class Schmoovement : MonoBehaviour
         float horizontalPush = 0;
         float horizontalVelocity;
 
-
+        animator.SetFloat("Speed", rb2d.linearVelocity.x);
+        animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+        animator.SetBool("isWalled", Walled);
+        animator.SetBool("isGrounded", Grounded);
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -112,9 +118,24 @@ public class Schmoovement : MonoBehaviour
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
         Debug.Log(rb2d.linearVelocity.y);
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
+
+        if(!isFacingRight && horizontalVelocity > 0)
+        {
+            Flip();
+        }
+        else if(isFacingRight && horizontalVelocity < 0)
+        {
+            Flip();
+        }
     }
 
-
+    public void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1f;
+        transform.localScale = localScale;
+    }
 
     void OnCollisionStay2D(Collision2D coll)
     {

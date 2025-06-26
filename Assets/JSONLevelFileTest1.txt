@@ -1,0 +1,1 @@
+{"index":3,"typetype":"straight_wire","direction":2,"state":0,"inputDirections":[],"outputDirections":[],"meta":"","visualActive":0}
