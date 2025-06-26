@@ -32,7 +32,7 @@ public class JSONReader : MonoBehaviour
     [System.Serializable]
     public class BlockList
     {
-        public blockData[] blocks;
+        public List <blockData> blocks;
     }
 
     public BlockList myBlockList = new BlockList();
@@ -47,10 +47,39 @@ public class JSONReader : MonoBehaviour
         //Debug.Log(myBlockList.blocks); //Wenn nicht mehr funktioniert diese Zeile wieder einbauen. 
 
         BlockSafeFile = load();
+
+        RemoveBlock(1);
     }
 
     public List<blockData> load()
     {
         return new List<blockData>(JsonUtility.FromJson<BlockList>(textJSON.text).blocks);
+    }
+
+    public void RemoveBlock(int index)
+    {
+        for (int i = 0; i < BlockSafeFile.Count; i++)
+        {
+            if (BlockSafeFile[i].index == index)
+            {
+                BlockSafeFile.RemoveAt(i);
+            }
+        }
+        
+    }
+
+    public void AddBlock(blockData block)
+    {
+
+    }
+
+    public bool BlockExists (int index)
+    {
+        foreach (blockData block in BlockSafeFile)
+        {
+            if (block.index == index)
+                return true;
+        }
+        return false; 
     }
 }

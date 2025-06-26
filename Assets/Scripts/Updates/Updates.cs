@@ -439,18 +439,21 @@ public class Updates : MonoBehaviour
     }
 }
 
+[System.Serializable]
 public struct connectionData
 {
     public int[] sides;
     public Dictionary<int, List<connections>> data;
 }
 
+[System.Serializable]
 public struct connections
 {
     public int outputIndex;
     public int outputSide;
 }
 
+[System.Serializable]
 public struct blockData
 {
     public int index;
