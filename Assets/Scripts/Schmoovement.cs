@@ -11,6 +11,7 @@ public class Schmoovement : MonoBehaviour
     public bool secondJump = false;
     public bool Walled = false;
     public bool Slide = false;
+    public float slideVel = 1;
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
@@ -32,7 +33,7 @@ public class Schmoovement : MonoBehaviour
 
 
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-
+        slideVel = 1;
         float jumpVelocity;
         float verticalVelocity;
         float horizontalPush = 0;
@@ -83,10 +84,20 @@ public class Schmoovement : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (Walled)
+            {
+                jumpVelocity = -4;
+                slideVel = 0;
+            }
+            else
+            {
+                slideVel = 1;
+            }
+        }
 
-
-
-        verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + (slideVel * rb2d.linearVelocity.y);
 
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
@@ -95,7 +106,7 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + (slideVel * rb2d.linearVelocity.y);
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
         {
@@ -103,20 +114,12 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        controldamper = 1;
-
-
-
-        if (Slide)
-        {
-            verticalVelocity = -4;
-        }
-
         horizontaly = (horizontaly + horizontalPush) * 0.99f;
         horizontalVelocity = horizontaly + horizontal * controldamper;
-
+        Debug.Log("verticalVelocity "+verticalVelocity);
+        Debug.Log("jumpVelocity " +jumpVelocity);
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
-        Debug.Log(rb2d.linearVelocity.y);
+
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
         if(!isFacingRight && horizontalVelocity > 0)
