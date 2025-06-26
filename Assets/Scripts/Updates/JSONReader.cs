@@ -6,19 +6,6 @@ public class JSONReader : MonoBehaviour
 {
     public TextAsset textJSON;
 
-    //[System.Serializable]
-    /*public class Block
-    {
-        public int index;
-        public string typetype;
-        public int direction;
-        public int state;
-        public int[] inputDirections;
-        public int[] outputDirections;
-        public string meta;
-        public int visualActive;
-    }
-    */
     public blockData myBlock = new blockData();
     
     public void WriteJSON()
@@ -63,6 +50,7 @@ public class JSONReader : MonoBehaviour
             if (BlockSafeFile[i].index == index)
             {
                 BlockSafeFile.RemoveAt(i);
+                SafeSafeFile();
             }
         }
         
@@ -70,7 +58,14 @@ public class JSONReader : MonoBehaviour
 
     public void AddBlock(blockData block)
     {
+        BlockSafeFile.Add(block);
+        SafeSafeFile();
+    }
 
+    public void EditBlock(blockData block)
+    {
+        RemoveBlock(block.index);
+        AddBlock(block);
     }
 
     public bool BlockExists (int index)
@@ -81,5 +76,50 @@ public class JSONReader : MonoBehaviour
                 return true;
         }
         return false; 
+    }
+
+    public void EditBlockDirection (blockData block, int newVal)
+    {
+        RemoveBlock(block.index);
+        block.direction = newVal;
+        AddBlock(block);
+    }
+
+    public void EditBlockType (blockData block, string newVal)
+    {
+        RemoveBlock(block.index);
+        block.type = newVal;
+        AddBlock(block);
+    }
+    public void EditBlockTypeType(blockData block, string newVal)
+    {
+        RemoveBlock(block.index);
+        block.typetype = newVal;
+        AddBlock(block);
+    }
+    public void EditBlockState(blockData block, int newVal)
+    {
+        RemoveBlock(block.index);
+        block.state = newVal;
+        AddBlock(block);
+    }
+
+    public void EditBlockMeta(blockData block, string newVal)
+    {
+        RemoveBlock(block.index);
+        block.meta = newVal;
+        AddBlock(block);
+    }
+    public void EditBlockVisualActive(blockData block, int newVal)
+    {
+        RemoveBlock(block.index);
+        block.visualActive = newVal;
+        AddBlock(block);
+    }
+    public void SafeSafeFile()
+    {
+        List<blockData> data = BlockSafeFile;
+
+        File.WriteAllText("C:/Users/sp25-2/Documents/GitHub/plattformer-Puzzle-golf-spiel/Assets/Resources/JSONLevelFiles" + "/JSONLevelFileTest1.txt", JsonUtility.ToJson(data));
     }
 }
