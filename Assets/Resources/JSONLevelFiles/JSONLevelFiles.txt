@@ -1,0 +1,36 @@
+{
+	"blocks":[
+		{
+			"index": 1,
+			"typetype": "wire_straight",
+			"direction": 0,
+			"state": 0,
+			"inputDirections": [0,1,0,1],
+			"outputDirections": [0,0,0,0],
+			"meta": "0",
+			"visualActive": 0	
+		},
+		{
+			"index": 2,
+			"typetype": "wire_curve",
+			"direction": 1,
+			"state": 0,
+			"inputDirections": [1,1,0,0],
+			"outputDirections": [0,0,0,0],
+			"meta": "0",
+			"visualActive": 0	
+		},
+		{
+			"index": 3,
+			"typetype": "wire_t",
+			"direction": 3,
+			"state": 0,
+			"inputDirections": [1,1,0,1],
+			"outputDirections": [0,0,0,0],
+			"meta": "0",
+			"visualActive": 0	
+		}
+
+	
+	]
+}
