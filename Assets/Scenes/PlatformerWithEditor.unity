@@ -4341,6 +4341,8 @@ GameObject:
   - component: {fileID: 1227257907}
   - component: {fileID: 1227257906}
   - component: {fileID: 1227257909}
+  - component: {fileID: 1227257911}
+  - component: {fileID: 1227257910}
   m_Layer: 0
   m_Name: MoveablePlatform
   m_TagString: Ground
@@ -4397,7 +4399,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227257904}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -4508,34 +4510,25 @@ MonoBehaviour:
   points:
   - {fileID: 63718564}
   - {fileID: 960715383}
---- !u!1 &1561179339
-GameObject:
+--- !u!114 &1227257910
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1561179344}
-  - component: {fileID: 1561179343}
-  - component: {fileID: 1561179342}
-  - component: {fileID: 1561179341}
-  - component: {fileID: 1561179346}
-  - component: {fileID: 1561179345}
-  m_Layer: 0
-  m_Name: Schmoove Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!61 &1561179341
-BoxCollider2D:
+  m_GameObject: {fileID: 1227257904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7438e63ae9360114d80b0d511bcd76d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &1227257911
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561179339}
+  m_GameObject: {fileID: 1227257904}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -4559,22 +4552,48 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.5}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
+    oldSize: {x: 2, y: 0.5}
+    newSize: {x: 2, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -1, y: 0.25}
+      - {x: -1, y: -0.25}
+      - {x: 1, y: -0.25}
+      - {x: 1, y: 0.25}
+  m_UseDelaunayMesh: 0
+--- !u!1 &1561179339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1561179344}
+  - component: {fileID: 1561179343}
+  - component: {fileID: 1561179342}
+  - component: {fileID: 1561179346}
+  - component: {fileID: 1561179345}
+  - component: {fileID: 1561179347}
+  m_Layer: 0
+  m_Name: Schmoove Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!50 &1561179342
 Rigidbody2D:
   serializedVersion: 5
@@ -4590,7 +4609,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.8
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -4682,7 +4701,7 @@ Animator:
   m_GameObject: {fileID: 1561179339}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fdfc9178766e3094d9816e2ada2c27e8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 60de9c1b46d83384ebb754031c2b5026, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4709,6 +4728,43 @@ MonoBehaviour:
   Grounded: 0
   secondJump: 0
   Walled: 0
+--- !u!70 &1561179347
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561179339}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.38}
+  m_Size: {x: 1.2, y: 0.0001}
+  m_Direction: 0
 --- !u!1 &1671438645
 GameObject:
   m_ObjectHideFlags: 0

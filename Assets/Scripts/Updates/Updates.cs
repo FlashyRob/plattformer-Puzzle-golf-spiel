@@ -4,17 +4,25 @@ using System.Linq;
 
 public class Updates : MonoBehaviour
 {
+    private CheckWheatherTwoBlocksAreConnected position;
 
-    public connectionData[] blocks = new connectionData[20];
-    public int[,] activeSides = new int[20, 4];
-    public blockData[] blockData = new blockData[20];
-    
+    public connectionData[] blocks;
+    public int[,] activeSides;
+    public blockData[] blockData;    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        for(int i = 0; i < blocks.Length; i++)
+        position = FindAnyObjectByType <CheckWheatherTwoBlocksAreConnected>();
+
+        int worldTotalSize = position.worldX * position.worldY;
+
+        activeSides = new int[worldTotalSize, 4];
+        blocks = new connectionData[worldTotalSize];
+        blockData = new blockData[worldTotalSize];
+
+        for (int i = 0; i < blocks.Length; i++)
         {
             var c = new connectionData();
             c.sides = new int[] { 0, 1, 2, 3 };
