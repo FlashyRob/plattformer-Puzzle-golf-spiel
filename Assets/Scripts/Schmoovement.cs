@@ -10,8 +10,7 @@ public class Schmoovement : MonoBehaviour
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
-    public bool Slide = false;
-    public float slideVel = 1;
+
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
@@ -33,11 +32,11 @@ public class Schmoovement : MonoBehaviour
 
 
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-        slideVel = 1;
         float jumpVelocity;
         float verticalVelocity;
         float horizontalPush = 0;
         float horizontalVelocity;
+        bool slideVel;
 
         animator.SetFloat("Speed", rb2d.linearVelocity.x);
         animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
@@ -57,6 +56,8 @@ public class Schmoovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            slideVel = false;
+
             if (Grounded && !Walled)
             {
                 jumpVelocity = 9;
@@ -65,39 +66,30 @@ public class Schmoovement : MonoBehaviour
 
             if (Walled)
             {
+                jumpVelocity = 13;
+                controldamper = 0.4f;
+
                 if (collidex > myx)
                 {
                     // The wall is to the left
-                    jumpVelocity = 13;
+
                     horizontalPush = -3;
-                    Slide = false;
-                    controldamper = 0.4f;
                 }
 
                 if (collidex < myx)
                 {
                     // The wall is to the right
-                    jumpVelocity = 13;
+
                     horizontalPush = 3;
-                    Slide = false;
-                    controldamper = 0.4f;
                 }
             }
         }
         else
         {
-            if (Walled)
-            {
-                jumpVelocity = -4;
-                slideVel = 0;
-            }
-            else
-            {
-                slideVel = 1;
-            }
+            slideVel = true;
         }
 
-        verticalVelocity = jumpVelocity + (slideVel * rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
@@ -106,7 +98,7 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + (slideVel * rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
         {
@@ -114,8 +106,19 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
+        if (slideVel && Walled)
+        {
+            verticalVelocity = -4;
+        }
+
+
+        horizontalVelocity = rb2d.linearVelocity.x + horizontalPush + horizontal * 5;
+
+
+        /*
         horizontaly = (horizontaly + horizontalPush) * 0.99f;
         horizontalVelocity = horizontaly + horizontal * controldamper;
+        */
         Debug.Log("verticalVelocity "+verticalVelocity);
         Debug.Log("jumpVelocity " +jumpVelocity);
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
@@ -156,20 +159,10 @@ public class Schmoovement : MonoBehaviour
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
                 // The vector mostly points in x or -x direction. So we've hit a wall
-
-                if (Walled!)
-                {
-                    Slide = true;
-                }
-                else
-                {
-                    Slide = false;
-                }
                 Walled = true;
                 collidex = contact.point.x; // remeber the contact point for walljump
                 myx = transform.position.x;
@@ -190,7 +183,6 @@ public class Schmoovement : MonoBehaviour
             if (Walled)
             {
                 Walled = false;
-                Slide = false;
             }
         }
     }
