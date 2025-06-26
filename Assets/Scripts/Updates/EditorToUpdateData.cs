@@ -73,18 +73,22 @@ public class EditorToUpdateData : MonoBehaviour
         if (blockName == "wire_straight")
         {
             directionsInput = new int[4] { 0, 1, 0, 1 };
+            directionsOutput =  new int[4] { 0, 1, 0, 1 };
         }
         else if (blockName == "wire_curve")
         {
             directionsInput = new int[4] { 1, 1, 0, 0 };
+            directionsOutput = new int[4] { 1, 1, 0, 0 };
         }
         else if (blockName == "wire_t")
         {
             directionsInput = new int[4] { 1, 1, 0, 1 };
+            directionsOutput = new int[4] { 1, 1, 0, 1 };
         }
         else if (blockName == "wire_cross")
         {
             directionsInput = new int[4] { 1, 1, 1, 1 };
+            directionsOutput = new int[4] { 1, 1, 1, 1 };
         }
         else if (blockName == "lever")
         {

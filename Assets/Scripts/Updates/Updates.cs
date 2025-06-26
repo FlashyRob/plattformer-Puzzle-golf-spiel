@@ -407,8 +407,18 @@ public class Updates : MonoBehaviour
         
     public blockData GetBlock(int index)
     {
-        blockData block = blockData[index];
+        for (int i = 0; i < BlocksSafeFile.Count; i++)
+        {
+            if (BlockSafeFile[i].index == index)
+            {
+                blockData block = blockSafeFile[i];
+                return block;
+            }
+        }
+        blockData block = new blockData();
+
         return block;
+        
     }
 
     private int[] CheckConnectionSides(int[] connectionSides, List<connections> sources)
@@ -442,6 +452,7 @@ public struct connections
 
 public struct blockData
 {
+    public int index;
     public string type;
     public string typetype;
     public int direction;

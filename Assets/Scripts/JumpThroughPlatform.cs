@@ -17,13 +17,15 @@ public class JumpThroughPlatform : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(transform.position.y <= (collision.transform.position.y - 1))
+        if(transform.position.y <= (collision.transform.position.y - 0.75))
         {
+            //Debug.Log("TRIGGERED!");
             box.enabled = true;
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        //Debug.Log("nope");
         box.enabled = false;
     }
 }
