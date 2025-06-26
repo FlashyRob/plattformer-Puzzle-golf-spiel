@@ -312,6 +312,7 @@ GameObject:
   - component: {fileID: 1795388764}
   - component: {fileID: 1795388763}
   - component: {fileID: 1795388762}
+  - component: {fileID: 1795388765}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -387,6 +388,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d20bef9349e1b46be1697f78e86f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blocks: []
+  blockData: []
+--- !u!114 &1795388765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795388759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b0e142c9ffdc7459a392b904905793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textJSON: {fileID: 4900000, guid: 78716a2d9ac699245b7e7a2714470300, type: 3}
+  myBlock:
+    index: 0
+    type: 
+    typetype: 
+    direction: 0
+    outputDirections: 
+    inputDirections: 
+    state: 0
+    meta: 
+    visualActive: 0
+  BlockSafeFile: []
+  myBlockList:
+    blocks: []
 --- !u!1 &1860760836
 GameObject:
   m_ObjectHideFlags: 0
