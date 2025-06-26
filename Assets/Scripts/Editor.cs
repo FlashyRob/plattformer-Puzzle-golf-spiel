@@ -5,20 +5,24 @@ using UnityEngine.UI;
 public class Editor : MonoBehaviour
 {
     private GameObject[] block;
+    private GameObject[] textures;
     public GameObject hud;
-    public string editorMode = "place";
-    private string[] materials = new string[] {
-        "Terrain (16x16) 1_46",
-        "Terrain (16x16) 1_47",
-        "Terrain (16x16) 1_48",
-        "Terrain (16x16) 1_65",
-        "Terrain (16x16) 1_67",
-        "Terrain (16x16) 1_68",
-        "Terrain (16x16) 1_69",
-        "Terrain (16x16) 1_66"
-    };
+    public string editorMode;
     public Vector3 mousePos;
+    private string[] materials = new string[] {
+    "Terrain (16x16) 1_46",
+    "Terrain (16x16) 1_47",
+    "Terrain (16x16) 1_48",
+    "Terrain (16x16) 1_65",
+    "Terrain (16x16) 1_67",
+    "Terrain (16x16) 1_68",
+    "Terrain (16x16) 1_69",
+    "Terrain (16x16) 1_66"
+    }; 
+    private int[] materialRotations;
+
     List<string> blockName = new List<string>();
+    List<string> texturesName = new List<string>();
 
     private Updates update;
     private EditorToUpdateData editorToUpdate;
@@ -30,18 +34,32 @@ public class Editor : MonoBehaviour
     private GameObject createdBlocks;
     void Awake()
     {
+        materialRotations = new int[materials.Length];
+        for (int i = 0; i < materialRotations.Length; i++)
+            materialRotations[i] = 0;
+
+
         update = FindAnyObjectByType<Updates>();
         editorToUpdate =  FindAnyObjectByType<EditorToUpdateData>();
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         reader = FindAnyObjectByType<JSONReader>();
 
+
         block = Resources.LoadAll<GameObject>("Blocks");
+        textures = Resources.LoadAll<GameObject>("Textures");
+
         for (int i = 0; i < block.Length; i++)
         {
             blockName.Add(block[i].name);
         }
+
+        for (int i = 0; i < textures.Length; i++)
+        {
+            texturesName.Add(textures[i].name);
+        }
         Initialize();
     }
+
 
     private void Initialize()
     {
@@ -55,9 +73,11 @@ public class Editor : MonoBehaviour
         }
         createdBlocks = new GameObject("Created Blocks");
 
+
         RectTransform rt;
         HorizontalLayoutGroup lg;
         Image im;
+
 
         var editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -116,6 +136,14 @@ public class Editor : MonoBehaviour
             im.sprite = oc.sprite;
             im.color = oc.color;
         }
+
+        /*
+        var optionsParent = new GameObject();
+        optionsParent.name = "OptionsParent";
+        optionsParent.transform.parent = editorParent.transform;
+        rt = optionsParent.AddComponent<RectTransform>();
+        rt.localScale = new Vector3(0, 0, 0);*/
+
     }
 
     Vector3 GetMousePos()
@@ -142,29 +170,38 @@ public class Editor : MonoBehaviour
             Initialize();
         }
 
-        if (
-            (
-                (Input.GetKey(KeyCode.Mouse0) && editorMode == "drag") ||
-                (Input.GetKeyDown(KeyCode.Mouse0) && editorMode == "place")
-            ) && 
-            !CheckUIHover.hoverUI
-        )
+        mousePos = GetMousePos();
+        if (!CheckValid(mousePos)) { return; }
+        if (ClickTest.selectedMaterial == "Nothing") { return; }
+        if (!CheckUIHover.hoverUI) { return; }
+
+        string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
+        GameObject currentBlockObject = GameObject.Find(currentBlockName);
+        GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
+
+        if (reader.BlockExists(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y))) {
+        editorMode = "delete";
+        } else {
+        editorMode = "place";
+        }
+
+        GameObject oldSelect = GameObject.Find("select");
+        if (oldSelect != null)
         {
-            mousePos = GetMousePos();
-            if (!CheckValid(mousePos)) { return; }
+            oldSelect.GetComponent<RemoveBlock>().kill();
+        }
 
-            string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
-            if (ClickTest.selectedMaterial == "Nothing")
+        GameObject newSelect = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity);
+        newSelect.name = "select";
+        newSelect.AddComponent<RemoveBlock>();
+
+        if ((Input.GetKey(KeyCode.Mouse0)) && editorMode == "place")
+        {
+            if (currentBlockObject != null)
             {
-                return;
-            }
-            GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
-            GameObject currentBlockObject = GameObject.Find(currentBlockName);
-
-            if (currentBlockObject != null) {
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
             }
-                        
+
             GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
@@ -172,20 +209,34 @@ public class Editor : MonoBehaviour
             var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = 1; // show on top of other elements
 
-            editorToUpdate.addDataToBlockData((int) mousePos.x, (int) mousePos.y, currentBlockPrefab.name);
+            editorToUpdate.addDataToBlockData((int)mousePos.x, (int)mousePos.y, currentBlockPrefab.name);
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse0) && editorMode == "delete" && !CheckUIHover.hoverUI)
+        else if (Input.GetKey(KeyCode.Mouse0) && editorMode == "delete")
         {
-            mousePos = GetMousePos();
-            if (!CheckValid(mousePos)) { return; }
-
-            string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
-            GameObject currentBlockObject = GameObject.Find(currentBlockName);
-            if (currentBlockObject != null) {
+            if (currentBlockObject != null)
+            {
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
             }
-            
-            //reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+
+            reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (currentBlockObject != null)
+            {
+                currentBlockObject.GetComponent<RemoveBlock>().kill();
+            }
+
+            blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+            GameObject selectedBlockPrefab = block[blockName.IndexOf(getBlock.type)];
+
+            GameObject newBlock = Instantiate(selectedBlockPrefab, mousePos, new Quaternion(0, 0, getBlock.direction * 90, 0), createdBlocks.transform);
+            newBlock.name = currentBlockName;
+            newBlock.AddComponent<RemoveBlock>();
+
+            var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = 1; // show on top of other elements
+            reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
     }
 
