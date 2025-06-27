@@ -36,6 +36,9 @@ public class Editor : MonoBehaviour
     private EditorToUpdateData editorToUpdate;
 
     private GameObject createdBlocks;
+    private GameObject select;
+    private GameObject currentBlockObject;
+    private GameObject currentBlockPrefab;
 
     public void StartEditor()
     {
@@ -62,6 +65,10 @@ public class Editor : MonoBehaviour
         {
             texturesName.Add(textures[i].name);
         }
+
+        select = Instantiate(textures[texturesName.IndexOf("select")], mousePos, Quaternion.identity);
+        select.name = "select";
+
         Initialize();
     }
 
@@ -177,10 +184,8 @@ public class Editor : MonoBehaviour
         if (CheckUIHover.hoverUI) return;
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
-        GameObject currentBlockObject = GameObject.Find(currentBlockName);
-        GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && currentBlockObject)
         {
             blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
             currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
@@ -194,6 +199,8 @@ public class Editor : MonoBehaviour
 
         if (mousePos == mousePosOld) return;
 
+        currentBlockObject = GameObject.Find(currentBlockName);
+
         if (Input.GetMouseButtonDown(0))
         {
             if (reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y)))
@@ -206,15 +213,16 @@ public class Editor : MonoBehaviour
             }
         }
 
-        GameObject oldSelect = GameObject.Find("select");
-        if (oldSelect != null)
+        select.transform.position = mousePos;
+        if (ClickTest.changed)
         {
-            oldSelect.GetComponent<RemoveBlock>().kill();
+            ClickTest.changed = false;
+            currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
+            SpriteRenderer selectSprite = select.GetComponent<SpriteRenderer>();
+            SpriteRenderer prefabSprite = currentBlockPrefab.GetComponent<SpriteRenderer>();
+            selectSprite.sprite = prefabSprite.sprite;
+            selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
         }
-
-        GameObject newSelect = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity);
-        newSelect.name = "select";
-        newSelect.AddComponent<RemoveBlock>();
 
         if (Input.GetKey(KeyCode.Mouse0) && editorMode == "place")
         {
