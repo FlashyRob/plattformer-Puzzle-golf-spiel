@@ -252,7 +252,7 @@ public class Editor : MonoBehaviour
             getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
             getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
             getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
-            reader.EditBlockDirection(getBlock, (getBlock.direction - 1) % 4);
+            reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
     }
     public void SetMaterial(string[] newMaterials)
