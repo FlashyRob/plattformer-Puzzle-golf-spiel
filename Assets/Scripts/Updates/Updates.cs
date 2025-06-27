@@ -35,13 +35,6 @@ public class Updates : MonoBehaviour
 
         AddConnection(0, 0, new connections { outputIndex = 6, outputSide = 1 });
         AddConnection(0, 0, new connections { outputIndex = 7, outputSide = 3 });
-
-
-        var l = GetConnections(0,0);
-        for(int i= 0; i < l.Count; i++)
-        {
-            Debug.Log(l[i].outputIndex+ " " +l[i].outputSide);
-        }
     }
 
     // Update is called once per frame

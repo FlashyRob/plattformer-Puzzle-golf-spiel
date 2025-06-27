@@ -21,7 +21,6 @@ public class GenerateLevel : MonoBehaviour
         for (int i = 0; i < block.Length; i++)
         {
             blockNames.Add(block[i].name);
-            Debug.Log(block[i].name);
         }
 
         createdBlocks = new GameObject("CreatedBlocks");
@@ -41,11 +40,9 @@ public class GenerateLevel : MonoBehaviour
             string blockName = "block:" + blockPos.x + "," + blockPos.y;
             GameObject blockPrefab;
         
-            Debug.Log(blockType);
             try
             {
                 blockPrefab = block[blockNames.IndexOf(blockType)];
-                Debug.Log(blockPrefab.name);
 
                 GameObject newBlock = Instantiate(
                     blockPrefab,
