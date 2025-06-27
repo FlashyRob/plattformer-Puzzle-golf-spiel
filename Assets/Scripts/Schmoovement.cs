@@ -15,6 +15,7 @@ public class Schmoovement : MonoBehaviour
     float myx = 0;
     private float horizontaly = 0;
     float controldamper = 1;
+    bool slideVel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,7 +35,8 @@ public class Schmoovement : MonoBehaviour
         float jumpVelocity;
         float verticalVelocity;
         float horizontalVelocity;
-        bool slideVel;
+        bool walljumping = false;
+        bool downgrr = false;
 
         animator.SetFloat("Speed", rb2d.linearVelocity.x);
         animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
@@ -65,27 +67,25 @@ public class Schmoovement : MonoBehaviour
             if (Walled)
             {
                 jumpVelocity = 13;
-                controldamper = 0.4f;
+                controldamper = 0.6f;
+                walljumping = true;
+                Walled = false;
 
                 if (collidex > myx)
                 {
                     // The wall is to the left
 
-                    horizontalPush = -4;
+                    horizontalPush = -3.5f;
                 }
-		else
+		        else
                 {
                     // The wall is to the right
 
-                    horizontalPush = 4;
+                    horizontalPush = 3.5f;
                 }
             }
         }
-        else
-        {
-            slideVel = true;
-        }
-
+       
         verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
 
@@ -106,22 +106,31 @@ public class Schmoovement : MonoBehaviour
         if (slideVel && Walled)
         {
             verticalVelocity = -4;
+            downgrr = true;
         }
 	
-	horizontalPush = horizontalPush * 0.95f;
+        if (walljumping && downgrr)
+        {
+            jumpVelocity = 13;
+            verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
+        }
 
-	if (horizontalPush < 1 && horizontalPush > -1) 
+	horizontalPush = horizontalPush * 0.97f;
+
+	if (horizontalPush < 2 && horizontalPush > -2) 
 	{
 	horizontalPush = 0;
 	}
 
         horizontalVelocity = horizontal * controldamper + horizontalPush;
 
-        /*
-        horizontaly = (horizontaly + horizontalPush) * 0.95f;
-        horizontalVelocity = horizontaly + horizontal * controldamper;
-        */
-        Debug.Log(horizontalVelocity);
+        
+
+
+        // Debug.Log("verticalVelocity "+verticalVelocity);
+        // Debug.Log("jumpVelocity " +jumpVelocity);
+        // Debug.Log(verticalVelocity == -4);
+
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
 
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
@@ -154,6 +163,9 @@ public class Schmoovement : MonoBehaviour
 
             controldamper = 1;
 
+            Debug.Log("Ich bin am Sliden =)");
+            slideVel = true;
+
             if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
@@ -175,6 +187,7 @@ public class Schmoovement : MonoBehaviour
     {
         if (coll.gameObject.tag == "Ground")
         {
+            slideVel = false;
             if (Grounded)
             {
                 Grounded = false;
@@ -189,3 +202,6 @@ public class Schmoovement : MonoBehaviour
     }
 }
   
+
+// bei slide jump velocity = 4
+// jumpMultiplier (*rb2dvertical) = 0
