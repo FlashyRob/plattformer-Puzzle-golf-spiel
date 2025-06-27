@@ -16,7 +16,9 @@ public class Schmoovement : MonoBehaviour
     float myx = 0;
     private float horizontaly = 0;
     float controldamper = 1;
-
+    public Vector2 velocity;
+    public float moveSpeed;
+    public float platformJump;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -58,7 +60,7 @@ public class Schmoovement : MonoBehaviour
         {
             if (Grounded && !Walled)
             {
-                jumpVelocity = 9;
+                jumpVelocity = 9 + platformJump;
 
             }
 
@@ -115,8 +117,9 @@ public class Schmoovement : MonoBehaviour
         horizontaly = (horizontaly + horizontalPush) * 0.99f;
         horizontalVelocity = horizontaly + horizontal * controldamper;
 
-        rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
-        Debug.Log(rb2d.linearVelocity.y);
+        rb2d.linearVelocity = new Vector2(horizontalVelocity * moveSpeed, verticalVelocity);
+        velocity = rb2d.linearVelocity;
+        //Debug.Log(rb2d.linearVelocity.y);
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
         if(!isFacingRight && horizontalVelocity > 0)
@@ -139,7 +142,16 @@ public class Schmoovement : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Ground")
+        if(coll.collider.CompareTag("MovingPlatform"))
+        {
+            Grounded = true;
+            Walled = false;
+            secondJump = false;
+            Slide = false;
+            moveSpeed = 12.5f;
+            //platformJump = 20;
+        }
+        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
@@ -176,7 +188,14 @@ public class Schmoovement : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Ground")
+        if(coll.collider.CompareTag("MovingPlatform"))
+        {
+            Grounded = false;
+            secondJump = true;
+            moveSpeed = 5;
+            platformJump = 0;
+        }
+        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
             if (Grounded)
             {
