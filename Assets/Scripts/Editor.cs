@@ -9,6 +9,7 @@ public class Editor : MonoBehaviour
     public GameObject hud;
     public string editorMode;
     public Vector3 mousePos;
+    public Vector3 mousePosOld;
     private string[] materials = new string[] {
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
@@ -34,10 +35,9 @@ public class Editor : MonoBehaviour
     private JSONReader reader;
     private EditorToUpdateData editorToUpdate;
 
-
-
     private GameObject createdBlocks;
-    void Awake()
+
+    public void StartEditor()
     {
         materialRotations = new int[materials.Length];
         for (int i = 0; i < materialRotations.Length; i++)
@@ -72,10 +72,6 @@ public class Editor : MonoBehaviour
         {
             Destroy(hud.transform.GetChild(0).gameObject);
         } catch { }
-        if (createdBlocks != null)
-        {
-            Destroy(createdBlocks);
-        }
         createdBlocks = GameObject.Find("CreatedBlocks");
 
 
@@ -174,7 +170,7 @@ public class Editor : MonoBehaviour
             Initialize();
         }
         */
-
+        mousePosOld = mousePos;
         mousePos = GetMousePos();
         if (!CheckValid(mousePos)) return;
         if (ClickTest.selectedMaterial == "Nothing") return;
@@ -183,6 +179,20 @@ public class Editor : MonoBehaviour
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
         GameObject currentBlockObject = GameObject.Find(currentBlockName);
         GameObject currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+            currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
+
+            getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
+            getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
+            getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
+            getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
+            reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
+        }
+
+        if (mousePos == mousePosOld) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -217,7 +227,7 @@ public class Editor : MonoBehaviour
                 reader.RemoveBlock(posIndex);
             }
 
-            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity/*, createdBlocks.transform*/);
+            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
 
@@ -242,17 +252,6 @@ public class Editor : MonoBehaviour
             }
 
             reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
-        {
-            blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
-            currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
-
-            getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
-            getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
-            getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
-            getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
-            reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
     }
     public void SetMaterial(string[] newMaterials)
