@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7891827262440484548}
   - component: {fileID: 7364066366718279236}
   m_Layer: 0
-  m_Name: Schmoove Player
+  m_Name: Schmoove Criminal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,6 +134,10 @@ MonoBehaviour:
   Grounded: 0
   secondJump: 0
   Walled: 0
+  horizontalPush: 0
+  velocity: {x: 0, y: 0}
+  moveSpeed: 5
+  platformJump: 0
 --- !u!95 &2934691376798589745
 Animator:
   serializedVersion: 7
@@ -191,7 +195,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.38}
-  m_Size: {x: 1.2, y: 0.0001}
+  m_Size: {x: 0.99, y: 0.0001}
   m_Direction: 0
 --- !u!61 &7364066366718279236
 BoxCollider2D:
@@ -237,5 +241,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.1}
+  m_Size: {x: 0.9, y: 0.1}
   m_EdgeRadius: 0
