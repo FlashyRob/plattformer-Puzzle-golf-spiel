@@ -28,7 +28,11 @@ public class ScannerinoCrocodilo : MonoBehaviour
         //{
         //    scannedBlockIndexes.Add(i);
         //}
+        Invoke("Scanner", 2f);
+        
     }
+
+
 
     public void ScannFromBlock(int index, int side)
     {
@@ -132,7 +136,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
         foreach (findBlock foundBlock in foundInputBlocks)
         {
             ScannFromBlock(foundBlock.index, foundBlock.Side);
-
+            ApplyConnectionData(foundPowerssources);
 
         }
     }
