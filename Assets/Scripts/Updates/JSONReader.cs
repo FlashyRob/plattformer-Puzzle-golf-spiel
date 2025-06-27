@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-
 public class JSONReader : MonoBehaviour
 {
     public TextAsset textJSON;
@@ -54,6 +53,32 @@ public class JSONReader : MonoBehaviour
             }
         }
         
+    }
+
+    public int[] getInputDirectionsOfIndex(int index)
+    {
+        int[] directions = new int[] { 0, 0, 0, 0 };
+        for (int i = 0; i < BlockSafeFile.Count; i++)
+        {
+            if (BlockSafeFile[i].index == index)
+            {
+                directions = BlockSafeFile[i].inputDirections;
+            } 
+        }
+        return (directions);
+    }
+
+    public int[] getOutputDirectionsOfIndex(int index)
+    {
+        int[] directions = new int[] { 0, 0, 0, 0 };
+        for (int i = 0; i < BlockSafeFile.Count; i++)
+        {
+            if (BlockSafeFile[i].index == index)
+            {
+                directions = BlockSafeFile[i].outputDirections;
+            }
+        }
+        return (directions);
     }
 
     public void AddBlock(blockData block)
