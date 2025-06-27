@@ -10,14 +10,14 @@ public class Editor : MonoBehaviour
     public string editorMode;
     public Vector3 mousePos;
     private string[] materials = new string[] {
-    "Terrain (16x16) 1_46",
-    "Terrain (16x16) 1_47",
-    "Terrain (16x16) 1_48",
-    "Terrain (16x16) 1_65",
-    "Terrain (16x16) 1_67",
-    "Terrain (16x16) 1_68",
-    "Terrain (16x16) 1_69",
-    "Terrain (16x16) 1_66"
+        "Terrain (16x16) 1_46",
+        "Terrain (16x16) 1_47",
+        "Terrain (16x16) 1_48",
+        "Terrain (16x16) 1_65",
+        "Terrain (16x16) 1_67",
+        "Terrain (16x16) 1_68",
+        "Terrain (16x16) 1_69",
+        "Terrain (16x16) 1_66"
     }; 
     private int[] materialRotations;
 
@@ -69,7 +69,7 @@ public class Editor : MonoBehaviour
         {
             Destroy(createdBlocks);
         }
-        createdBlocks = new GameObject("Created Blocks");
+        createdBlocks = GameObject.Find("CreatedBlocks");
 
 
         RectTransform rt;
@@ -238,6 +238,11 @@ public class Editor : MonoBehaviour
             currentBlockObject.transform.Rotate(new Vector3(0, 0, 90));
             reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
+    }
+    public void SetMaterial(string[] newMaterials)
+    {
+        materials = newMaterials;
+        Initialize();
     }
 
     public blockData GetBlockAt(int x, int y)
