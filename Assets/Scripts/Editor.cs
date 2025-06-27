@@ -25,7 +25,6 @@ public class Editor : MonoBehaviour
     List<string> texturesName = new List<string>();
 
     private Updates update;
-    private EditorToUpdateData editorToUpdate;
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
 
@@ -40,7 +39,6 @@ public class Editor : MonoBehaviour
 
 
         update = FindAnyObjectByType<Updates>();
-        editorToUpdate =  FindAnyObjectByType<EditorToUpdateData>();
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         reader = FindAnyObjectByType<JSONReader>();
 
@@ -240,12 +238,6 @@ public class Editor : MonoBehaviour
             currentBlockObject.transform.Rotate(new Vector3(0, 0, 90));
             reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
-    }
-
-    public void SetMaterial(string[] newMaterials)
-    {
-        materials = newMaterials;
-        Initialize();
     }
 
     public blockData GetBlockAt(int x, int y)
