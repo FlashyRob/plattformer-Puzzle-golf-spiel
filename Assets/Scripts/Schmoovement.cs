@@ -69,13 +69,13 @@ public class Schmoovement : MonoBehaviour
                 {
                     // The wall is to the left
 
-                    horizontalPush = -3.5f;
+                    horizontalPush = -3;
                 }
                 else
                 {
                     // The wall is to the right
 
-                    horizontalPush = 3.5f;
+                    horizontalPush = 3;
                 }
             }
         }
@@ -111,7 +111,7 @@ public class Schmoovement : MonoBehaviour
 
 	horizontalPush = horizontalPush * 0.97f;
 
-	if (horizontalPush < 0.1 && horizontalPush > -0.1)
+	if (horizontalPush < 0.5 && horizontalPush > -0.5)
 	{
 	horizontalPush = 0;
 	}
