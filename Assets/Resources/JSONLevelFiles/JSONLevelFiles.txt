@@ -29,8 +29,14 @@
 			"outputDirections": [0,0,0,0],
 			"meta": "0",
 			"visualActive": 0	
+		},
+		{
+			"index": 4,
+			"type": "Terrain (16x16) 1_47",
+			"direction": 0,
+			"state": 0,
+			"meta": "0",
+			"visualActive": 0	
 		}
-
-	
 	]
 }

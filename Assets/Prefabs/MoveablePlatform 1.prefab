@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 4527512387004031598}
   m_Layer: 0
   m_Name: Platform
-  m_TagString: Untagged
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -249,7 +249,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 0.3}
+  m_Size: {x: 1.9, y: 0.3}
   m_EdgeRadius: 0
 --- !u!251 &3740794420499886713
 PlatformEffector2D:
@@ -287,6 +287,10 @@ MonoBehaviour:
   points:
   - {fileID: 145231913748634475}
   - {fileID: 2664710283144165377}
+  velocity: {x: 0, y: 0}
+  boxLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &3366922359559306049
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +351,7 @@ Transform:
   m_GameObject: {fileID: 5466825086953805835}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15, y: 0, z: 0}
+  m_LocalPosition: {x: 7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

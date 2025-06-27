@@ -35,13 +35,6 @@ public class Updates : MonoBehaviour
 
         AddConnection(0, 0, new connections { outputIndex = 6, outputSide = 1 });
         AddConnection(0, 0, new connections { outputIndex = 7, outputSide = 3 });
-
-
-        var l = GetConnections(0,0);
-        for(int i= 0; i < l.Count; i++)
-        {
-            Debug.Log(l[i].outputIndex+ " " +l[i].outputSide);
-        }
     }
 
     // Update is called once per frame
@@ -85,6 +78,9 @@ public class Updates : MonoBehaviour
                     break;
                 case "condensator":
                     HandleCondensator(block.index, block);
+                    break;
+                case "battery":
+                    HandleBattery(block.index, block);
                     break;
             }
         }
@@ -209,6 +205,17 @@ public class Updates : MonoBehaviour
         }
         EditVisualActive(i, 0);
     }
+
+    private void HandleBattery(int i, blockData block)
+    {
+        EditVisualActive(i, 1);
+
+        EditBlockActiveSide(i, 0, 1);
+        EditBlockActiveSide(i, 1, 1);
+        EditBlockActiveSide(i, 2, 1);
+        EditBlockActiveSide(i, 3, 1);
+
+    } 
 
     private void HandleDoor(int i, blockData block)
     {

@@ -10,19 +10,19 @@ public class Editor : MonoBehaviour
     public string editorMode;
     public Vector3 mousePos;
     private string[] materials = new string[] {
-    "Terrain (16x16) 1_46",
-    "Terrain (16x16) 1_47",
-    "Terrain (16x16) 1_48",
-    "Terrain (16x16) 1_65",
-    "Terrain (16x16) 1_67",
-    "Terrain (16x16) 1_68",
-    "Terrain (16x16) 1_69",
-    "Terrain (16x16) 1_66",
-    "wire_curve",
-    "wire_straight",
-    "wire_t",
-    "lamp",
-    "battery",
+        "Terrain (16x16) 1_46",
+        "Terrain (16x16) 1_47",
+        "Terrain (16x16) 1_48",
+        "Terrain (16x16) 1_65",
+        "Terrain (16x16) 1_67",
+        "Terrain (16x16) 1_68",
+        "Terrain (16x16) 1_69",
+        "Terrain (16x16) 1_66",
+        "wire_curve",
+        "wire_straight",
+        "wire_t",
+        "lamp",
+        "battery",
     }; 
     private int[] materialRotations;
 
@@ -32,6 +32,7 @@ public class Editor : MonoBehaviour
     private Updates update;
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
+    private EditorToUpdateData editorToUpdate;
 
 
 
@@ -46,6 +47,7 @@ public class Editor : MonoBehaviour
         update = FindAnyObjectByType<Updates>();
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         reader = FindAnyObjectByType<JSONReader>();
+        editorToUpdate = FindAnyObjectByType<EditorToUpdateData>();
 
 
         block = Resources.LoadAll<GameObject>("Blocks");
@@ -74,7 +76,7 @@ public class Editor : MonoBehaviour
         {
             Destroy(createdBlocks);
         }
-        createdBlocks = new GameObject("Created Blocks");
+        createdBlocks = GameObject.Find("CreatedBlocks");
 
 
         RectTransform rt;
@@ -215,18 +217,22 @@ public class Editor : MonoBehaviour
                 reader.RemoveBlock(posIndex);
             }
 
-            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
+            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity/*, createdBlocks.transform*/);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
 
             var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
             spriteRenderer.sortingOrder = 1; // show on top of other elements
 
-            blockData prototypeBlock = new blockData();
-            prototypeBlock.type = currentBlockPrefab.name;
-            prototypeBlock.direction = 0;
-            prototypeBlock.index = posIndex;
-            reader.AddBlock(prototypeBlock);
+            blockData ptBlock = new blockData();
+            ptBlock.type = currentBlockPrefab.name;
+            ptBlock.direction = 0;
+            ptBlock.index = posIndex;
+            ptBlock.inputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).inputDirections;
+            ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, (ptBlock.direction + 3) % 4);
+            ptBlock.outputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).outputDirections;
+            ptBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.outputDirections, (ptBlock.direction + 3) % 4);
+            reader.AddBlock(ptBlock);
         }
         else if (Input.GetKey(KeyCode.Mouse0) && editorMode == "delete")
         {
@@ -240,9 +246,19 @@ public class Editor : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.R))
         {
             blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
-            currentBlockObject.transform.Rotate(new Vector3(0, 0, 90));
+            currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
+
+            getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
+            getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
+            getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
+            getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
             reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
         }
+    }
+    public void SetMaterial(string[] newMaterials)
+    {
+        materials = newMaterials;
+        Initialize();
     }
 
     public blockData GetBlockAt(int x, int y)

@@ -30,16 +30,6 @@ public class EditorToUpdateData : MonoBehaviour
 
         // List<string> wireNames = new List<string>() { "wire_straight" , "wire_curve" , "wire_t" , "wire_cross" , "lever" };
 
-        connectors Test2 = BlockNamesToDirections("wire_straight");
-        for (int i = 0; i < Test2.outputDirections.Length; i++)
-        {
-            Debug.Log(Test2.outputDirections[i]);
-        }
-        for (int i = 0; i < Test2.inputDirections.Length; i++)
-        {
-            Debug.Log(Test2.inputDirections[i]);
-        }
-
         editorData loadedData = new editorData();
         loadedData.blockNames = new string[] { "And", "Or" };
         loadedData.directions = new int[] { 0, 1 };
@@ -73,7 +63,7 @@ public class EditorToUpdateData : MonoBehaviour
         if (blockName == "wire_straight")
         {
             directionsInput = new int[4] { 0, 1, 0, 1 };
-            directionsOutput =  new int[4] { 0, 1, 0, 1 };
+            directionsOutput = new int[4] { 0, 1, 0, 1 };
         }
         else if (blockName == "wire_curve")
         {
@@ -99,6 +89,14 @@ public class EditorToUpdateData : MonoBehaviour
             directionsInput = new int[4] { 1, 0, 1, 0 };
             directionsOutput = new int[4] { 0, 1, 0, 1 };
         }
+        else if (blockName == "lamp")
+        {
+            directionsInput = new int[4] { 0, 0, 0, 1 };
+        }
+        else if (blockName == "battery")
+        {
+            directionsOutput = new int[4] { 1, 0, 0, 0 };
+        }
         else
         {
             directionsOutput = new int[4] { 0, 0, 0, 0 };
@@ -117,7 +115,7 @@ public class EditorToUpdateData : MonoBehaviour
 
         for (int i = 0; i < directions1.Length; i++)
         {
-            outputDirections[i] = directions1[(i + direction) % 4];
+            outputDirections[i] = directions1[(i + (4 - direction) + 3) % 4];
         }
 
         return (outputDirections);

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 {
+    private JSONReader reader;
 
     public int worldX = 100;
     public int worldY = 100;
@@ -15,13 +16,7 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         int testX = (int)GetXY(Index).x;
         int testY = (int)GetXY(Index).y;
 
-        
-
-        Debug.Log(testX);
-        Debug.Log(testY);
-
-        Debug.Log(GetIndexFromXY(testX, testY));
-        
+        reader = FindAnyObjectByType<JSONReader>();
     }
 
 
@@ -59,23 +54,26 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         return (NextToEachOther);
     }
 
-    public bool CheckIfTwoBlocksAreConnected(int Index1, int[] directions1, int Index2, int[] directions2) // directions In/Out-Put angeben je nach dem was man halt überprüfen will
+    public bool CheckIfTwoBlocksAreConnected(int Index1, int Index2) //Index1 = input; Index2 = output
     {
+        int[] InputDirections = reader.getInputDirectionsOfIndex(Index1);
+        int[] OutputDirections = reader.getOutputDirectionsOfIndex(Index2);
+
         bool connected;
 
-        if (Index1 - 1 == Index2 && directions1[3] == 1 && directions2[1] == 1) // Index1 genau ein Tile rechts von Index2
+        if (Index1 - 1 == Index2 && InputDirections[3] == 1 && OutputDirections[1] == 1) // Index1 genau ein Tile rechts von Index2
         {
             connected = true;
         }
-        else if (Index1 + 1 == Index2 && directions1[1] == 1 && directions2[3] == 1) // Index1 genau ein Tile links von Index2
+        else if (Index1 + 1 == Index2 && InputDirections[1] == 1 && OutputDirections[3] == 1) // Index1 genau ein Tile links von Index2
         {
             connected = true;
         }
-        else if (Index1 - worldX == Index2 && directions1[2] == 1 && directions2[0] == 1) // Index1 genau ein tile über Index2
+        else if (Index1 - worldX == Index2 && InputDirections[2] == 1 && OutputDirections[0] == 1) // Index1 genau ein tile ï¿½ber Index2
         {
             connected = true;
         }
-        else if (Index2 - worldX == Index1 && directions1[0] == 1 && directions2[2] == 1) // Index1 genau ein tile unter Index2
+        else if (Index2 - worldX == Index1 && InputDirections[0] == 1 && OutputDirections[2] == 1) // Index1 genau ein tile unter Index2
         {
             connected = true;
         }
@@ -85,13 +83,25 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         }
 
         return (connected);
+
     }
 
 
-    public int getDirectionFromXY(int x, int y) // Die müsste man mal bauen
+    public int getDirectionFromXY(int x, int y) // Die mï¿½sste man mal bauen
     {
+        int index = GetIndexFromXY(x, y);
+
         int direction = 0;
+
+        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        {
+            if (reader.BlockSafeFile[i].index == index)
+            {
+                direction = reader.BlockSafeFile[i].direction;
+            }
+        }
         return (direction);
+            
     }
 
 
