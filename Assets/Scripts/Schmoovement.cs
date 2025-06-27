@@ -13,9 +13,9 @@ public class Schmoovement : MonoBehaviour
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
-    private float horizontaly = 0;
     float controldamper = 1;
-    bool slideVel;
+    float sliding = 0;
+    bool Slide = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -33,11 +33,9 @@ public class Schmoovement : MonoBehaviour
 
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
         float jumpVelocity;
-        float verticalVelocity;
+        float verticalVelocity = 0;
         float horizontalVelocity;
-        bool walljumping = false;
-        bool downgrr = false;
-
+        
         animator.SetFloat("Speed", rb2d.linearVelocity.x);
         animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
         animator.SetBool("isWalled", Walled);
@@ -56,28 +54,24 @@ public class Schmoovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            slideVel = false;
-
+            sliding = 0;
             if (Grounded && !Walled)
             {
                 jumpVelocity = 9;
-
             }
 
             if (Walled)
             {
                 jumpVelocity = 13;
-                controldamper = 0.6f;
-                walljumping = true;
-                Walled = false;
-
+                controldamper = 0.8f;
+                Slide = false;
                 if (collidex > myx)
                 {
                     // The wall is to the left
 
                     horizontalPush = -3.5f;
                 }
-		        else
+                else
                 {
                     // The wall is to the right
 
@@ -85,8 +79,20 @@ public class Schmoovement : MonoBehaviour
                 }
             }
         }
-       
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
+        else
+        {
+            if (Slide)
+            {
+                jumpVelocity = -2;
+                sliding = 1;
+            }
+            else
+            {
+                sliding = 0;
+            }
+        }
+
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
 
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
@@ -95,41 +101,22 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
         {
             verticalVelocity = 8;
             secondJump = false;
-        }
-
-        if (slideVel && Walled)
-        {
-            verticalVelocity = -4;
-            downgrr = true;
-        }
-	
-        if (walljumping && downgrr)
-        {
-            jumpVelocity = 13;
-            verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
-        }
+        } 
 
 	horizontalPush = horizontalPush * 0.97f;
 
-	if (horizontalPush < 2 && horizontalPush > -2) 
+	if (horizontalPush < 0.1 && horizontalPush > -0.1)
 	{
 	horizontalPush = 0;
 	}
 
         horizontalVelocity = horizontal * controldamper + horizontalPush;
-
-        
-
-
-        // Debug.Log("verticalVelocity "+verticalVelocity);
-        // Debug.Log("jumpVelocity " +jumpVelocity);
-        // Debug.Log(verticalVelocity == -4);
 
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
 
@@ -153,6 +140,23 @@ public class Schmoovement : MonoBehaviour
         transform.localScale = localScale;
     }
 
+    private void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "Ground")
+        {
+            ContactPoint2D contact = coll.contacts[0];
+            Vector2 normal = contact.normal; // has length of 1
+                                             // we check the collision normal to see which direction the ground hit us from
+            horizontalPush = 0;
+
+            if (Mathf.Abs(normal.x) > 0.5f) 
+            {
+                // The vector mostly points in x or -x direction. So we've hit a wall
+                Slide = true;
+            }
+        }
+    }
+
     void OnCollisionStay2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "Ground")
@@ -162,9 +166,6 @@ public class Schmoovement : MonoBehaviour
             // we check the collision normal to see which direction the ground hit us from
 
             controldamper = 1;
-
-            Debug.Log("Ich bin am Sliden =)");
-            slideVel = true;
 
             if (normal.y > 0.5f)
             {
@@ -187,21 +188,22 @@ public class Schmoovement : MonoBehaviour
     {
         if (coll.gameObject.tag == "Ground")
         {
-            slideVel = false;
             if (Grounded)
             {
-                Grounded = false;
                 secondJump = true;
+                Grounded = false;;
             }
 
             if (Walled)
             {
                 Walled = false;
             }
+        
+            if (Slide)
+            {
+                Slide = false;
+            }
         }
     }
 }
   
-
-// bei slide jump velocity = 4
-// jumpMultiplier (*rb2dvertical) = 0
