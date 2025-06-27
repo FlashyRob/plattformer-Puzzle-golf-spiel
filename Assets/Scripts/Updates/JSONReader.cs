@@ -11,7 +11,7 @@ public class JSONReader : MonoBehaviour
     public void WriteJSON()
     {
         string strOutput = JsonUtility.ToJson(myBlock);
-        File.WriteAllText("C:/Users/sp25-2/Documents/GitHub/plattformer-Puzzle-golf-spiel/Assets/Resources/JSONLevelFiles" + "/JSONLevelFileTest1.txt", strOutput);
+        File.WriteAllText("Assets/Resources/JSONLevelFiles" + "/JSONLevelFileTest1.txt", strOutput);
     }
 
     public List<blockData> BlockSafeFile;
@@ -120,6 +120,6 @@ public class JSONReader : MonoBehaviour
     {
         List<blockData> data = BlockSafeFile;
 
-        File.WriteAllText("C:/Users/sp25-2/Documents/GitHub/plattformer-Puzzle-golf-spiel/Assets/Resources/JSONLevelFiles" + "/JSONLevelFileTest1.txt", JsonUtility.ToJson(data));
+        File.WriteAllText("Assets/Resources/JSONLevelFiles" + "/JSONLevelFileTest1.txt", JsonUtility.ToJson(data));
     }
 }

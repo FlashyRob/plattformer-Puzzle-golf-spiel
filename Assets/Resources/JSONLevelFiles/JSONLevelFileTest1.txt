@@ -1,1 +1,1 @@
-{"index":0,"type":"","typetype":"","direction":0,"outputDirections":[],"inputDirections":[],"state":0,"meta":"","visualActive":0}
+{}
