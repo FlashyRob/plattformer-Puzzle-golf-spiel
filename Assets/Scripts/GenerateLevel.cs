@@ -54,5 +54,11 @@ public class GenerateLevel : MonoBehaviour
                 newBlock.AddComponent<RemoveBlock>();
             } catch { }
         }
+
+        Editor editor;
+        editor = FindAnyObjectByType<Editor>();
+        if (editor != null) {
+            editor.StartEditor();
+        }
     }
 }
