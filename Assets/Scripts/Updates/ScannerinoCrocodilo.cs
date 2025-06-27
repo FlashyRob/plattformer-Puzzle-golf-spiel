@@ -6,29 +6,37 @@ public class ScannerinoCrocodilo : MonoBehaviour
 {
     public List<int> scannedBlockIndexes;
     public List<int> nextScanns;
-    public List<int> foundPowerssources;
+    public List<findBlock> foundPowerssources;
     public List<int> visitedBlocks;
+    public List<findBlock> foundInputBlocks;
 
-    public string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "toggle"};
+    public string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "toggle" };
 
     private CheckWheatherTwoBlocksAreConnected general;
     private Updates update;
+    private JSONReader reader;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         general = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         update = FindAnyObjectByType<Updates>();
+        reader = FindAnyObjectByType<JSONReader>();
+
 
         //for (int i = 0; i < general.worldX * general.worldY; i++)
         //{
         //    scannedBlockIndexes.Add(i);
         //}
+        Invoke("Scanner", 2f);
+        
     }
+
+
 
     public void ScannFromBlock(int index, int side)
     {
-        string[] sides = new string[4] {"top", "right", "bootom", "left"};
+        string[] sides = new string[4] { "top", "right", "bootom", "left" };
 
         nextScanns.Clear();
         foundPowerssources.Clear();
@@ -50,40 +58,95 @@ public class ScannerinoCrocodilo : MonoBehaviour
             thisScann = nextScanns;
             nextScanns.Clear();
 
+            safetyBreak += 1;
+
             if (thisScann.Count == 0 || safetyBreak > 1000)
             {
                 break;
             }
 
-             for (int i = 0; i < thisScann.Count; i++)
-             {
-                 int tileIndex = thisScann[i];
-                 tiles neightbours = ScannNeighbours(tileIndex);
-                 var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
+            for (int i = 0; i < thisScann.Count; i++)
+            {
+                int tileIndex = thisScann[i];
+                tiles neightbours = ScannNeighbours(tileIndex);
+                var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
 
                 visitedBlocks.Add(tileIndex);
-
-                 foreach(var nIndex in neighbourDir)
-                 {
+                int scannDir = 0;
+                foreach (var nIndex in neighbourDir)
+                {
                     if (general.CheckIfTwoBlocksAreConnected(tileIndex, nIndex) && !(nIndex == index) && !visitedBlocks.Contains(nIndex))
                     {
                         if (StringContains(update.GetBlock(tileIndex).type, powerSources))
                         {
-                            foundPowerssources.Add(nIndex);
+                            findBlock powerSource;
+
+                            powerSource.index = nIndex;
+                            powerSource.Side = scannDir;
+                            powerSource.fromSide = side;
+                            powerSource.fromIndex = index;
+
+                            foundPowerssources.Add(powerSource);
                         }
                         else
                         {
-                            nextScanns.Add(nIndex);
+                            if (update.GetBlock(tileIndex).type == "wire")
+                            {
+                                nextScanns.Add(nIndex);
+                            }
                         }
+                        scannDir++;
                     }
-                 }
-             }
+                }
+            }
         }
     }
 
-    public void Scanner()
+
+    public void FindInputBlocks()
     {
 
+        foundInputBlocks.Clear();
+
+        foreach (blockData block in reader.BlockSafeFile)
+        {
+            if (block.inputDirections.Contains(1))
+            {
+                for (int side = 0; side < 4; side++)
+                {
+                    if (block.inputDirections[side] == 1)
+                    {
+                        findBlock foundBlock = new findBlock();
+                        foundBlock.index = block.index;
+                        foundBlock.Side = side;
+
+                        foundInputBlocks.Add(foundBlock);
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+    public void Scanner()
+    {
+        FindInputBlocks();
+        foreach (findBlock foundBlock in foundInputBlocks)
+        {
+            ScannFromBlock(foundBlock.index, foundBlock.Side);
+            ApplyConnectionData(foundPowerssources);
+
+        }
+    }
+
+    public void ApplyConnectionData(List<findBlock> foundConnections)
+    {
+        foreach (findBlock foundBlock in foundConnections)
+        {
+            update.AddConnection(foundBlock.index, foundBlock.Side, new connections { outputIndex = foundBlock.fromIndex, outputSide = foundBlock.fromSide});
+        }
     }
 
     /*
@@ -140,6 +203,13 @@ public bool StringContains(string item, string[] array)
         public int left;
     }
 
+    public struct findBlock
+    {
+        public int index;
+        public int Side;
+        public int fromIndex;
+        public int fromSide;
+    }
     
     
 }

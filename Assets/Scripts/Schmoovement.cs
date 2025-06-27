@@ -17,7 +17,6 @@ public class Schmoovement : MonoBehaviour
     public Vector2 velocity;
     public float moveSpeed;
     public float platformJump;
-    float sliding = 0;
     bool Slide = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -57,7 +56,6 @@ public class Schmoovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            sliding = 0;
             if (Grounded && !Walled)
             {
                 jumpVelocity = 9 + platformJump;
@@ -96,7 +94,11 @@ public class Schmoovement : MonoBehaviour
                 }
                 
             }
-        }
+            else
+            {
+                jumpVelocity = 0;
+            }
+        }   
 
         verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
@@ -128,9 +130,9 @@ public class Schmoovement : MonoBehaviour
             {
                 verticalVelocity = -3;
             }
-            else if (verticalVelocity < -3)
+            else if (verticalVelocity < -1.5f)
             {
-                verticalVelocity = -3;
+                verticalVelocity = -1.5f;
             }
         }
 
@@ -176,6 +178,11 @@ public class Schmoovement : MonoBehaviour
                 Slide = true;
             }
         }
+        
+        if (coll.gameObject.tag == "MovingPlatform")
+        {
+            
+        }
     }
 
     void OnCollisionStay2D(Collision2D coll)
@@ -187,6 +194,8 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
             Slide = false;
             //moveSpeed = 11f;
+            Debug.Log("Moving Platform" + !Slide);
+            //moveSpeed = 12.5f;
             //platformJump = 20;
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
@@ -204,6 +213,7 @@ public class Schmoovement : MonoBehaviour
                 Walled = false;
                 secondJump = false;
                 Slide = false;
+                Debug.Log("Vector" + !Slide);
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
@@ -240,6 +250,7 @@ public class Schmoovement : MonoBehaviour
             if (Slide)
             {
                 Slide = false;
+                Debug.Log("collisonExit" + !Slide);
             }
         }
     }
