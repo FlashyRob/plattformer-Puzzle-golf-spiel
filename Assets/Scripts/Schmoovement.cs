@@ -66,8 +66,8 @@ public class Schmoovement : MonoBehaviour
 
             if (Walled)
             {
-                jumpVelocity = 13;
-                controldamper = 0.8f;
+                jumpVelocity = 10;
+                controldamper = 0.3f;
                 Slide = false;
                 if (collidex > myx)
                 {
@@ -87,16 +87,19 @@ public class Schmoovement : MonoBehaviour
         {
             if (Slide)
             {
-                jumpVelocity = -2;
-                sliding = 1;
-            }
-            else
-            {
-                sliding = 0;
+                if (Input.GetKey(KeyCode.A)|| Input.GetKey(KeyCode.D))
+                {
+                    jumpVelocity = -2;
+                }
+                else
+                {
+                    jumpVelocity = -0.5f;
+                }
+                
             }
         }
 
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
@@ -105,20 +108,32 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
         {
             verticalVelocity = 8;
             secondJump = false;
-        } 
+        }
 
-	horizontalPush = horizontalPush * 0.97f;
+        horizontalPush = horizontalPush * 0.95f;
 
-	if (horizontalPush < 0.5 && horizontalPush > -0.5)
-	{
-	horizontalPush = 0;
-	}
+        if (horizontalPush < 0.5 && horizontalPush > -0.5)
+        {
+        horizontalPush = 0;
+        }
+
+        if (Slide)
+        {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) && verticalVelocity < -3)
+            {
+                verticalVelocity = -3;
+            }
+            else if (verticalVelocity < -3)
+            {
+                verticalVelocity = -3;
+            }
+        }
 
         horizontalVelocity = horizontal * controldamper + horizontalPush;
 
@@ -187,6 +202,7 @@ public class Schmoovement : MonoBehaviour
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
+                Slide = false;
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
