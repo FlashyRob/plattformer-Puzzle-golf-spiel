@@ -65,7 +65,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
                  foreach(var nIndex in neighbourDir)
                  {
-                    if (general.CheckIfTwoBlocksAreConnected(tileIndex, update.GetBlock(tileIndex).inputDirections, nIndex, update.GetBlock(nIndex).outputDirections) && !(nIndex == index) && !visitedBlocks.Contains(nIndex))
+                    if (general.CheckIfTwoBlocksAreConnected(tileIndex, nIndex) && !(nIndex == index) && !visitedBlocks.Contains(nIndex))
                     {
                         if (StringContains(update.GetBlock(tileIndex).type, powerSources))
                         {
