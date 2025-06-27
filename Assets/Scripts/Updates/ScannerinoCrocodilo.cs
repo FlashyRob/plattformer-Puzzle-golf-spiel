@@ -145,6 +145,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
     {
         foreach (findBlock foundBlock in foundConnections)
         {
+            Debug.Log(foundBlock.index + " " + foundBlock.Side + " " + update.GetBlock(foundBlock.index).type);
             update.AddConnection(foundBlock.index, foundBlock.Side, new connections { outputIndex = foundBlock.fromIndex, outputSide = foundBlock.fromSide});
         }
     }

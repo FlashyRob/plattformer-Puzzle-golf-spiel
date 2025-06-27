@@ -9,7 +9,7 @@ public class Updates : MonoBehaviour
 
     public connectionData[] blocks;
     public int[,] activeSides;
-    public blockData[] blockData;    
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -121,7 +121,17 @@ public class Updates : MonoBehaviour
         switch (block.typetype)
         {
             case "wire_straight":
-                int[] activeConnections = CheckConnectionSides(block.inputDirections, GetConnections(i, 0));
+                if (IsAnyConnectionActive(block.inputDirections, i, 3))
+                {
+                    EditVisualActive(i, 1);
+                    break;
+                }
+                if (IsAnyConnectionActive(block.inputDirections, i, 1))
+                {
+                    EditVisualActive(i, 1);
+                    break;
+                }
+                EditVisualActive(i, 0);
                 break;
 
             case "wire_curve":
