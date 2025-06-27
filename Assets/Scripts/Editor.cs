@@ -246,7 +246,7 @@ public class Editor : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.R))
         {
             blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
-            currentBlockObject.transform.Rotate(new Vector3(0, 0, 90));
+            currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
             getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
             getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
