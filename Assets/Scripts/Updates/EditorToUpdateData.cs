@@ -30,16 +30,6 @@ public class EditorToUpdateData : MonoBehaviour
 
         // List<string> wireNames = new List<string>() { "wire_straight" , "wire_curve" , "wire_t" , "wire_cross" , "lever" };
 
-        connectors Test2 = BlockNamesToDirections("wire_straight");
-        for (int i = 0; i < Test2.outputDirections.Length; i++)
-        {
-            Debug.Log(Test2.outputDirections[i]);
-        }
-        for (int i = 0; i < Test2.inputDirections.Length; i++)
-        {
-            Debug.Log(Test2.inputDirections[i]);
-        }
-
         editorData loadedData = new editorData();
         loadedData.blockNames = new string[] { "And", "Or" };
         loadedData.directions = new int[] { 0, 1 };

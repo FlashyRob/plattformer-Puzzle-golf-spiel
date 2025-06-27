@@ -3,23 +3,23 @@ using UnityEngine;
 public class Schmoovement : MonoBehaviour
 
 {
-
     private Rigidbody2D rb2d;
     private Collider2D capsule2d;
     private Animator animator;
     public bool Grounded = false;
     public bool secondJump = false;
     public bool Walled = false;
-    public bool Slide = false;
+    public float horizontalPush = 0;
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
-    private float horizontaly = 0;
     float controldamper = 1;
+    float sliding = 0;
+    bool Slide = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {
+    {	
         isFacingRight = true;
         rb2d = GetComponent<Rigidbody2D>();
         capsule2d = GetComponent<Collider2D>();
@@ -32,12 +32,10 @@ public class Schmoovement : MonoBehaviour
 
 
         float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-
         float jumpVelocity;
-        float verticalVelocity;
-        float horizontalPush = 0;
+        float verticalVelocity = 0;
         float horizontalVelocity;
-
+        
         animator.SetFloat("Speed", rb2d.linearVelocity.x);
         animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
         animator.SetBool("isWalled", Walled);
@@ -56,37 +54,45 @@ public class Schmoovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            sliding = 0;
             if (Grounded && !Walled)
             {
                 jumpVelocity = 9;
-
             }
 
             if (Walled)
             {
+                jumpVelocity = 13;
+                controldamper = 0.8f;
+                Slide = false;
                 if (collidex > myx)
                 {
                     // The wall is to the left
-                    jumpVelocity = 13;
-                    horizontalPush = -3;
-                    Slide = false;
-                    controldamper = 0.4f;
-                }
 
-                if (collidex < myx)
+                    horizontalPush = -3;
+                }
+                else
                 {
                     // The wall is to the right
-                    jumpVelocity = 13;
+
                     horizontalPush = 3;
-                    Slide = false;
-                    controldamper = 0.4f;
                 }
             }
         }
+        else
+        {
+            if (Slide)
+            {
+                jumpVelocity = -2;
+                sliding = 1;
+            }
+            else
+            {
+                sliding = 0;
+            }
+        }
 
-
-
-        verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
 
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
@@ -95,28 +101,25 @@ public class Schmoovement : MonoBehaviour
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + (rb2d.linearVelocity.y);
+        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y * (sliding - 1) * -1 + verticalVelocity * sliding;
 
         if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
         {
             verticalVelocity = 8;
             secondJump = false;
-        }
+        } 
 
-        controldamper = 1;
+	horizontalPush = horizontalPush * 0.97f;
 
+	if (horizontalPush < 0.5 && horizontalPush > -0.5)
+	{
+	horizontalPush = 0;
+	}
 
-
-        if (Slide)
-        {
-            verticalVelocity = -4;
-        }
-
-        horizontaly = (horizontaly + horizontalPush) * 0.99f;
-        horizontalVelocity = horizontaly + horizontal * controldamper;
+        horizontalVelocity = horizontal * controldamper + horizontalPush;
 
         rb2d.linearVelocity = new Vector2(horizontalVelocity * 5, verticalVelocity);
-        Debug.Log(rb2d.linearVelocity.y);
+
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
         if(!isFacingRight && horizontalVelocity > 0)
@@ -137,6 +140,23 @@ public class Schmoovement : MonoBehaviour
         transform.localScale = localScale;
     }
 
+    private void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "Ground")
+        {
+            ContactPoint2D contact = coll.contacts[0];
+            Vector2 normal = contact.normal; // has length of 1
+                                             // we check the collision normal to see which direction the ground hit us from
+            horizontalPush = 0;
+
+            if (Mathf.Abs(normal.x) > 0.5f) 
+            {
+                // The vector mostly points in x or -x direction. So we've hit a wall
+                Slide = true;
+            }
+        }
+    }
+
     void OnCollisionStay2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "Ground")
@@ -153,20 +173,10 @@ public class Schmoovement : MonoBehaviour
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
                 // The vector mostly points in x or -x direction. So we've hit a wall
-
-                if (Walled!)
-                {
-                    Slide = true;
-                }
-                else
-                {
-                    Slide = false;
-                }
                 Walled = true;
                 collidex = contact.point.x; // remeber the contact point for walljump
                 myx = transform.position.x;
@@ -180,13 +190,17 @@ public class Schmoovement : MonoBehaviour
         {
             if (Grounded)
             {
-                Grounded = false;
                 secondJump = true;
+                Grounded = false;;
             }
 
             if (Walled)
             {
                 Walled = false;
+            }
+        
+            if (Slide)
+            {
                 Slide = false;
             }
         }

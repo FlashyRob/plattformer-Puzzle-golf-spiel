@@ -17,12 +17,6 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         int testY = (int)GetXY(Index).y;
 
         reader = FindAnyObjectByType<JSONReader>();
-
-        Debug.Log(testX);
-        Debug.Log(testY);
-
-        Debug.Log(GetIndexFromXY(testX, testY));
-        
     }
 
 
@@ -75,7 +69,7 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
         {
             connected = true;
         }
-        else if (Index1 - worldX == Index2 && InputDirections[2] == 1 && OutputDirections[0] == 1) // Index1 genau ein tile über Index2
+        else if (Index1 - worldX == Index2 && InputDirections[2] == 1 && OutputDirections[0] == 1) // Index1 genau ein tile ï¿½ber Index2
         {
             connected = true;
         }
@@ -93,7 +87,7 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
     }
 
 
-    public int getDirectionFromXY(int x, int y) // Die müsste man mal bauen
+    public int getDirectionFromXY(int x, int y) // Die mï¿½sste man mal bauen
     {
         int index = GetIndexFromXY(x, y);
 
