@@ -229,9 +229,9 @@ public class Editor : MonoBehaviour
             ptBlock.direction = 0;
             ptBlock.index = posIndex;
             ptBlock.inputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).inputDirections;
-            ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, ptBlock.direction);
+            ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, (ptBlock.direction + 3) % 4);
             ptBlock.outputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).outputDirections;
-            ptBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.outputDirections, ptBlock.direction);
+            ptBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.outputDirections, (ptBlock.direction + 3) % 4);
             reader.AddBlock(ptBlock);
         }
         else if (Input.GetKey(KeyCode.Mouse0) && editorMode == "delete")
