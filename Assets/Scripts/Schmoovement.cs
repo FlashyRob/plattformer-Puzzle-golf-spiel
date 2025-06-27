@@ -20,7 +20,6 @@ public class Schmoovement : MonoBehaviour
     float sliding = 0;
     bool Slide = false;
 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {	
@@ -139,6 +138,8 @@ public class Schmoovement : MonoBehaviour
 
         rb2d.linearVelocity = new Vector2(horizontalVelocity * moveSpeed, verticalVelocity);
         velocity = rb2d.linearVelocity;
+        Debug.Log(velocity.x);
+        Debug.Log(velocity.y);
         //Debug.Log(rb2d.linearVelocity.y);
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
@@ -185,7 +186,7 @@ public class Schmoovement : MonoBehaviour
             Walled = false;
             secondJump = false;
             Slide = false;
-            moveSpeed = 12.5f;
+            //moveSpeed = 11f;
             //platformJump = 20;
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
