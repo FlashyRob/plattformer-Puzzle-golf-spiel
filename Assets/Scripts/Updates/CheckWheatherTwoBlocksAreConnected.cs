@@ -14,14 +14,6 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
     {
         int testX = (int)GetXY(Index).x;
         int testY = (int)GetXY(Index).y;
-
-        
-
-        Debug.Log(testX);
-        Debug.Log(testY);
-
-        Debug.Log(GetIndexFromXY(testX, testY));
-        
     }
 
 
