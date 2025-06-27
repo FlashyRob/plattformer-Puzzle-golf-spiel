@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 376543024872344978}
   - component: {fileID: 8294968998525712236}
   m_Layer: 0
-  m_Name: cable t
+  m_Name: wire_curve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ba6beb2073a86cd4ab70811242dbeab4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cf2a46f6fd9e5b14a94863759b3e2c0e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

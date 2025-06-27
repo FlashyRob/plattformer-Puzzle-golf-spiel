@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 376543024872344978}
   - component: {fileID: 8294968998525712236}
   m_Layer: 0
-  m_Name: cable bend
+  m_Name: wire_straight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 14793907914cf354fbee3be272758683, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 98510b9463b1f394aa1c313e371abfe3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

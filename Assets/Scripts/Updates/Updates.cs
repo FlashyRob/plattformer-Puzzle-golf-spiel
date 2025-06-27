@@ -42,8 +42,6 @@ public class Updates : MonoBehaviour
         {
             Debug.Log(l[i].outputIndex+ " " +l[i].outputSide);
         }
-
-        
     }
 
     // Update is called once per frame
@@ -56,37 +54,37 @@ public class Updates : MonoBehaviour
             switch  (block.type)
             {
                 case "wire":
-                    handleWire(i, block);
+                    handleWire(block.index, block);
                     break;
                 case "and_gate":
-                    HandleAndGate(i, block);
+                    HandleAndGate(block.index, block);
                     break;
                 case "or_gate":
-                    HandleOrGate(i, block);
+                    HandleOrGate(block.index, block);
                     break;
                 case "xor_gate":
-                    HandleXorGate(i, block);
+                    HandleXorGate(block.index, block);
                     break;
                 case "not_gate":
-                    HandleNotGate(i, block);
+                    HandleNotGate(block.index, block);
                     break;
                 case "lamp":
-                    HandleLamp(i, block);
+                    HandleLamp(block.index, block);
                     break;
                 case "door":
-                    HandleDoor(i, block);
+                    HandleDoor(block.index, block);
                     break;
                 case "flip_flop":
-                    HandleFlipFlop(i, block);
+                    HandleFlipFlop(block.index, block);
                     break;
                 case "toggle":
-                    HandleToggle(i, block);
+                    HandleToggle(block.index, block);
                     break;
                 case "pulse":
-                    HandlePulse(i, block);
+                    HandlePulse(block.index, block);
                     break;
                 case "condensator":
-                    HandleCondensator(i, block);
+                    HandleCondensator(block.index, block);
                     break;
             }
         }

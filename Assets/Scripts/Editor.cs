@@ -17,7 +17,12 @@ public class Editor : MonoBehaviour
     "Terrain (16x16) 1_67",
     "Terrain (16x16) 1_68",
     "Terrain (16x16) 1_69",
-    "Terrain (16x16) 1_66"
+    "Terrain (16x16) 1_66",
+    "wire_curve",
+    "wire_straight",
+    "wire_t",
+    "lamp",
+    "battery",
     }; 
     private int[] materialRotations;
 
