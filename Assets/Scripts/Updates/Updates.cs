@@ -22,7 +22,6 @@ public class Updates : MonoBehaviour
 
         activeSides = new int[worldTotalSize, 4];
         blocks = new connectionData[worldTotalSize];
-        blockData = new blockData[worldTotalSize];
 
         for (int i = 0; i < blocks.Length; i++)
         {
