@@ -6,18 +6,23 @@ public class PlatformMovement : MonoBehaviour
     public float speed;
     public int startingPoint;
     public Transform[] points;
-    public LayerMask boxLayer;
-    public Vector2 movement;
+    public Vector2 velocity;
+    private Rigidbody2D rb;
+
+    private Vector2 lastPosition;
 
     private int i = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         transform.position = points[startingPoint].position;
+        rb.MovePosition(points[startingPoint].position);
+        lastPosition = rb.position;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Vector2.Distance(transform.position, points[i].position) < 0.02f)
         {
@@ -27,31 +32,17 @@ public class PlatformMovement : MonoBehaviour
                 i = 0;
             }
         }
-        transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime);
-    }
-
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        ContactPoint2D contact = collision.contacts[0];
-        Vector2 normal = contact.normal; // has length of 1
-
-        if (normal.y < -0.5f)
+        //rb.MovePosition(Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime));
+        Vector2 newPostion = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime);
+        velocity = (newPostion - lastPosition) / Time.deltaTime;
+        if(velocity.magnitude > speed * 2) // if you pause the game the movement grows huge
         {
-            collision.transform.SetParent(transform);
+            velocity = velocity.normalized * speed;
         }
+        rb.MovePosition(newPostion);
+        //movement = (points[i].position - transform.position).normalized * speed;
+        //movement = ((Vector2)transform.position - lastPosition);
+        lastPosition = newPostion;
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        collision.transform.SetParent(null);
-    }
-    /*private void FixedUpdate()
-    {
-        //velocity = (points[i].position - transform.position).normalized * speed;
-        velocity = ((Vector2)transform.position - lastPosition) / Time.fixedDeltaTime;
-        lastPosition = transform.position;
-    }*/
-
 
 }

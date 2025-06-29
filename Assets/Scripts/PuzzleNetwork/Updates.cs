@@ -47,9 +47,9 @@ public class Updates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        for (int i = 0; i < reader.blockSafeFile.Count; i++)
         {
-            blockData block = reader.BlockSafeFile[i];
+            blockData block = reader.blockSafeFile[i];
 
             switch  (block.type)
             {
@@ -432,11 +432,11 @@ public class Updates : MonoBehaviour
     public blockData GetBlock(int index)
     {
         blockData thisBlock = new blockData();
-        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        for (int i = 0; i < reader.blockSafeFile.Count; i++)
         {
-            if (reader.BlockSafeFile[i].index == index)
+            if (reader.blockSafeFile[i].index == index)
             {
-                thisBlock = reader.BlockSafeFile[i];
+                thisBlock = reader.blockSafeFile[i];
                 return thisBlock;
             }
         }

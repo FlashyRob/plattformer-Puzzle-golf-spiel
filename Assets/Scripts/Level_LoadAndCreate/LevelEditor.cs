@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Editor : MonoBehaviour
+/// <summary>
+/// Creates UI elements and reacts to mous-clicks to create level blocks.
+/// </summary>
+public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;

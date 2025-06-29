@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class JSONReader : MonoBehaviour
 {
-    public string DefaultSaveFile = "Level_0";
-    public List<blockData> BlockSafeFile;
+    public string saveName = "Level_0";
+    public List<blockData> blockSafeFile;
     
     private string SavePath(string level_name)
     {
@@ -15,13 +15,13 @@ public class JSONReader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        BlockSafeFile = load();
+        blockSafeFile = LoadLevel();
         RemoveBlock(1);
     }
 
-    public List<blockData> load()
+    public List<blockData> LoadLevel()
     {
-        string path = SavePath(DefaultSaveFile);
+        string path = SavePath(saveName);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
@@ -38,38 +38,38 @@ public class JSONReader : MonoBehaviour
 
     public void RemoveBlock(int index)
     {
-        for (int i = 0; i < BlockSafeFile.Count; i++)
+        for (int i = 0; i < blockSafeFile.Count; i++)
         {
-            if (BlockSafeFile[i].index == index)
+            if (blockSafeFile[i].index == index)
             {
-                BlockSafeFile.RemoveAt(i);
+                blockSafeFile.RemoveAt(i);
                 SafeSafeFile();
             }
         }
 
     }
 
-    public int[] getInputDirectionsOfIndex(int index)
+    public int[] GetInputDirectionsOfIndex(int index)
     {
         int[] directions = new int[] { 0, 0, 0, 0 };
-        for (int i = 0; i < BlockSafeFile.Count; i++)
+        for (int i = 0; i < blockSafeFile.Count; i++)
         {
-            if (BlockSafeFile[i].index == index)
+            if (blockSafeFile[i].index == index)
             {
-                directions = BlockSafeFile[i].inputDirections;
+                directions = blockSafeFile[i].inputDirections;
             }
         }
         return (directions);
     }
 
-    public int[] getOutputDirectionsOfIndex(int index)
+    public int[] GetOutputDirectionsOfIndex(int index)
     {
         int[] directions = new int[] { 0, 0, 0, 0 };
-        for (int i = 0; i < BlockSafeFile.Count; i++)
+        for (int i = 0; i < blockSafeFile.Count; i++)
         {
-            if (BlockSafeFile[i].index == index)
+            if (blockSafeFile[i].index == index)
             {
-                directions = BlockSafeFile[i].outputDirections;
+                directions = blockSafeFile[i].outputDirections;
             }
         }
         return (directions);
@@ -77,7 +77,7 @@ public class JSONReader : MonoBehaviour
 
     public void AddBlock(blockData block)
     {
-        BlockSafeFile.Add(block);
+        blockSafeFile.Add(block);
 
         SafeSafeFile();
     }
@@ -92,7 +92,7 @@ public class JSONReader : MonoBehaviour
 
     public bool BlockExists(int index)
     {
-        foreach (blockData block in BlockSafeFile)
+        foreach (blockData block in blockSafeFile)
         {
             if (block.index == index)
                 return true;
@@ -155,11 +155,13 @@ public class JSONReader : MonoBehaviour
     {
         // Debug.Log("Saved " + BlockSafeFile.Count + " blocks to save file " + SavePath(DefaultSaveFile));
 
-        BlockList b = new BlockList();
-        b.blocks = BlockSafeFile;
+        BlockList b = new BlockList
+        {
+            blocks = blockSafeFile
+        };
         var j = JsonUtility.ToJson(b);
 
-        File.WriteAllText(SavePath(DefaultSaveFile), j);
+        File.WriteAllText(SavePath(saveName), j);
     }
 
     [System.Serializable]

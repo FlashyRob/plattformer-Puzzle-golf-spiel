@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 42925745919082566}
   - component: {fileID: 4558364548715690766}
   - component: {fileID: 2753760434347544054}
+  - component: {fileID: 1857630810741877752}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -116,5 +117,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d3cccc77192b2429172b14c3cb32c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultSaveFile: Level_0
-  BlockSafeFile: []
+  saveName: Level_0
+  blockSafeFile: []
+--- !u!114 &1857630810741877752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3304341615304926020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29b9bdec48489743b4c97dc2e855059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scannedBlockIndexes: 
+  nextScanns: 
+  visitedBlocks: 
+  powerSources:
+  - and_gate
+  - lever
+  - button
+  - preassure_plate
+  - or_gate
+  - xor_gate
+  - flip_flop
+  - toggle

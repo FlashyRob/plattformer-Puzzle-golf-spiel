@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Spawns level blocks to re-create the saved level loaded by JSONReader. If an LevelEditor exists it's initialized.
+/// </summary>
 public class GenerateLevel : MonoBehaviour
 {
     private CheckWheatherTwoBlocksAreConnected position;
@@ -33,11 +36,11 @@ public class GenerateLevel : MonoBehaviour
 
         createdBlocks = new GameObject("CreatedBlocks");
 
-        reader.BlockSafeFile = reader.load();
+        reader.blockSafeFile = reader.LoadLevel();
 
-        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        for (int i = 0; i < reader.blockSafeFile.Count; i++)
         {
-            blockData thisBlock = reader.BlockSafeFile[i];
+            blockData thisBlock = reader.blockSafeFile[i];
             xy blockPos = position.GetXY(thisBlock.index);
             string blockType = thisBlock.type;
             if (blockType == null)
@@ -64,8 +67,8 @@ public class GenerateLevel : MonoBehaviour
             catch { }
         }
 
-        Editor editor;
-        editor = FindAnyObjectByType<Editor>();
+        LevelEditor editor;
+        editor = FindAnyObjectByType<LevelEditor>();
         if (editor != null)
         {
             editor.StartEditor();

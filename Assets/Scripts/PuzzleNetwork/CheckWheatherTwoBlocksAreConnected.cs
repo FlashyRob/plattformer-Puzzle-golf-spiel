@@ -56,8 +56,8 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 
     public bool CheckIfTwoBlocksAreConnected(int Index1, int Index2) //Index1 = input; Index2 = output
     {
-        int[] InputDirections = reader.getInputDirectionsOfIndex(Index1);
-        int[] OutputDirections = reader.getOutputDirectionsOfIndex(Index2);
+        int[] InputDirections = reader.GetInputDirectionsOfIndex(Index1);
+        int[] OutputDirections = reader.GetOutputDirectionsOfIndex(Index2);
 
         bool connected;
 
@@ -93,11 +93,11 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 
         int direction = 0;
 
-        for (int i = 0; i < reader.BlockSafeFile.Count; i++)
+        for (int i = 0; i < reader.blockSafeFile.Count; i++)
         {
-            if (reader.BlockSafeFile[i].index == index)
+            if (reader.blockSafeFile[i].index == index)
             {
-                direction = reader.BlockSafeFile[i].direction;
+                direction = reader.blockSafeFile[i].direction;
             }
         }
         return (direction);

@@ -21,7 +21,7 @@ public class Schmoovement : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {	
+    {
         isFacingRight = true;
         rb2d = GetComponent<Rigidbody2D>();
         capsule2d = GetComponent<Collider2D>();
@@ -29,21 +29,43 @@ public class Schmoovement : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    private float inputHorizontalAxis;
+    private bool inputKeyDownSpace;
+    private bool inputKeySpace;
+    private bool inputKeyD;
+    private bool inputKeyA;
+
+    private bool processInput = false;
+
+    private Vector2 playerVel;
     void Update()
     {
 
+        inputHorizontalAxis = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
+        inputKeyDownSpace = Input.GetKeyDown(KeyCode.Space);
+        inputKeySpace = Input.GetKey(KeyCode.Space);
+        inputKeyD = Input.GetKey(KeyCode.D);
+        inputKeyA = Input.GetKey(KeyCode.A);
 
-        float horizontal = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-        float jumpVelocity;
-        float verticalVelocity = 0;
-        float horizontalVelocity;
-        
-        animator.SetFloat("Speed", rb2d.linearVelocity.x);
-        animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+        Debug.Log("At start of FixedUpdate player velocity is " + rb2d.linearVelocity);
+
         animator.SetBool("isWalled", Walled);
         animator.SetBool("isGrounded", Grounded);
 
-        if (Input.GetKey(KeyCode.Space))
+        playerVel = rb2d.linearVelocity;
+
+    }
+
+    void FixedUpdate()
+    {
+
+        float jumpVelocity;
+        float verticalVelocity = 0;
+        float horizontalVelocity;
+
+
+        if (inputKeySpace)
         {
             jumpVelocity = 0.012f;
         }
@@ -53,8 +75,7 @@ public class Schmoovement : MonoBehaviour
         }
 
 
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (inputKeyDownSpace)
         {
             if (Grounded && !Walled)
             {
@@ -84,7 +105,7 @@ public class Schmoovement : MonoBehaviour
         {
             if (Slide)
             {
-                if (Input.GetKey(KeyCode.A)|| Input.GetKey(KeyCode.D))
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                 {
                     jumpVelocity = -2;
                 }
@@ -92,26 +113,26 @@ public class Schmoovement : MonoBehaviour
                 {
                     jumpVelocity = -0.5f;
                 }
-                
+
             }
             else
             {
                 jumpVelocity = 0;
             }
-        }   
+        }
 
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
+        verticalVelocity = jumpVelocity + playerVel.y;
 
 
-        if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity > 6)
+        if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity > 6)
         {
             jumpVelocity = 4;
             secondJump = false;
         }
 
-        verticalVelocity = jumpVelocity + rb2d.linearVelocity.y;
+        verticalVelocity = jumpVelocity + playerVel.y;
 
-        if (Input.GetKeyDown(KeyCode.Space) && secondJump && !Walled && verticalVelocity < 6)
+        if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity < 6)
         {
             verticalVelocity = 8;
             secondJump = false;
@@ -121,12 +142,12 @@ public class Schmoovement : MonoBehaviour
 
         if (horizontalPush < 0.5 && horizontalPush > -0.5)
         {
-        horizontalPush = 0;
+            horizontalPush = 0;
         }
 
         if (Slide)
         {
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) && verticalVelocity < -3)
+            if (inputKeyA || inputKeyD && verticalVelocity < -3)
             {
                 verticalVelocity = -3;
             }
@@ -136,24 +157,70 @@ public class Schmoovement : MonoBehaviour
             }
         }
 
-        horizontalVelocity = horizontal * controldamper + horizontalPush;
+        horizontalVelocity = inputHorizontalAxis * controldamper + horizontalPush;
 
         rb2d.linearVelocity = new Vector2(horizontalVelocity * moveSpeed, verticalVelocity);
+
+
+        // move with platforms
+        if (currentPlatform && !inputKeySpace)
+        {
+            Vector2 platformVel = currentPlatform.velocity;
+
+            Vector2 playerAndPlatform = rb2d.linearVelocity;
+            // Always add horizontal platform motion when we stand on the platform
+            playerAndPlatform.x += platformVel.x;
+
+
+
+            // The vertical velocity builds up over mutliple frames because dont overrite it from scratch every frame.
+            // So we cannot simply add it like the platform x motion
+            // instead, I check if the platform is moving faster in the direction than the player and snap the player to the platform velocity in this case
+            // additionally I snap the player velocity to the plaform if the players velcoity is already close to the platform
+            // this setup allows you to jump though the platform without loosing your velocity.
+            float playerY = playerVel.y;
+            float platformY = platformVel.y;
+            bool similarVerticalSpeed = Mathf.Abs(playerY - platformY) <= Mathf.Abs(platformY * 0.05f);
+            bool platformIsFaster = false; // Mathf.Abs(platformY) > Mathf.Abs(playerY) && Mathf.Sign(platformY) == Mathf.Sign(playerY);
+
+            if (similarVerticalSpeed || platformIsFaster)
+            {
+                playerAndPlatform.y = platformY;
+            }
+
+            rb2d.linearVelocity = playerAndPlatform;
+
+            Debug.Log("Player velocity platform added: " + rb2d.linearVelocity);
+        }
+
         velocity = rb2d.linearVelocity;
-        Debug.Log(velocity.x);
-        Debug.Log(velocity.y);
-        //Debug.Log(rb2d.linearVelocity.y);
+
+        animator.SetFloat("Speed", rb2d.linearVelocity.x);
+        if (Grounded)
+        {
+            animator.SetFloat("JumpSpeed", 0);
+        }
+        else
+        {
+            animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+        }
+
+
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
-        if(!isFacingRight && horizontalVelocity > 0)
+
+        if (!isFacingRight && horizontalVelocity > 0)
         {
             Flip();
         }
-        else if(isFacingRight && horizontalVelocity < 0)
+        else if (isFacingRight && horizontalVelocity < 0)
         {
             Flip();
         }
+
+        playerVel = rb2d.linearVelocity;
     }
+
 
     public void Flip()
     {
@@ -172,31 +239,45 @@ public class Schmoovement : MonoBehaviour
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
 
-            if (Mathf.Abs(normal.x) > 0.5f) 
+            if (Mathf.Abs(normal.x) > 0.5f)
             {
                 // The vector mostly points in x or -x direction. So we've hit a wall
                 Slide = true;
             }
         }
-        
+
         if (coll.gameObject.tag == "MovingPlatform")
         {
-            
+
         }
     }
 
     void OnCollisionStay2D(Collision2D coll)
     {
-        if(coll.collider.CompareTag("MovingPlatform"))
+
+        if (coll.collider.CompareTag("MovingPlatform"))
         {
-            Grounded = true;
-            Walled = false;
-            secondJump = false;
-            Slide = false;
-            //moveSpeed = 11f;
-            Debug.Log("Moving Platform" + !Slide);
-            //moveSpeed = 12.5f;
-            //platformJump = 20;
+            // we use collider bounds of platform and player to see if we are on top of the platform
+            // normal vector was to lenient
+            // Get bounds
+            Collider2D playerCol = GetComponent<Collider2D>();
+            Collider2D platformCol = coll.collider;
+
+            float playerBottom = playerCol.bounds.min.y;
+            float platformTop = platformCol.bounds.max.y;
+
+            // Optional buffer to account for small penetration
+            float tolerance = 0.05f;
+
+            if (playerBottom >= platformTop - tolerance)
+            {
+                Grounded = true;
+                Walled = false;
+                secondJump = false;
+                Slide = false;
+                currentPlatform = coll.gameObject.GetComponent<PlatformMovement>();
+            }
+
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
@@ -225,10 +306,14 @@ public class Schmoovement : MonoBehaviour
         }
     }
 
+
+    private PlatformMovement currentPlatform;
     void OnCollisionExit2D(Collision2D coll)
     {
-        if(coll.collider.CompareTag("MovingPlatform"))
+        if (coll.collider.CompareTag("MovingPlatform"))
         {
+            //rb2d.gravityScale = 1.8f;
+            currentPlatform = null;
             Grounded = false;
             secondJump = true;
             moveSpeed = 5;
@@ -239,14 +324,14 @@ public class Schmoovement : MonoBehaviour
             if (Grounded)
             {
                 secondJump = true;
-                Grounded = false;;
+                Grounded = false; ;
             }
 
             if (Walled)
             {
                 Walled = false;
             }
-        
+
             if (Slide)
             {
                 Slide = false;
@@ -255,4 +340,3 @@ public class Schmoovement : MonoBehaviour
         }
     }
 }
-  
