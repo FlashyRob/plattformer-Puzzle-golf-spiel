@@ -190,11 +190,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_GravityScale: 0
+  m_Material: {fileID: 6200000, guid: 12a81d7b3331daf46a76851fab606279, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -287,9 +287,7 @@ MonoBehaviour:
   points:
   - {fileID: 145231913748634475}
   - {fileID: 2664710283144165377}
-  boxLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  velocity: {x: 0, y: 0}
 --- !u!1 &3366922359559306049
 GameObject:
   m_ObjectHideFlags: 0

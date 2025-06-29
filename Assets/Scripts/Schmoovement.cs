@@ -14,7 +14,7 @@ public class Schmoovement : MonoBehaviour
     float collidex = 0;
     float myx = 0;
     float controldamper = 1;
-    public Vector2 velocity;
+    public Vector2 velocityDebug;
     public float moveSpeed;
     public float platformJump;
     bool Slide = false;
@@ -48,177 +48,174 @@ public class Schmoovement : MonoBehaviour
         inputKeyD = Input.GetKey(KeyCode.D);
         inputKeyA = Input.GetKey(KeyCode.A);
 
-        Debug.Log("At start of FixedUpdate player velocity is " + rb2d.linearVelocity);
+        processInput = true;
 
-        animator.SetBool("isWalled", Walled);
-        animator.SetBool("isGrounded", Grounded);
+        //Debug.Log("At start Update player velocity is " + rb2d.linearVelocity);
+
+
 
         playerVel = rb2d.linearVelocity;
 
     }
 
+    float verticalVelocity = 0;
+    float horizontalVelocity;
     void FixedUpdate()
     {
-
+        // Fixed Update is called multiple times while update is called once.
+        // we are perform the movmement in fixed update to allow accurate moving platform tracking
         float jumpVelocity;
-        float verticalVelocity = 0;
-        float horizontalVelocity;
+        //Debug.Log("At start Fixed Update player velocity is " + rb2d.linearVelocity);
 
-
-        if (inputKeySpace)
+        if (processInput)
         {
-            jumpVelocity = 0.012f;
-        }
-        else
-        {
-            jumpVelocity = 0;
-        }
-
-
-        if (inputKeyDownSpace)
-        {
-            if (Grounded && !Walled)
+            //Debug.Log("Processing Input");
+            if (inputKeySpace)
             {
-                jumpVelocity = 9 + platformJump;
-            }
-
-            if (Walled)
-            {
-                jumpVelocity = 10;
-                controldamper = 0.3f;
-                Slide = false;
-                if (collidex > myx)
-                {
-                    // The wall is to the left
-
-                    horizontalPush = -3;
-                }
-                else
-                {
-                    // The wall is to the right
-
-                    horizontalPush = 3;
-                }
-            }
-        }
-        else
-        {
-            if (Slide)
-            {
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-                {
-                    jumpVelocity = -2;
-                }
-                else
-                {
-                    jumpVelocity = -0.5f;
-                }
-
+                jumpVelocity = 0.012f;
             }
             else
             {
                 jumpVelocity = 0;
             }
-        }
 
-        verticalVelocity = jumpVelocity + playerVel.y;
-
-
-        if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity > 6)
-        {
-            jumpVelocity = 4;
-            secondJump = false;
-        }
-
-        verticalVelocity = jumpVelocity + playerVel.y;
-
-        if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity < 6)
-        {
-            verticalVelocity = 8;
-            secondJump = false;
-        }
-
-        horizontalPush = horizontalPush * 0.95f;
-
-        if (horizontalPush < 0.5 && horizontalPush > -0.5)
-        {
-            horizontalPush = 0;
-        }
-
-        if (Slide)
-        {
-            if (inputKeyA || inputKeyD && verticalVelocity < -3)
+            if (inputKeyDownSpace)
             {
-                verticalVelocity = -3;
+                if (Grounded && !Walled)
+                {
+                    jumpVelocity = 9 + platformJump;
+                }
+
+                if (Walled)
+                {
+                    jumpVelocity = 10;
+                    controldamper = 0.3f;
+                    Slide = false;
+                    if (collidex > myx)
+                    {
+                        // The wall is to the left
+
+                        horizontalPush = -3;
+                    }
+                    else
+                    {
+                        // The wall is to the right
+
+                        horizontalPush = 3;
+                    }
+                }
             }
-            else if (verticalVelocity < -1.5f)
+            else
             {
-                verticalVelocity = -1.5f;
+                if (Slide)
+                {
+                    if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                    {
+                        jumpVelocity = -2;
+                    }
+                    else
+                    {
+                        jumpVelocity = -0.5f;
+                    }
+
+                }
+                else
+                {
+                    jumpVelocity = 0;
+                }
             }
+
+            verticalVelocity = jumpVelocity + playerVel.y;
+
+
+            if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity > 6)
+            {
+                jumpVelocity = 4;
+                secondJump = false;
+            }
+
+            verticalVelocity = jumpVelocity + playerVel.y;
+
+            if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity < 6)
+            {
+                verticalVelocity = 8;
+                secondJump = false;
+            }
+
+            horizontalPush = horizontalPush * 0.95f;
+
+            if (horizontalPush < 0.5 && horizontalPush > -0.5)
+            {
+                horizontalPush = 0;
+            }
+
+            if (Slide)
+            {
+                if (inputKeyA || inputKeyD && verticalVelocity < -3)
+                {
+                    verticalVelocity = -3;
+                }
+                else if (verticalVelocity < -1.5f)
+                {
+                    verticalVelocity = -1.5f;
+                }
+            }
+
+            horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
+            rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
+            processInput = false;
+
+            // set animation parameters
+            animator.SetFloat("Speed", rb2d.linearVelocity.x);
+            animator.SetBool("isWalled", Walled);
+            animator.SetBool("isGrounded", Grounded);
+            if (Grounded)
+            {
+                animator.SetFloat("JumpSpeed", 0);
+            }
+            else
+            {
+                animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+            }
+
+            if (!isFacingRight && horizontalVelocity > 0)
+            {
+                Flip();
+            }
+            else if (isFacingRight && horizontalVelocity < 0)
+            {
+                Flip();
+            }
+
+            //Debug.Log("Input gives us " + rb2d.linearVelocity);
         }
-
-        horizontalVelocity = inputHorizontalAxis * controldamper + horizontalPush;
-
-        rb2d.linearVelocity = new Vector2(horizontalVelocity * moveSpeed, verticalVelocity);
-
 
         // move with platforms
         if (currentPlatform && !inputKeySpace)
         {
             Vector2 platformVel = currentPlatform.velocity;
 
-            Vector2 playerAndPlatform = rb2d.linearVelocity;
+            Vector2 playerAndPlatform = new Vector2();
             // Always add horizontal platform motion when we stand on the platform
-            playerAndPlatform.x += platformVel.x;
+            playerAndPlatform.x = horizontalVelocity + platformVel.x;
 
-
-
-            // The vertical velocity builds up over mutliple frames because dont overrite it from scratch every frame.
+            // The vertical velocity builds up over mutliple frames because we dont overrite it from scratch like the horizontalVelocity.
             // So we cannot simply add it like the platform x motion
-            // instead, I check if the platform is moving faster in the direction than the player and snap the player to the platform velocity in this case
-            // additionally I snap the player velocity to the plaform if the players velcoity is already close to the platform
-            // this setup allows you to jump though the platform without loosing your velocity.
-            float playerY = playerVel.y;
-            float platformY = platformVel.y;
-            bool similarVerticalSpeed = Mathf.Abs(playerY - platformY) <= Mathf.Abs(platformY * 0.05f);
-            bool platformIsFaster = false; // Mathf.Abs(platformY) > Mathf.Abs(playerY) && Mathf.Sign(platformY) == Mathf.Sign(playerY);
-
-            if (similarVerticalSpeed || platformIsFaster)
+            // instead, I snap the player velocity to the plaform if the players velcoity is already close to the platform
+            // this setup allows you to jump though the platform without snapping to the platform and loosing your velocity.
+            if (Mathf.Abs(playerVel.y - platformVel.y) <= Mathf.Abs(platformVel.y * 0.05f))
             {
-                playerAndPlatform.y = platformY;
+                playerAndPlatform.y = platformVel.y;
             }
-
             rb2d.linearVelocity = playerAndPlatform;
-
-            Debug.Log("Player velocity platform added: " + rb2d.linearVelocity);
+            //Debug.Log("Player velocity platform added: " + rb2d.linearVelocity);
         }
 
-        velocity = rb2d.linearVelocity;
-
-        animator.SetFloat("Speed", rb2d.linearVelocity.x);
-        if (Grounded)
-        {
-            animator.SetFloat("JumpSpeed", 0);
-        }
-        else
-        {
-            animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
-        }
-
+        velocityDebug = rb2d.linearVelocity; // debug display velocity in inspector window
+        //Debug.Log("At player velocity Fixed Update calcualted " + rb2d.linearVelocity);
 
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
-
-        if (!isFacingRight && horizontalVelocity > 0)
-        {
-            Flip();
-        }
-        else if (isFacingRight && horizontalVelocity < 0)
-        {
-            Flip();
-        }
-
-        playerVel = rb2d.linearVelocity;
     }
 
 
@@ -294,7 +291,7 @@ public class Schmoovement : MonoBehaviour
                 Walled = false;
                 secondJump = false;
                 Slide = false;
-                Debug.Log("Vector" + !Slide);
+                //Debug.Log("Vector" + !Slide);
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
@@ -312,7 +309,6 @@ public class Schmoovement : MonoBehaviour
     {
         if (coll.collider.CompareTag("MovingPlatform"))
         {
-            //rb2d.gravityScale = 1.8f;
             currentPlatform = null;
             Grounded = false;
             secondJump = true;
@@ -335,7 +331,7 @@ public class Schmoovement : MonoBehaviour
             if (Slide)
             {
                 Slide = false;
-                Debug.Log("collisonExit" + !Slide);
+                //Debug.Log("collisonExit" + !Slide);
             }
         }
     }
