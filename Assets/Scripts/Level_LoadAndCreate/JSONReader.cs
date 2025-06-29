@@ -1,43 +1,39 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+
 public class JSONReader : MonoBehaviour
 {
-    public TextAsset textJSON;
-
-    public blockData myBlock = new blockData();
-
+    public string DefaultSaveFile = "Level_0";
     public List<blockData> BlockSafeFile;
-
-    [System.Serializable]
-    public class BlockList
+    
+    private string SavePath(string level_name)
     {
-        public List<blockData> blocks;
+        return Application.persistentDataPath+ "\\" +level_name +".json";
     }
-
-    public BlockList myBlockList = new BlockList();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
-        myBlockList = JsonUtility.FromJson<BlockList>(textJSON.text);
-
-        //Debug.Log(myBlockList.blocks); //Wenn nicht mehr funktioniert diese Zeile wieder einbauen. 
-
         BlockSafeFile = load();
-
         RemoveBlock(1);
-    }
-
-    private void Update()
-    {
-        SafeSafeFile();
     }
 
     public List<blockData> load()
     {
-        return new List<blockData>(JsonUtility.FromJson<BlockList>(textJSON.text).blocks);
+        string path = SavePath(DefaultSaveFile);
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            BlockList loaded = JsonUtility.FromJson<BlockList>(json);
+            Debug.Log("Loaded " + loaded.blocks.Count + " blocks from save file " + path);
+            return new List<blockData>(loaded.blocks);
+        }
+        else
+        {
+            Debug.LogWarning("Save file not found at: " + path);
+            return new List<blockData>();
+        }
     }
 
     public void RemoveBlock(int index)
@@ -157,9 +153,18 @@ public class JSONReader : MonoBehaviour
 
     public void SafeSafeFile()
     {
+        // Debug.Log("Saved " + BlockSafeFile.Count + " blocks to save file " + SavePath(DefaultSaveFile));
+
         BlockList b = new BlockList();
         b.blocks = BlockSafeFile;
         var j = JsonUtility.ToJson(b);
-        File.WriteAllText("Assets/Resources/JSONLevelFiles" + "/JSONLevelFiles.txt", j);
+
+        File.WriteAllText(SavePath(DefaultSaveFile), j);
+    }
+
+    [System.Serializable]
+    public class BlockList
+    {
+        public List<blockData> blocks;
     }
 }

@@ -7,7 +7,7 @@ public class Editor : MonoBehaviour
     private GameObject[] block;
     private GameObject[] textures;
     public GameObject hud;
-    public string editorMode;
+    public string editorMode = "place";
     public Vector3 mousePos;
     public Vector3 mousePosOld;
     private string[] materials = new string[] {
@@ -75,12 +75,15 @@ public class Editor : MonoBehaviour
 
     private void Initialize()
     {
+        if (!hud)
+        {
+            hud = FindAnyObjectByType<Canvas>().gameObject;
+        }
         try
         {
             Destroy(hud.transform.GetChild(0).gameObject);
         } catch { }
         createdBlocks = GameObject.Find("CreatedBlocks");
-
 
         RectTransform rt;
         HorizontalLayoutGroup lg;
@@ -244,9 +247,6 @@ public class Editor : MonoBehaviour
             GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
-
-            var spriteRenderer = newBlock.GetComponent<SpriteRenderer>();
-            spriteRenderer.sortingOrder = 1; // show on top of other elements
 
             blockData ptBlock = new blockData();
             ptBlock.type = currentBlockPrefab.name;

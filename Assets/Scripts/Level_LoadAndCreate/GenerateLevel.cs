@@ -15,7 +15,15 @@ public class GenerateLevel : MonoBehaviour
     void Start()
     {
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+        if (!position)
+        {
+            position = gameObject.AddComponent<CheckWheatherTwoBlocksAreConnected>();
+        }
         reader = FindAnyObjectByType<JSONReader>();
+        if (!reader)
+        {
+            reader = gameObject.AddComponent<JSONReader>();
+        }
 
         block = Resources.LoadAll<GameObject>("Blocks");
         for (int i = 0; i < block.Length; i++)
@@ -39,25 +47,27 @@ public class GenerateLevel : MonoBehaviour
             int blockDirection = thisBlock.direction * 90;
             string blockName = "block:" + blockPos.x + "," + blockPos.y;
             GameObject blockPrefab;
-        
+
             try
             {
                 blockPrefab = block[blockNames.IndexOf(blockType)];
 
                 GameObject newBlock = Instantiate(
                     blockPrefab,
-                    new Vector3((float) blockPos.x, (float) blockPos.y, 0),
+                    new Vector3((float)blockPos.x, (float)blockPos.y, 0),
                     Quaternion.Euler(0, 0, blockDirection),
                     createdBlocks.transform
                 );
                 newBlock.name = blockName;
                 newBlock.AddComponent<RemoveBlock>();
-            } catch { }
+            }
+            catch { }
         }
 
         Editor editor;
         editor = FindAnyObjectByType<Editor>();
-        if (editor != null) {
+        if (editor != null)
+        {
             editor.StartEditor();
         }
     }

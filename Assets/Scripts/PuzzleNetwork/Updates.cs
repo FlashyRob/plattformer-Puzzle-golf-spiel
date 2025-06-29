@@ -16,7 +16,15 @@ public class Updates : MonoBehaviour
     void Start()
     {
         position = FindAnyObjectByType <CheckWheatherTwoBlocksAreConnected>();
+        if (!position)
+        {
+            position = gameObject.AddComponent<CheckWheatherTwoBlocksAreConnected>();
+        }
         reader = FindAnyObjectByType<JSONReader>();
+        if (!reader)
+        {
+            reader = gameObject.AddComponent<JSONReader>();
+        }
 
         int worldTotalSize = position.worldX * position.worldY;
 
