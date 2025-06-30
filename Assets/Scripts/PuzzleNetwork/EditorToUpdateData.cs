@@ -41,7 +41,7 @@ public class EditorToUpdateData : MonoBehaviour
         {
 
             blockData b = new blockData();
-            b.typetype = loadedData.blockNames[i];
+            b.type = loadedData.blockNames[i];
             b.direction = loadedData.directions[i];
             b.state = loadedData.state[i];
             connectors inAndOutPutDirectionsAtI = BlockNamesToDirections(loadedData.blockNames[i]);
@@ -129,7 +129,7 @@ public class EditorToUpdateData : MonoBehaviour
         
         int index = position.GetIndexFromXY(x, y);
 
-        b.typetype = blockName;
+        b.type = blockName;
         b.direction = direction;
         b.state = state;
         connectors inAndOutPutDirectionsAtI = BlockNamesToDirections(blockName);

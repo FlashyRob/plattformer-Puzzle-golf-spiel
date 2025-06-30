@@ -126,7 +126,7 @@ public class Updates : MonoBehaviour
 
     private void handleWire(int i, blockData block)
     {
-        switch (block.typetype)
+        switch (block.type)
         {
             case "wire_straight":
                 if (IsAnyConnectionActive(block.inputDirections, i, 3))
@@ -480,7 +480,6 @@ public struct blockData
 {
     public int index;
     public string type;
-    public string typetype;
     public int direction;
     public int[] outputDirections;
     public int[] inputDirections;
