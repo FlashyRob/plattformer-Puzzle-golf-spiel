@@ -43,10 +43,6 @@ public class GenerateLevel : MonoBehaviour
             blockData thisBlock = reader.blockSafeFile[i];
             xy blockPos = position.GetXY(thisBlock.index);
             string blockType = thisBlock.type;
-            if (blockType == null)
-            {
-                blockType = thisBlock.typetype;
-            }
             int blockDirection = thisBlock.direction * 90;
             string blockName = "block:" + blockPos.x + "," + blockPos.y;
             GameObject blockPrefab;

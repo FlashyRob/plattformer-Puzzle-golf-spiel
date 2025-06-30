@@ -7,11 +7,6 @@ public class Updates : MonoBehaviour
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
 
-    public connectionData[] blocks;
-    public int[,] activeSides;
-
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,22 +21,6 @@ public class Updates : MonoBehaviour
             reader = gameObject.AddComponent<JSONReader>();
         }
 
-        int worldTotalSize = position.worldX * position.worldY;
-
-        activeSides = new int[worldTotalSize, 4];
-        blocks = new connectionData[worldTotalSize];
-
-        for (int i = 0; i < blocks.Length; i++)
-        {
-            var c = new connectionData();
-            c.sides = new int[] { 0, 1, 2, 3 };
-            c.data = new Dictionary<int, List<connections>> { { 0, new List<connections>() }, { 1, new List<connections>()}, { 2, new List<connections>()}, { 3, new List<connections>()} };
-
-            blocks[i] = c;
-        }
-
-        AddConnection(0, 0, new connections { outputIndex = 6, outputSide = 1 });
-        AddConnection(0, 0, new connections { outputIndex = 7, outputSide = 3 });
     }
 
     // Update is called once per frame
@@ -53,8 +32,17 @@ public class Updates : MonoBehaviour
 
             switch  (block.type)
             {
-                case "wire":
-                    handleWire(block.index, block);
+                case "wire_straight":
+                    HandleWireStraight(block.index, block);
+                    break;
+                case "wire_curve":
+                    HandleWireCorner(block.index, block);
+                    break;
+                case "wire_T":
+                    HandleWireT(block.index, block);
+                    break;
+                case "wire_corner":
+                    HandleWireCorner(block.index, block);
                     break;
                 case "and_gate":
                     HandleAndGate(block.index, block);
@@ -87,29 +75,63 @@ public class Updates : MonoBehaviour
                     HandleCondensator(block.index, block);
                     break;
                 case "battery":
-                    HandleBattery(block.index, block);
+                    HandleBattery(block.index);
                     break;
             }
         }
     }
 
+
     public void AddConnection(int blockIndex, int side, connections connection)
     {
-        connectionData currentConnection = blocks[blockIndex];
-        currentConnection.data[side].Add(connection);
-        
-
+        blockData thisBlock = new blockData();
+        thisBlock = GetBlock(blockIndex);
+        switch (side)
+        {
+            case 0:
+                thisBlock.connectios_top.Add(connection);
+                break;
+            case 1:
+                thisBlock.connectios_right.Add(connection);
+                break;
+            case 2:
+                thisBlock.connectios_bottom.Add(connection);
+                break;
+            case 3:
+                thisBlock.connectios_left.Add(connection);
+                break;
+        }
+            
     }
 
     public List<connections> GetConnections(int blockIndex, int side)
     {
-        var l = blocks[blockIndex].data[side];
+        blockData thisBlock = GetBlock(blockIndex);
+        var l = new List<connections>();
+
+        switch (side)
+        {
+            case 0:
+                l = thisBlock.connectios_top;
+                break;
+            case 1:
+                l = thisBlock.connectios_right;
+                break;
+            case 2:
+                l = thisBlock.connectios_bottom;
+                break;
+            case 3:
+                l = thisBlock.connectios_left;
+                break;
+        }
         return (l);
     }
 
     public bool isActive(int index, int side)
     {
-        return (activeSides[index, side] == 1);
+        blockData thisBlock = GetBlock(index);
+        var l = thisBlock.activeSides[side];
+        return (l);
     }
 
     public bool checkActive(List<connections> sources)
@@ -124,82 +146,69 @@ public class Updates : MonoBehaviour
         return false;
     }
 
-    private void handleWire(int i, blockData block)
+
+    private void HandleWireStraight(int i, blockData block)
     {
-        switch (block.typetype)
+        if (IsAnyConnectionActive(block.inputDirections, i, 3))
         {
-            case "wire_straight":
-                if (IsAnyConnectionActive(block.inputDirections, i, 3))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 1))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                EditVisualActive(i, 0);
-                break;
-
-            case "wire_curve":
-                if (IsAnyConnectionActive(block.inputDirections, i, 0))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 1))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                EditVisualActive(i, 0);
-                break;
-
-            case "wire_t":
-                if (IsAnyConnectionActive(block.inputDirections, i, 0))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 1))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 3))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                EditVisualActive(i, 0);
-                break;
-
-            case "wire_cross":
-                if (IsAnyConnectionActive(block.inputDirections, i, 0))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 1))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 2))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                if (IsAnyConnectionActive(block.inputDirections, i, 3))
-                {
-                    EditVisualActive(i, 1);
-                    break;
-                }
-                EditVisualActive(i, 0);
-                break;
-
+            EditVisualActive(i, 1);
         }
+        if (IsAnyConnectionActive(block.inputDirections, i, 1))
+        {
+            EditVisualActive(i, 1);
+        }
+        EditVisualActive(i, 0);
+    }
+
+    private void HandleWireCorner(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block.inputDirections, i, 0))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 1))
+        {
+            EditVisualActive(i, 1);
+        }
+        EditVisualActive(i, 0);
+    }
+
+    private void HandleWireT(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block.inputDirections, i, 0))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 1))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 3))
+        {
+            EditVisualActive(i, 1);
+        }
+        EditVisualActive(i, 0);
+    }
+
+    private void HandelWireCross(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block.inputDirections, i, 0))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 1))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 2))
+        {
+            EditVisualActive(i, 1);
+        }
+        if (IsAnyConnectionActive(block.inputDirections, i, 3))
+        {
+            EditVisualActive(i, 1);
+        }
+        EditVisualActive(i, 0);
     }
 
     private void HandleLamp(int i, blockData block)
@@ -223,7 +232,7 @@ public class Updates : MonoBehaviour
         EditVisualActive(i, 0);
     }
 
-    private void HandleBattery(int i, blockData block)
+    private void HandleBattery(int i)
     {
         EditVisualActive(i, 1);
 
@@ -231,8 +240,92 @@ public class Updates : MonoBehaviour
         EditBlockActiveSide(i, 1, 1);
         EditBlockActiveSide(i, 2, 1);
         EditBlockActiveSide(i, 3, 1);
+    }
 
-    } 
+    private void ToggleLever(int i, blockData block)
+    {
+        block.visualActive = (block.visualActive + 1) % 2;
+
+        if (block.visualActive == 1)
+        {
+            EditBlockActiveSide(i, 0, 1);
+            EditBlockActiveSide(i, 1, 1);
+            EditBlockActiveSide(i, 2, 1);
+            EditBlockActiveSide(i, 3, 1);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, 0);
+            EditBlockActiveSide(i, 1, 0);
+            EditBlockActiveSide(i, 2, 0);
+            EditBlockActiveSide(i, 3, 0);
+        }
+    }
+
+    private void SetLever(int i, blockData block, int newVal)
+    {
+        block.visualActive = newVal;
+
+        if (block.visualActive == 1)
+        {
+            EditBlockActiveSide(i, 0, 1);
+            EditBlockActiveSide(i, 1, 1);
+            EditBlockActiveSide(i, 2, 1);
+            EditBlockActiveSide(i, 3, 1);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, 0);
+            EditBlockActiveSide(i, 1, 0);
+            EditBlockActiveSide(i, 2, 0);
+            EditBlockActiveSide(i, 3, 0);
+        }
+    }
+
+    private void SetButton(int i, blockData block, int newVal)
+    {
+        block.visualActive = newVal;
+
+        if (block.visualActive == 1)
+        {
+            EditBlockActiveSide(i, 0, 1);
+            EditBlockActiveSide(i, 1, 1);
+            EditBlockActiveSide(i, 2, 1);
+            EditBlockActiveSide(i, 3, 1);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, 0);
+            EditBlockActiveSide(i, 1, 0);
+            EditBlockActiveSide(i, 2, 0);
+            EditBlockActiveSide(i, 3, 0);
+        }
+    }
+
+    private void SetPreassureplate(int i, blockData block, int newVal)
+    {
+        block.visualActive = newVal;
+
+        if (block.visualActive == 1)
+        {
+            EditBlockActiveSide(i, 0, 1);
+            EditBlockActiveSide(i, 1, 1);
+            EditBlockActiveSide(i, 2, 1);
+            EditBlockActiveSide(i, 3, 1);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, 0);
+            EditBlockActiveSide(i, 1, 0);
+            EditBlockActiveSide(i, 2, 0);
+            EditBlockActiveSide(i, 3, 0);
+        }
+    }
+     
+    private void SetVisualAvive(int i, blockData block, int newVal)
+    {
+        block.visualActive = newVal;
+    }
 
     private void HandleDoor(int i, blockData block)
     {
@@ -461,12 +554,6 @@ public class Updates : MonoBehaviour
     }
 }
 
-[System.Serializable]
-public struct connectionData
-{
-    public int[] sides;
-    public Dictionary<int, List<connections>> data;
-}
 
 [System.Serializable]
 public struct connections
@@ -480,11 +567,17 @@ public struct blockData
 {
     public int index;
     public string type;
-    public string typetype;
     public int direction;
     public int[] outputDirections;
     public int[] inputDirections;
     public int state;
     public string meta;
     public int visualActive;
+    public List<connections> connectios_top;
+    public List<connections> connectios_bottom;
+    public List<connections> connectios_left;
+    public List<connections> connectios_right;
+    public bool[] activeSides;
+    public bool editable;
+    public bool clickkable;
 }

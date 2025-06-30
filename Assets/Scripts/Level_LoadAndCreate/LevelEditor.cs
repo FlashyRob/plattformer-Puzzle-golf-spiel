@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,11 +17,7 @@ public class LevelEditor : MonoBehaviour
     private string[] materials = new string[] {
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
-        "Terrain (16x16) 1_48",
-        "Terrain (16x16) 1_65",
-        "Terrain (16x16) 1_67",
         "Terrain (16x16) 1_68",
-        "Terrain (16x16) 1_69",
         "Terrain (16x16) 1_66",
         "wire_curve",
         "wire_straight",
@@ -29,6 +26,18 @@ public class LevelEditor : MonoBehaviour
         "battery",
     }; 
     private int[] materialRotations;
+    private GameObject[] materialObjects;
+    private int[] materialCounts = new int[] {
+        5,
+        3,
+        0,
+        1,
+        8,
+        8,
+        8,
+        4,
+        4,
+    };
 
     List<string> blockName = new List<string>();
     List<string> texturesName = new List<string>();
@@ -48,6 +57,7 @@ public class LevelEditor : MonoBehaviour
         materialRotations = new int[materials.Length];
         for (int i = 0; i < materialRotations.Length; i++)
             materialRotations[i] = 0;
+        materialObjects = new GameObject[materials.Length];
 
 
         update = FindAnyObjectByType<Updates>();
@@ -130,7 +140,7 @@ public class LevelEditor : MonoBehaviour
 
         for (int i = 0; i < materials.Length; i++)
         {
-            var blockSelector = new GameObject();
+            GameObject blockSelector = new GameObject();
             blockSelector.name = materials[i];
             blockSelector.transform.parent = blockSelectorParent.transform;
             rt = blockSelector.AddComponent<RectTransform>();
@@ -149,6 +159,8 @@ public class LevelEditor : MonoBehaviour
             var oc = block[materialPrefabIdx].GetComponent<SpriteRenderer>();
             im.sprite = oc.sprite;
             im.color = oc.color;
+
+            materialObjects[i] = blockSelector;
         }
 
         /*
@@ -200,6 +212,15 @@ public class LevelEditor : MonoBehaviour
                 getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
                 getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
                 reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
+
+                int materialIndex = System.Array.IndexOf(materials, getBlock.type);
+                int directionDegree = (getBlock.direction + 1) * -90;
+                materialRotations[materialIndex] = directionDegree;
+                materialObjects[materialIndex].transform.rotation = Quaternion.Euler(0, 0, directionDegree);
+                if (getBlock.type == ClickTest.selectedMaterial)
+                {
+                    select.transform.rotation = Quaternion.Euler(0, 0, directionDegree);
+                }
             }
         }
 
@@ -229,6 +250,7 @@ public class LevelEditor : MonoBehaviour
             SpriteRenderer prefabSprite = currentBlockPrefab.GetComponent<SpriteRenderer>();
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
+            select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)]);
         }
 
         if (
@@ -247,7 +269,12 @@ public class LevelEditor : MonoBehaviour
                 reader.RemoveBlock(posIndex);
             }
 
-            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
+            GameObject newBlock = Instantiate(
+                currentBlockPrefab,
+                mousePos,
+                Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)]), 
+                createdBlocks.transform
+            );
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
 
@@ -259,6 +286,7 @@ public class LevelEditor : MonoBehaviour
             ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, (ptBlock.direction + 3) % 4);
             ptBlock.outputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).outputDirections;
             ptBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.outputDirections, (ptBlock.direction + 3) % 4);
+            ptBlock.activeSides = new bool[4];
             reader.AddBlock(ptBlock);
         }
         else if (

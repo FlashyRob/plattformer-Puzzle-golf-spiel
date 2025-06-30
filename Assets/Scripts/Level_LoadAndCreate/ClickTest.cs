@@ -8,7 +8,6 @@ public class ClickTest : MonoBehaviour, IPointerClickHandler
     //Detect if a click occurs
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        string[] materials = new string[] {"grass", "dirt", "water"};
         selectedMaterial = name;
         changed = true;
     }
