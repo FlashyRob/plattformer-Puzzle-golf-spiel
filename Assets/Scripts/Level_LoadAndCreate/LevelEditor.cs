@@ -17,11 +17,7 @@ public class LevelEditor : MonoBehaviour
     private string[] materials = new string[] {
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
-        "Terrain (16x16) 1_48",
-        "Terrain (16x16) 1_65",
-        "Terrain (16x16) 1_67",
         "Terrain (16x16) 1_68",
-        "Terrain (16x16) 1_69",
         "Terrain (16x16) 1_66",
         "wire_curve",
         "wire_straight",
@@ -31,6 +27,17 @@ public class LevelEditor : MonoBehaviour
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
+    private int[] materialCounts = new int[] {
+        5,
+        3,
+        0,
+        1,
+        8,
+        8,
+        8,
+        4,
+        4,
+    };
 
     List<string> blockName = new List<string>();
     List<string> texturesName = new List<string>();
@@ -206,10 +213,13 @@ public class LevelEditor : MonoBehaviour
                 getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
                 reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
 
-                int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
+                int materialIndex = System.Array.IndexOf(materials, getBlock.type);
                 materialRotations[materialIndex] = (getBlock.direction + 1) % 4;
-                select.transform.Rotate(new Vector3(0, 0, -90));
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
+                if (getBlock.type == ClickTest.selectedMaterial)
+                {
+                    select.transform.Rotate(new Vector3(0, 0, -90));
+                }
             }
         }
 
@@ -239,6 +249,7 @@ public class LevelEditor : MonoBehaviour
             SpriteRenderer prefabSprite = currentBlockPrefab.GetComponent<SpriteRenderer>();
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
+            select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)]);
         }
 
         if (
