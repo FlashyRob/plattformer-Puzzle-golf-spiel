@@ -276,7 +276,7 @@ public class Schmoovement : MonoBehaviour
             }
 
         }
-        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
+        if (coll.gameObject.tag == "Ground")
         {
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
@@ -299,6 +299,24 @@ public class Schmoovement : MonoBehaviour
                 Walled = true;
                 collidex = contact.point.x; // remeber the contact point for walljump
                 myx = transform.position.x;
+            }
+        }
+        if (coll.gameObject.tag == "Box")
+        {
+            ContactPoint2D contact = coll.contacts[0];
+            Vector2 normal = contact.normal; // has length of 1
+            // we check the collision normal to see which direction the ground hit us from
+
+            controldamper = 1;
+
+            if (normal.y > 0.5f)
+            {
+                // the normal vector mostly points up. The ground has hit us from below.
+                Grounded = true;
+                Walled = false;
+                secondJump = false;
+                Slide = false;
+                //Debug.Log("Vector" + !Slide);
             }
         }
     }
