@@ -269,6 +269,7 @@ public class LevelEditor : MonoBehaviour
             ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, (ptBlock.direction + 3) % 4);
             ptBlock.outputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).outputDirections;
             ptBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.outputDirections, (ptBlock.direction + 3) % 4);
+            ptBlock.activeSides = new bool[4];
             reader.AddBlock(ptBlock);
         }
         else if (

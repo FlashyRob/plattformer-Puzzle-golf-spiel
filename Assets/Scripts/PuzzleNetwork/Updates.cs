@@ -21,8 +21,6 @@ public class Updates : MonoBehaviour
             reader = gameObject.AddComponent<JSONReader>();
         }
 
-        AddConnection(0, 0, new connections { outputIndex = 6, outputSide = 1 });
-        AddConnection(0, 0, new connections { outputIndex = 7, outputSide = 3 });
     }
 
     // Update is called once per frame
@@ -83,16 +81,49 @@ public class Updates : MonoBehaviour
         }
     }
 
+
     public void AddConnection(int blockIndex, int side, connections connection)
     {
-        blockData thisBlock = GetBlock(blockIndex);
-        thisBlock.connectionData[side].Add(connection);
+        blockData thisBlock = new blockData();
+        thisBlock = GetBlock(blockIndex);
+        switch (side)
+        {
+            case 0:
+                thisBlock.connectios_top.Add(connection);
+                break;
+            case 1:
+                thisBlock.connectios_right.Add(connection);
+                break;
+            case 2:
+                thisBlock.connectios_bottom.Add(connection);
+                break;
+            case 3:
+                thisBlock.connectios_left.Add(connection);
+                break;
+        }
+            
     }
 
     public List<connections> GetConnections(int blockIndex, int side)
     {
         blockData thisBlock = GetBlock(blockIndex);
-        var l = thisBlock.connectionData[side];
+        var l = new List<connections>();
+
+        switch (side)
+        {
+            case 0:
+                l = thisBlock.connectios_top;
+                break;
+            case 1:
+                l = thisBlock.connectios_right;
+                break;
+            case 2:
+                l = thisBlock.connectios_bottom;
+                break;
+            case 3:
+                l = thisBlock.connectios_left;
+                break;
+        }
         return (l);
     }
 
@@ -114,6 +145,7 @@ public class Updates : MonoBehaviour
         }
         return false;
     }
+
 
     private void HandleWireStraight(int i, blockData block)
     {
@@ -541,7 +573,10 @@ public struct blockData
     public int state;
     public string meta;
     public int visualActive;
-    public List<List<connections>> connectionData;
+    public List<connections> connectios_top;
+    public List<connections> connectios_bottom;
+    public List<connections> connectios_left;
+    public List<connections> connectios_right;
     public bool[] activeSides;
     public bool editable;
     public bool clickkable;
