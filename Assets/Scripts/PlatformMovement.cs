@@ -1,11 +1,13 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+
 public class PlatformMovement : MonoBehaviour
 {
     public float speed;
     public int startingPoint;
     public Transform[] points;
+    [HideInInspector]
     public Vector2 velocity;
     private Rigidbody2D rb;
 

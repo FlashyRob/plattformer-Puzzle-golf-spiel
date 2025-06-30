@@ -15,7 +15,7 @@ public class Schmoovement : MonoBehaviour
     float myx = 0;
     float exitx = 0;
     float controldamper = 1;
-    public Vector2 velocityDebug;
+    private Vector2 velocityDebug;
     public float moveSpeed;
     public float platformJump;
     bool Slide = false;
