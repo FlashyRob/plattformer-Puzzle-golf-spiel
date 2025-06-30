@@ -6,6 +6,8 @@ public class JSONReader : MonoBehaviour
 {
     public string saveName = "Level_0";
     public List<blockData> blockSafeFile;
+
+    private ScannerinoCrocodilo scanner;
     
     private string SavePath(string level_name)
     {
@@ -17,6 +19,8 @@ public class JSONReader : MonoBehaviour
     {
         blockSafeFile = LoadLevel();
         RemoveBlock(1);
+
+        scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
     }
 
     public List<blockData> LoadLevel()
@@ -154,6 +158,8 @@ public class JSONReader : MonoBehaviour
         var j = JsonUtility.ToJson(b);
 
         File.WriteAllText(SavePath(saveName), j);
+
+        scanner.Scanner();
     }
 
     [System.Serializable]

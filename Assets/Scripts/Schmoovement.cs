@@ -13,11 +13,17 @@ public class Schmoovement : MonoBehaviour
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
+    float exitx = 0;
     float controldamper = 1;
     public Vector2 velocityDebug;
     public float moveSpeed;
     public float platformJump;
     bool Slide = false;
+    bool Sneaking = false;
+    bool Sneakdrop = false;
+    bool CameFromAbove = false;
+    bool DroppedRight = false;
+    bool DroppedLeft = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,30 +37,27 @@ public class Schmoovement : MonoBehaviour
     // Update is called once per frame
 
     private float inputHorizontalAxis;
-    private bool inputKeyDownSpace;
+    private int inputKeyDownSpace;
     private bool inputKeySpace;
     private bool inputKeyD;
     private bool inputKeyA;
-
     private bool processInput = false;
 
     private Vector2 playerVel;
     void Update()
     {
-
         inputHorizontalAxis = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
-        inputKeyDownSpace = Input.GetKeyDown(KeyCode.Space);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            inputKeyDownSpace++;
+        }
         inputKeySpace = Input.GetKey(KeyCode.Space);
         inputKeyD = Input.GetKey(KeyCode.D);
         inputKeyA = Input.GetKey(KeyCode.A);
+        playerVel = rb2d.linearVelocity;
+
 
         processInput = true;
-
-        //Debug.Log("At start Update player velocity is " + rb2d.linearVelocity);
-
-
-
-        playerVel = rb2d.linearVelocity;
 
     }
 
@@ -65,11 +68,9 @@ public class Schmoovement : MonoBehaviour
         // Fixed Update is called multiple times while update is called once.
         // we are perform the movmement in fixed update to allow accurate moving platform tracking
         float jumpVelocity;
-        //Debug.Log("At start Fixed Update player velocity is " + rb2d.linearVelocity);
 
         if (processInput)
         {
-            //Debug.Log("Processing Input");
             if (inputKeySpace)
             {
                 jumpVelocity = 0.012f;
@@ -79,11 +80,22 @@ public class Schmoovement : MonoBehaviour
                 jumpVelocity = 0;
             }
 
-            if (inputKeyDownSpace)
+            if (inputKeyDownSpace>=1)
             {
                 if (Grounded && !Walled)
                 {
-                    jumpVelocity = 9 + platformJump;
+                    Grounded = false;
+                    if (Sneaking)
+                    {
+                        jumpVelocity = 12 + platformJump;
+                        controldamper = 1;
+                        Sneakdrop = false;
+                        Sneaking = false;
+                    }
+                    else
+                    {
+                        jumpVelocity = 9 + platformJump;
+                    }
                 }
 
                 if (Walled)
@@ -125,10 +137,28 @@ public class Schmoovement : MonoBehaviour
                 }
             }
 
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                if (Grounded)
+                {
+                    Sneaking = true;
+                    controldamper = 0.5f;
+                }
+                else
+                {
+                    controldamper = 1;
+                    Sneaking = false;
+                }
+            }
+            else
+            {
+                Sneaking = false;
+            }
+
             verticalVelocity = jumpVelocity + playerVel.y;
 
 
-            if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity > 6)
+            if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity > 6)
             {
                 jumpVelocity = 4;
                 secondJump = false;
@@ -136,7 +166,8 @@ public class Schmoovement : MonoBehaviour
 
             verticalVelocity = jumpVelocity + playerVel.y;
 
-            if (inputKeyDownSpace && secondJump && !Walled && verticalVelocity < 6)
+            if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity < 6)
+          
             {
                 verticalVelocity = 8;
                 secondJump = false;
@@ -162,7 +193,40 @@ public class Schmoovement : MonoBehaviour
             }
 
             horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
+
+            if(Sneakdrop)
+            {
+                Debug.Log("I am executing");
+                if (transform.position.x < exitx &&! DroppedRight)
+                {
+                    rb2d.MovePosition(new Vector2(exitx, transform.position.y));
+                    DroppedLeft = true;
+                    DroppedRight = false;
+
+                    if (horizontalVelocity < 0)
+                    {
+                        horizontalVelocity = 0;
+                    }
+                }
+                
+                if (transform.position.x > exitx &&! DroppedLeft)
+                {
+                    rb2d.MovePosition(new Vector2(exitx, transform.position.y));
+                    DroppedRight = true;
+                    DroppedLeft = false;
+
+                    if (horizontalVelocity > 0)
+                    {
+                        horizontalVelocity = 0;
+                    }
+                }
+            }
+
             rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
+            if (inputKeyDownSpace >= 1)
+            {
+                inputKeyDownSpace--;
+            }
             processInput = false;
 
             // set animation parameters
@@ -186,8 +250,6 @@ public class Schmoovement : MonoBehaviour
             {
                 Flip();
             }
-
-            //Debug.Log("Input gives us " + rb2d.linearVelocity);
         }
 
         // move with platforms
@@ -199,7 +261,7 @@ public class Schmoovement : MonoBehaviour
             // Always add horizontal platform motion when we stand on the platform
             playerAndPlatform.x = horizontalVelocity + platformVel.x;
 
-            // The vertical velocity builds up over mutliple frames because we dont overrite it from scratch like the horizontalVelocity.
+            // The vertical velocity builds up over mutliple frames because we dont overwrite it from scratch like the horizontalVelocity.
             // So we cannot simply add it like the platform x motion
             // instead, I snap the player velocity to the plaform if the players velcoity is already close to the platform
             // this setup allows you to jump though the platform without snapping to the platform and loosing your velocity.
@@ -208,12 +270,9 @@ public class Schmoovement : MonoBehaviour
                 playerAndPlatform.y = platformVel.y;
             }
             rb2d.linearVelocity = playerAndPlatform;
-            //Debug.Log("Player velocity platform added: " + rb2d.linearVelocity);
         }
 
-        velocityDebug = rb2d.linearVelocity; // debug display velocity in inspector window
-        //Debug.Log("At player velocity Fixed Update calcualted " + rb2d.linearVelocity);
-
+        velocityDebug = rb2d.linearVelocity; 
         Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
 
     }
@@ -236,19 +295,22 @@ public class Schmoovement : MonoBehaviour
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
 
+            if (rb2d.linearVelocity.y <= 0)
+            {
+                CameFromAbove = true;
+            }
+            else
+            {
+                CameFromAbove = false;
+            }
+
             if (Mathf.Abs(normal.x) > 0.5f)
             {
                 // The vector mostly points in x or -x direction. So we've hit a wall
                 Slide = true;
             }
         }
-
-        if (coll.gameObject.tag == "MovingPlatform")
-        {
-
-        }
     }
-
     void OnCollisionStay2D(Collision2D coll)
     {
 
@@ -276,7 +338,32 @@ public class Schmoovement : MonoBehaviour
             }
 
         }
-        if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
+        if (coll.gameObject.tag == "Ground")
+        {
+            ContactPoint2D contact = coll.contacts[0];
+            Vector2 normal = contact.normal; // has length of 1
+            // we check the collision normal to see which direction the ground hit us from
+
+            exitx = contact.point.x;
+            controldamper = 1;
+
+            if (normal.y > 0.5f && CameFromAbove)
+            {
+                // the normal vector mostly points up. The ground has hit us from below.
+                Grounded = true;
+                Walled = false;
+                secondJump = false;
+                Slide = false;
+            }
+            else if (Mathf.Abs(normal.x) > 0.5f)
+            {
+                // The vector mostly points in x or -x direction. So we've hit a wall
+                Walled = true;
+                collidex = contact.point.x; // remeber the contact point for walljump
+                myx = transform.position.x;
+            }
+        }
+        if (coll.gameObject.tag == "Box")
         {
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
@@ -293,13 +380,6 @@ public class Schmoovement : MonoBehaviour
                 Slide = false;
                 //Debug.Log("Vector" + !Slide);
             }
-            else if (Mathf.Abs(normal.x) > 0.5f)
-            {
-                // The vector mostly points in x or -x direction. So we've hit a wall
-                Walled = true;
-                collidex = contact.point.x; // remeber the contact point for walljump
-                myx = transform.position.x;
-            }
         }
     }
 
@@ -312,8 +392,6 @@ public class Schmoovement : MonoBehaviour
             currentPlatform = null;
             Grounded = false;
             secondJump = true;
-            moveSpeed = 5;
-            platformJump = 0;
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
@@ -331,7 +409,24 @@ public class Schmoovement : MonoBehaviour
             if (Slide)
             {
                 Slide = false;
-                //Debug.Log("collisonExit" + !Slide);
+            }
+
+            if (Sneakdrop)
+            {
+                DroppedLeft = false;
+                DroppedRight = false;
+            }
+
+            if (Sneaking)
+            {
+                controldamper = 1;
+                Sneakdrop = true;
+            }
+            else
+            {
+                Sneakdrop = false;
+                DroppedLeft = false;
+                DroppedRight = false;
             }
         }
     }
