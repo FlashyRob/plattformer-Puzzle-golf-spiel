@@ -10,6 +10,7 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
+    private GameObject[] uiPrefabs;
     public GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
@@ -68,6 +69,7 @@ public class LevelEditor : MonoBehaviour
 
         block = Resources.LoadAll<GameObject>("Blocks");
         textures = Resources.LoadAll<GameObject>("Textures");
+        uiPrefabs = Resources.LoadAll<GameObject>("UIPrefabs");
 
         for (int i = 0; i < block.Length; i++)
         {
@@ -101,7 +103,7 @@ public class LevelEditor : MonoBehaviour
         RectTransform rt;
         HorizontalLayoutGroup lg;
         Image im;
-
+        TextMesh tm;
 
         var editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -118,7 +120,7 @@ public class LevelEditor : MonoBehaviour
         im.color = new Color(164f / 256f, 164f / 256f, 164f / 256f);
         editorParent.AddComponent<CheckUIHover>();
 
-        var blockSelectorParent = new GameObject();
+        GameObject blockSelectorParent = new GameObject();
         blockSelectorParent.name = "BlockSelectorParent";
         blockSelectorParent.transform.parent = editorParent.transform;
         rt = blockSelectorParent.AddComponent<RectTransform>();
@@ -163,13 +165,49 @@ public class LevelEditor : MonoBehaviour
             materialObjects[i] = blockSelector;
         }
 
-        /*
-        var optionsParent = new GameObject();
-        optionsParent.name = "OptionsParent";
-        optionsParent.transform.parent = editorParent.transform;
-        rt = optionsParent.AddComponent<RectTransform>();
-        rt.localScale = new Vector3(0, 0, 0);*/
+        GameObject blockCountParent = new GameObject();
+        blockCountParent.name = "BlockCountParent";
+        blockCountParent.transform.parent = editorParent.transform;
+        rt = blockCountParent.AddComponent<RectTransform>();
+        rt.localScale = new Vector3(1, 1, 1);
+        rt.anchorMin = new Vector2(0, 1);
+        rt.anchorMax = new Vector2(0, 1);
+        rt.anchoredPosition = new Vector2(23, -50);
+        rt.pivot = new Vector2(0, 0.5f);
+        lg = blockCountParent.AddComponent<HorizontalLayoutGroup>();
+        lg.padding = new RectOffset(23, 0, 5, 0);
+        lg.childAlignment = TextAnchor.MiddleLeft;
+        lg.spacing = 35;
+        lg.childControlWidth = false;
+        lg.childControlHeight = false;
+        lg.childForceExpandWidth = false;
+        lg.childForceExpandHeight = false;
 
+        for (int i = 0; i < materials.Length; i++) { 
+            GameObject blockCount = new GameObject();
+            blockCount.name = materials[i];
+            blockCount.transform.parent = blockCountParent.transform;
+            rt = blockCount.AddComponent<RectTransform>();
+            rt.localScale = new Vector3(1, 1, 1);
+            rt.sizeDelta = new Vector2(25, 25);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            im = blockCount.AddComponent<Image>();
+            im.color = new Color(1, 1, 1, 0.5f);
+
+            GameObject textItem = new GameObject();
+            textItem.name = "Text";
+            textItem.transform.parent = blockCount.transform;
+            rt = textItem.AddComponent<RectTransform>();
+            rt.localScale = new Vector3(1, 1, 1);
+            rt.anchorMin = new Vector2(0, 0);
+            rt.anchorMax = new Vector2(1, 1);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            tm = textItem.AddComponent<TextMesh>();
+            tm.text = "n/a";
+            tm.color = new Color(0, 0, 0, 1);
+            //tm.font = 
+            tm.fontSize = 25;
+        }
     }
 
     Vector3 GetMousePos()
