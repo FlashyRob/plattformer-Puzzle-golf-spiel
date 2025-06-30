@@ -242,11 +242,16 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
         foreach (findBlock foundBlock in foundInputBlocks)
         {
+            update.ResetConnections(foundBlock.index, foundBlock.side);
+        }
+
+        foreach (findBlock foundBlock in foundInputBlocks)
+        {
             Debug.Log("found an input at idx: " + foundBlock.index +" at side: " + foundBlock.side);
 
             ScannFromBlock(foundBlock.index, foundBlock.side);
 
-            update.ResetConnections(foundBlock.index, foundBlock.side);
+            
 
             ApplyConnectionData(foundPowerssources);
 
