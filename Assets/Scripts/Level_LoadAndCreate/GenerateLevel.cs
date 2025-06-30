@@ -45,7 +45,7 @@ public class GenerateLevel : MonoBehaviour
             string blockType = thisBlock.type;
             if (blockType == null)
             {
-                blockType = thisBlock.typetype;
+                blockType = thisBlock.type;
             }
             int blockDirection = thisBlock.direction * 90;
             string blockName = "block:" + blockPos.x + "," + blockPos.y;
