@@ -36,12 +36,6 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
     public void ScannFromBlock(int index, int side)
     {
-        Debug.Log("Our Powerssources are:");
-
-        foreach (string p in powerSources)
-        {
-            Debug.Log(p);
-        }
 
         nextScanns.Clear();
         foundPowerssources.Clear();
@@ -83,11 +77,11 @@ public class ScannerinoCrocodilo : MonoBehaviour
             findBlock powerSource;
 
             powerSource.index = nextScanns[0];
-            powerSource.Side = (side + 2) % 4;
+            powerSource.side = (side + 2) % 4;
             powerSource.fromSide = side;
             powerSource.fromIndex = index;
 
-            Debug.Log("foud a powersource at index: " + powerSource.index + "at side: " + powerSource.Side + "from: " + powerSource.fromIndex + "side:" + powerSource.fromSide + "I have ended the script for you =)");
+            Debug.Log("foud a powersource at index: " + powerSource.index + "at side: " + powerSource.side + "from: " + powerSource.fromIndex + "side:" + powerSource.fromSide + "I have ended the script for you =)");
             foundPowerssources.Add(powerSource);
             return;
 
@@ -147,11 +141,11 @@ public class ScannerinoCrocodilo : MonoBehaviour
                                 findBlock powerSource;
 
                                 powerSource.index = nIndex;
-                                powerSource.Side = (scannDir + 2) % 4;
+                                powerSource.side = (scannDir + 2) % 4;
                                 powerSource.fromSide = side;
                                 powerSource.fromIndex = index;
 
-                                Debug.Log("foud a powersource at index: " + powerSource.index + " at side: " + powerSource.Side + " from: " + powerSource.fromIndex +" side: "+ powerSource.fromSide);
+                                Debug.Log("foud a powersource at index: " + powerSource.index + " at side: " + powerSource.side + " from: " + powerSource.fromIndex +" side: "+ powerSource.fromSide);
                                 foundPowerssources.Add(powerSource);
 
                             }
@@ -192,7 +186,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
         Debug.Log("have fun with the powerssources I found:");
         for (int i = 0; i < foundPowerssources.Count; i++)
         {
-            Debug.Log("powerssource at: index:" + foundPowerssources[i].index + "side: " + foundPowerssources[i].Side);
+            Debug.Log("powerssource at: index:" + foundPowerssources[i].index + "side: " + foundPowerssources[i].side);
         }
         Debug.Log("that's all I have for you :(");
     }
@@ -228,7 +222,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
                     {
                         findBlock foundBlock = new findBlock();
                         foundBlock.index = block.index;
-                        foundBlock.Side = side;
+                        foundBlock.side = side;
 
                         foundInputBlocks.Add(foundBlock);
                     }
@@ -248,9 +242,12 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
         foreach (findBlock foundBlock in foundInputBlocks)
         {
-            Debug.Log("found an input at idx: " + foundBlock.index +" at side: " + foundBlock.Side);
+            Debug.Log("found an input at idx: " + foundBlock.index +" at side: " + foundBlock.side);
 
-            ScannFromBlock(foundBlock.index, foundBlock.Side);
+            ScannFromBlock(foundBlock.index, foundBlock.side);
+
+            update.ResetConnections(foundBlock.index, foundBlock.side);
+
             ApplyConnectionData(foundPowerssources);
 
         }
@@ -260,8 +257,8 @@ public class ScannerinoCrocodilo : MonoBehaviour
     {
         foreach (findBlock foundBlock in foundConnections)
         {
-            Debug.Log(foundBlock.index + " " + foundBlock.Side + " " + update.GetBlock(foundBlock.index).type);
-            update.AddConnection(foundBlock.fromIndex, foundBlock.fromSide, new connections { outputIndex = foundBlock.index, outputSide = foundBlock.Side});
+            Debug.Log("appied connection to " + foundBlock.index + " " + foundBlock.side + " " + update.GetBlock(foundBlock.index).type);
+            update.AddConnection(foundBlock.fromIndex, foundBlock.fromSide, new connections { outputIndex = foundBlock.index, outputSide = foundBlock.side});
         }
     }
 
@@ -322,7 +319,7 @@ public bool StringContains(string item, string[] array)
     public struct findBlock
     {
         public int index;
-        public int Side;
+        public int side;
         public int fromIndex;
         public int fromSide;
     }

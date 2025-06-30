@@ -80,7 +80,18 @@ public class Updates : MonoBehaviour
             }
         }
     }
+    
+    public void ResetConnections(int index, int side)
+    {
+        blockData thisBlock = new blockData();
+        thisBlock = GetBlock(index);
+        thisBlock.connectios_top.Clear();
+        thisBlock.connectios_bottom.Clear();
+        thisBlock.connectios_right.Clear();
+        thisBlock.connectios_left.Clear();
 
+        thisBlock.activeSides = new bool[4];
+    }
 
     public void AddConnection(int blockIndex, int side, connections connection)
     {
@@ -89,16 +100,28 @@ public class Updates : MonoBehaviour
         switch (side)
         {
             case 0:
-                thisBlock.connectios_top.Add(connection);
+                if (!thisBlock.connectios_top.Contains(connection))
+                {
+                    thisBlock.connectios_top.Add(connection);
+                }
                 break;
             case 1:
-                thisBlock.connectios_right.Add(connection);
+                if (!thisBlock.connectios_right.Contains(connection))
+                {
+                    thisBlock.connectios_right.Add(connection);
+                }
                 break;
             case 2:
-                thisBlock.connectios_bottom.Add(connection);
+                if (!thisBlock.connectios_bottom.Contains(connection))
+                {
+                    thisBlock.connectios_bottom.Add(connection);
+                }
                 break;
             case 3:
-                thisBlock.connectios_left.Add(connection);
+                if (!thisBlock.connectios_left.Contains(connection))
+                {
+                    thisBlock.connectios_left.Add(connection);
+                }
                 break;
         }
             
