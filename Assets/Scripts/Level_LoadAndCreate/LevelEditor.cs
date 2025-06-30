@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,7 @@ public class LevelEditor : MonoBehaviour
         "battery",
     }; 
     private int[] materialRotations;
+    private GameObject[] materialObjects;
 
     List<string> blockName = new List<string>();
     List<string> texturesName = new List<string>();
@@ -48,6 +50,7 @@ public class LevelEditor : MonoBehaviour
         materialRotations = new int[materials.Length];
         for (int i = 0; i < materialRotations.Length; i++)
             materialRotations[i] = 0;
+        materialObjects = new GameObject[materials.Length];
 
 
         update = FindAnyObjectByType<Updates>();
@@ -130,7 +133,7 @@ public class LevelEditor : MonoBehaviour
 
         for (int i = 0; i < materials.Length; i++)
         {
-            var blockSelector = new GameObject();
+            GameObject blockSelector = new GameObject();
             blockSelector.name = materials[i];
             blockSelector.transform.parent = blockSelectorParent.transform;
             rt = blockSelector.AddComponent<RectTransform>();
@@ -149,6 +152,8 @@ public class LevelEditor : MonoBehaviour
             var oc = block[materialPrefabIdx].GetComponent<SpriteRenderer>();
             im.sprite = oc.sprite;
             im.color = oc.color;
+
+            materialObjects[i] = blockSelector;
         }
 
         /*
@@ -200,6 +205,11 @@ public class LevelEditor : MonoBehaviour
                 getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
                 getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
                 reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
+
+                int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
+                materialRotations[materialIndex] = (getBlock.direction + 1) % 4;
+                select.transform.Rotate(new Vector3(0, 0, -90));
+                materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
         }
 
