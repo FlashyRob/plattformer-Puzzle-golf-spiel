@@ -216,10 +216,10 @@ public class LevelEditor : MonoBehaviour
                 int materialIndex = System.Array.IndexOf(materials, getBlock.type);
                 int directionDegree = (getBlock.direction + 1) * -90;
                 materialRotations[materialIndex] = directionDegree;
-                materialObjects[materialIndex].transform.rotation = Quaternion.Euler(0, 0, directionDegree);
+                materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
                 if (getBlock.type == ClickTest.selectedMaterial)
                 {
-                    select.transform.rotation = Quaternion.Euler(0, 0, directionDegree);
+                    select.transform.rotation = currentBlockObject.transform.rotation;
                 }
             }
         }
@@ -280,7 +280,7 @@ public class LevelEditor : MonoBehaviour
 
             blockData ptBlock = new blockData();
             ptBlock.type = currentBlockPrefab.name;
-            ptBlock.direction = 0;
+            ptBlock.direction = materialRotations[System.Array.IndexOf(materials, currentBlockPrefab.name)] / -90 % 4;
             ptBlock.index = posIndex;
             ptBlock.inputDirections = editorToUpdate.BlockNamesToDirections(ptBlock.type).inputDirections;
             ptBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(ptBlock.inputDirections, (ptBlock.direction + 3) % 4);
