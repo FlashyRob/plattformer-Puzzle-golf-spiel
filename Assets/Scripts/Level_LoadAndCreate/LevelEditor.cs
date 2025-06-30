@@ -214,11 +214,12 @@ public class LevelEditor : MonoBehaviour
                 reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
 
                 int materialIndex = System.Array.IndexOf(materials, getBlock.type);
-                materialRotations[materialIndex] = (getBlock.direction + 1) % 4;
-                materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
+                int directionDegree = (getBlock.direction + 1) * -90;
+                materialRotations[materialIndex] = directionDegree;
+                materialObjects[materialIndex].transform.rotation = Quaternion.Euler(0, 0, directionDegree);
                 if (getBlock.type == ClickTest.selectedMaterial)
                 {
-                    select.transform.Rotate(new Vector3(0, 0, -90));
+                    select.transform.rotation = Quaternion.Euler(0, 0, directionDegree);
                 }
             }
         }
@@ -268,7 +269,12 @@ public class LevelEditor : MonoBehaviour
                 reader.RemoveBlock(posIndex);
             }
 
-            GameObject newBlock = Instantiate(currentBlockPrefab, mousePos, Quaternion.identity, createdBlocks.transform);
+            GameObject newBlock = Instantiate(
+                currentBlockPrefab,
+                mousePos,
+                Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)]), 
+                createdBlocks.transform
+            );
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
 
