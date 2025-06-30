@@ -10,7 +10,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
     public List<int> visitedBlocks = new List<int>();
     public List<findBlock> foundInputBlocks = new List<findBlock>();
 
-    public string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "toggle" };
+    private string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "battery", "toggle"  };
 
     private CheckWheatherTwoBlocksAreConnected general;
     private Updates update;
@@ -36,6 +36,12 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
     public void ScannFromBlock(int index, int side)
     {
+        Debug.Log("Our Powerssources are:");
+
+        foreach (string p in powerSources)
+        {
+            Debug.Log(p);
+        }
 
         nextScanns.Clear();
         foundPowerssources.Clear();
@@ -58,19 +64,57 @@ public class ScannerinoCrocodilo : MonoBehaviour
                 break;
         }
 
+        Debug.Log("started a new Scan at index: "+ index);
+        Debug.Log("since the side was " + side + ", we started at index: " + nextScanns[0]);
+
         List<int> thisScann = new List<int>();
 
         int safetyBreak = 0;
 
+        if(!general.CheckIfTwoBlocksAreConnected(index, nextScanns[0]))
+        {
+            Debug.Log("No connections, since the block is not even connected at the side you told me to scann :(");
+            return;
+        }
+
+
+        if (IsPowerssource(update.GetBlock(nextScanns[0]).type))
+        {
+            findBlock powerSource;
+
+            powerSource.index = nextScanns[0];
+            powerSource.Side = (side + 2) % 4;
+            powerSource.fromSide = side;
+            powerSource.fromIndex = index;
+
+            Debug.Log("foud a powersource at index: " + powerSource.index + "at side: " + powerSource.Side + "from: " + powerSource.fromIndex + "side:" + powerSource.fromSide + "I have ended the script for you =)");
+            foundPowerssources.Add(powerSource);
+            return;
+
+        }
+
         while (true)
         {
-            thisScann = nextScanns;
+            Debug.Log("today I will scann: " + nextScanns.Count + " blocks");
+
+            thisScann.Clear();
+            
+            foreach (int i in nextScanns)
+            {
+                thisScann.Add(i);
+            }
+
             nextScanns.Clear();
+
+            
 
             safetyBreak += 1;
 
+            Debug.Log("started a new Scan of the this blocks List (len = " + thisScann.Count + ")");
+
             if (thisScann.Count == 0 || safetyBreak > 1000)
             {
+                Debug.Log("I have to break, since I have nothing left to scann :/");
                 break;
             }
 
@@ -78,40 +122,98 @@ public class ScannerinoCrocodilo : MonoBehaviour
             {
                 int tileIndex = thisScann[i];
                 tiles neightbours = ScannNeighbours(tileIndex);
-                var neighbourDir = new int[] { neightbours.top, neightbours.left, neightbours.right, neightbours.bottom };
+                var neighbourDir = new int[] { neightbours.top, neightbours.right, neightbours.bottom, neightbours.left};
 
                 visitedBlocks.Add(tileIndex);
-                int scannDir = 0;
+
+                int scannDir = -1;
+
                 foreach (var nIndex in neighbourDir)
                 {
-                    if (general.CheckIfTwoBlocksAreConnected(tileIndex, nIndex) && !(nIndex == index) && !visitedBlocks.Contains(nIndex))
+                    scannDir++; 
+
+                    Debug.Log("now we are scanning the tile at " + nIndex + " from " + tileIndex);
+
+                    if(nIndex > -1 && nIndex < general.worldX * general.worldY)
                     {
-                        if (StringContains(update.GetBlock(tileIndex).type, powerSources))
+                        
+                        bool connected = general.CheckIfTwoBlocksAreConnected(tileIndex, nIndex);
+                        bool isnotUs = !(nIndex == index);
+                        bool notYetVisited = !visitedBlocks.Contains(nIndex);
+                        if (connected && isnotUs  && notYetVisited)
                         {
-                            findBlock powerSource;
-
-                            powerSource.index = nIndex;
-                            powerSource.Side = scannDir;
-                            powerSource.fromSide = side;
-                            powerSource.fromIndex = index;
-
-                            foundPowerssources.Add(powerSource);
-                        }
-                        else
-                        {
-                            if (update.GetBlock(tileIndex).type == "wire")
+                            if (IsPowerssource(update.GetBlock(nIndex).type))
                             {
-                                nextScanns.Add(nIndex);
+                                findBlock powerSource;
+
+                                powerSource.index = nIndex;
+                                powerSource.Side = (scannDir + 2) % 4;
+                                powerSource.fromSide = side;
+                                powerSource.fromIndex = index;
+
+                                Debug.Log("foud a powersource at index: " + powerSource.index + " at side: " + powerSource.Side + " from: " + powerSource.fromIndex +" side: "+ powerSource.fromSide);
+                                foundPowerssources.Add(powerSource);
+
                             }
+                            else
+                            {
+                                if (update.GetBlock(nIndex).type.Contains("wire_"))
+                                {
+                                    nextScanns.Add(nIndex);
+
+                                    Debug.Log("Sadly I have not found a powerssource at index " + nIndex + " but it is a wire." + " The tile we found is named: " + update.GetBlock(nIndex).type);
+                                }
+                                else
+                                {
+                                    Debug.Log(nIndex + " does not contain a powerssource, nor a wire" + " The tile we found is named: " + update.GetBlock(nIndex).type);
+                                }
+                            }
+                            
+
+
+                        }else
+                        {
+                            Debug.Log("There is no connection between the blocks " + nIndex + " (nIndex) and " + tileIndex + " (this tile) or we have already tried this tile before");
                         }
-                        scannDir++;
+                        
+                    }else
+                    {
+                        Debug.Log("The index I tried to scann: " + nIndex + " was out of the map");
                     }
+                    
+                   
+                    
                 }
             }
+
+            Debug.Log("scan round ended");
         }
+        Debug.Log("scan is finished =)");
+        Debug.Log("have fun with the powerssources I found:");
+        for (int i = 0; i < foundPowerssources.Count; i++)
+        {
+            Debug.Log("powerssource at: index:" + foundPowerssources[i].index + "side: " + foundPowerssources[i].Side);
+        }
+        Debug.Log("that's all I have for you :(");
     }
 
+    public bool IsPowerssource(string type)
+    {
+        Debug.Log("Now we are checking if " + type + " is a powerssouce:");
 
+        foreach (string checkType in powerSources)
+        {
+            if (checkType == type) 
+            {
+                Debug.Log("YES =)");
+                return true;
+            }
+        }
+
+        Debug.Log("NO! GRRRR");
+
+        return false;
+    }
     public void FindInputBlocks()
     {
         foundInputBlocks.Clear();
@@ -141,8 +243,13 @@ public class ScannerinoCrocodilo : MonoBehaviour
     public void Scanner()
     {
         FindInputBlocks();
+
+        Debug.Log("#sides with input: " + foundInputBlocks.Count());
+
         foreach (findBlock foundBlock in foundInputBlocks)
         {
+            Debug.Log("found an input at idx: " + foundBlock.index +" at side: " + foundBlock.Side);
+
             ScannFromBlock(foundBlock.index, foundBlock.Side);
             ApplyConnectionData(foundPowerssources);
 
@@ -154,7 +261,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
         foreach (findBlock foundBlock in foundConnections)
         {
             Debug.Log(foundBlock.index + " " + foundBlock.Side + " " + update.GetBlock(foundBlock.index).type);
-            update.AddConnection(foundBlock.index, foundBlock.Side, new connections { outputIndex = foundBlock.fromIndex, outputSide = foundBlock.fromSide});
+            update.AddConnection(foundBlock.fromIndex, foundBlock.fromSide, new connections { outputIndex = foundBlock.index, outputSide = foundBlock.Side});
         }
     }
 

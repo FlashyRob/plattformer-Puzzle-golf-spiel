@@ -488,10 +488,10 @@ public class Updates : MonoBehaviour
         else EditVisualActive(i, 0);
     }
 
-    public bool IsAnyConnectionActive(int[] directions, int blockIndex, int side)
+    public bool IsAnyConnectionActive(int[] inputDirections, int blockIndex, int side)
     {
         int[] activeConnections;
-        activeConnections = CheckConnectionSides(directions, GetConnections(blockIndex, side));
+        activeConnections = CheckConnectionSides(inputDirections, GetConnections(blockIndex, side));
         if (activeConnections.Contains(1))
         {
             return true;
