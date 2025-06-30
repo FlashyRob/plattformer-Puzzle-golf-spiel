@@ -4,11 +4,11 @@ using System.Linq;
 
 public class ScannerinoCrocodilo : MonoBehaviour
 {
-    public List<int> scannedBlockIndexes;
-    public List<int> nextScanns;
-    public List<findBlock> foundPowerssources;
-    public List<int> visitedBlocks;
-    public List<findBlock> foundInputBlocks;
+    public List<int> scannedBlockIndexes = new List<int>();
+    public List<int> nextScanns = new List<int>();
+    public List<findBlock> foundPowerssources = new List<findBlock>();
+    public List<int> visitedBlocks = new List<int>();
+    public List<findBlock> foundInputBlocks = new List<findBlock>();
 
     public string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "toggle" };
 
@@ -36,18 +36,27 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
     public void ScannFromBlock(int index, int side)
     {
-        string[] sides = new string[4] { "top", "right", "bootom", "left" };
 
         nextScanns.Clear();
         foundPowerssources.Clear();
         visitedBlocks.Clear();
 
-        string sideName = sides[side];
-        var n = ScannNeighbours(index);
 
-        var sidePropertyField = typeof(tiles).GetField(sideName);
-        int sidePropertyValue = (int)sidePropertyField.GetValue(n);
-        nextScanns.Add(sidePropertyValue);
+        switch (side)
+        {
+            case 0:
+                nextScanns.Add(ScannNeighbours(index).top);
+                break;
+            case 1:
+                nextScanns.Add(ScannNeighbours(index).right);
+                break;
+            case 2:
+                nextScanns.Add(ScannNeighbours(index).bottom);
+                break;
+            case 3:
+                nextScanns.Add(ScannNeighbours(index).left);
+                break;
+        }
 
         List<int> thisScann = new List<int>();
 
@@ -105,7 +114,6 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
     public void FindInputBlocks()
     {
-        foundInputBlocks.Add(new findBlock());
         foundInputBlocks.Clear();
 
         foreach (blockData block in reader.blockSafeFile)
