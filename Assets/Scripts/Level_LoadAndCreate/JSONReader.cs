@@ -117,14 +117,6 @@ public class JSONReader : MonoBehaviour
 
         SafeSafeFile();
     }
-    public void EditBlockType(blockData block, string newVal)
-    {
-        RemoveBlock(block.index);
-        block.typetype = newVal;
-        AddBlock(block);
-
-        SafeSafeFile();
-    }
     public void EditBlockState(blockData block, int newVal)
     {
         RemoveBlock(block.index);
