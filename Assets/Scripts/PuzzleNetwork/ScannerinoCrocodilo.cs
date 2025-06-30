@@ -105,7 +105,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
     public void FindInputBlocks()
     {
-
+        foundInputBlocks.Add(new findBlock());
         foundInputBlocks.Clear();
 
         foreach (blockData block in reader.blockSafeFile)
