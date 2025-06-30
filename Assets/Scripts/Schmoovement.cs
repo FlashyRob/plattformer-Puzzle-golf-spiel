@@ -13,17 +13,17 @@ public class Schmoovement : MonoBehaviour
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
-    float exitx = 0;
     float controldamper = 1;
     private Vector2 velocityDebug;
     public float moveSpeed;
     public float platformJump;
     bool Slide = false;
-    bool Sneaking = false;
-    bool Sneakdrop = false;
     bool CameFromAbove = false;
-    bool DroppedRight = false;
-    bool DroppedLeft = false;
+    bool Sneaking = false;
+    float lastContactPointx = 0;
+    public bool Sneakdrop = false; 
+    bool OnLeftEdge = false;
+    bool OnRightEdge = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -80,22 +80,23 @@ public class Schmoovement : MonoBehaviour
                 jumpVelocity = 0;
             }
 
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                Sneaking = true;
+            }
+            else
+            {
+                Sneaking = false;
+            }
+
             if (inputKeyDownSpace>=1)
             {
+                Sneaking = false;
+
                 if (Grounded && !Walled)
                 {
-                    Grounded = false;
-                    if (Sneaking)
-                    {
-                        jumpVelocity = 12 + platformJump;
-                        controldamper = 1;
-                        Sneakdrop = false;
-                        Sneaking = false;
-                    }
-                    else
-                    {
-                        jumpVelocity = 9 + platformJump;
-                    }
+                    Grounded = false;                  
+                    jumpVelocity = 9 + platformJump;
                 }
 
                 if (Walled)
@@ -137,26 +138,12 @@ public class Schmoovement : MonoBehaviour
                 }
             }
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Sneaking && Grounded)
             {
-                if (Grounded)
-                {
-                    Sneaking = true;
-                    controldamper = 0.5f;
-                }
-                else
-                {
-                    controldamper = 1;
-                    Sneaking = false;
-                }
-            }
-            else
-            {
-                Sneaking = false;
+                controldamper = 0.5f;
             }
 
             verticalVelocity = jumpVelocity + playerVel.y;
-
 
             if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity > 6)
             {
@@ -196,30 +183,36 @@ public class Schmoovement : MonoBehaviour
 
             if(Sneakdrop)
             {
-                Debug.Log("I am executing");
-                if (transform.position.x < exitx &&! DroppedRight)
+                Debug.Log("I try to Sneakdrop");
+                if(transform.position.x < lastContactPointx || OnLeftEdge) // check if player is to the left of the contact point
                 {
-                    rb2d.MovePosition(new Vector2(exitx, transform.position.y));
-                    DroppedLeft = true;
-                    DroppedRight = false;
+                    OnLeftEdge = true; // player is on the left edge of the contact point
+                    if(horizontalVelocity < 0)
+                    {
+                        horizontalVelocity = 0; // stop player from moving left
+                    }
+                    
+                    if (horizontalVelocity > 0)
+                    {
+                        Sneakdrop = false; 
+                        OnLeftEdge = false;
+                    }
+                }
+                else if (transform.position.x > lastContactPointx || OnRightEdge) // check if player is to the right of the contact point
+                {
+                    OnRightEdge = true; // player is on the right edge of the contact point
+                    if (horizontalVelocity > 0)
+                    {
+                        horizontalVelocity = 0; // stop player from moving right
+                    }
 
                     if (horizontalVelocity < 0)
                     {
-                        horizontalVelocity = 0;
+                       Sneakdrop = false; 
+                       OnRightEdge = false; 
                     }
                 }
-                
-                if (transform.position.x > exitx &&! DroppedLeft)
-                {
-                    rb2d.MovePosition(new Vector2(exitx, transform.position.y));
-                    DroppedRight = true;
-                    DroppedLeft = false;
-
-                    if (horizontalVelocity > 0)
-                    {
-                        horizontalVelocity = 0;
-                    }
-                }
+                rb2d.MovePosition(new Vector2(lastContactPointx, transform.position.y)); // snap player to last contact point
             }
 
             rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
@@ -344,8 +337,8 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
             // we check the collision normal to see which direction the ground hit us from
 
-            exitx = contact.point.x;
             controldamper = 1;
+            lastContactPointx = contact.point.x ; // remember the contact point for sneakdrop 
 
             if (normal.y > 0.5f && CameFromAbove)
             {
@@ -395,8 +388,19 @@ public class Schmoovement : MonoBehaviour
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
+               if (Sneakdrop)
+            {
+                Sneakdrop = false;
+                OnLeftEdge = false;
+                OnRightEdge = false;
+            }
+
             if (Grounded)
             {
+                if (Sneaking)
+                {
+                    Sneakdrop = true;
+                }
                 secondJump = true;
                 Grounded = false; ;
             }
@@ -410,24 +414,6 @@ public class Schmoovement : MonoBehaviour
             {
                 Slide = false;
             }
-
-            if (Sneakdrop)
-            {
-                DroppedLeft = false;
-                DroppedRight = false;
-            }
-
-            if (Sneaking)
-            {
-                controldamper = 1;
-                Sneakdrop = true;
-            }
-            else
-            {
-                Sneakdrop = false;
-                DroppedLeft = false;
-                DroppedRight = false;
-            }
-        }
+       }
     }
 }
