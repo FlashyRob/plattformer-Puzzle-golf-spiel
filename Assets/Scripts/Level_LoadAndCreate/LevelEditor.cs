@@ -361,6 +361,7 @@ public class LevelEditor : MonoBehaviour
         )
         {
             int currentIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
+
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
@@ -368,7 +369,9 @@ public class LevelEditor : MonoBehaviour
             }
 
             reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+
             EditMaterialCount(currentIndex, false);
+            materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
         }
     }
     public void SetMaterial(string[] newMaterials)
