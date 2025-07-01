@@ -8,7 +8,8 @@ public class JSONReader : MonoBehaviour
     public List<blockData> blockSafeFile;
 
     private ScannerinoCrocodilo scanner;
-    
+    private Updates update;
+
     private string SavePath(string level_name)
     {
         return Application.persistentDataPath+ "\\" +level_name +".json";
@@ -21,6 +22,7 @@ public class JSONReader : MonoBehaviour
         RemoveBlock(1);
 
         scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
+        update = FindAnyObjectByType<Updates>();
     }
 
     public List<blockData> LoadLevel()
@@ -159,7 +161,9 @@ public class JSONReader : MonoBehaviour
 
         File.WriteAllText(SavePath(saveName), j);
 
-        scanner.Scanner();
+        update.updateLoop = false;
+
+       
     }
 
     [System.Serializable]
