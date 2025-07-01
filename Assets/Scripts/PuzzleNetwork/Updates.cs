@@ -315,7 +315,7 @@ public class Updates : MonoBehaviour
         EditBlockActiveSide(i, 3, true);
     }
 
-    private void ToggleLever(int i, blockData block)
+    public void ToggleLever(int i, blockData block)
     {
         block.visualActive = (block.visualActive + 1) % 2;
 
@@ -335,7 +335,7 @@ public class Updates : MonoBehaviour
         }
     }
 
-    private void SetLever(int i, blockData block, int newVal)
+    public void SetLever(int i, blockData block, int newVal)
     {
         block.visualActive = newVal;
 
@@ -355,7 +355,7 @@ public class Updates : MonoBehaviour
         }
     }
 
-    private void SetButton(int i, blockData block, int newVal)
+    public void SetButton(int i, blockData block, int newVal)
     {
         block.visualActive = newVal;
 
@@ -375,7 +375,9 @@ public class Updates : MonoBehaviour
         }
     }
 
-    private void SetPreassureplate(int i, blockData block, int newVal)
+
+
+    public void SetPressurePlate(int i, blockData block, int newVal)
     {
         block.visualActive = newVal;
 
@@ -569,7 +571,9 @@ public class Updates : MonoBehaviour
     {
         List <connections> inputConnections = new List<connections>();
 
-        switch (side)
+        int realSide = (side + block.direction) % 4; 
+
+        switch (realSide)
         {
             case 0:
                 inputConnections = block.connectios_top;
