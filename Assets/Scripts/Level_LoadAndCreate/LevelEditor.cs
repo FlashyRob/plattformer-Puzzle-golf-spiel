@@ -52,7 +52,6 @@ public class LevelEditor : MonoBehaviour
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
     private EditorToUpdateData editorToUpdate;
-    private ToggleBlockState toggleState;
 
     private GameObject createdBlocks;
     private GameObject select;
@@ -74,7 +73,6 @@ public class LevelEditor : MonoBehaviour
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         reader = FindAnyObjectByType<JSONReader>();
         editorToUpdate = FindAnyObjectByType<EditorToUpdateData>();
-        toggleState = FindAnyObjectByType<ToggleBlockState>();
 
 
         block = Resources.LoadAll<GameObject>("Blocks");
@@ -284,12 +282,6 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
         }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            toggleState.ChangeBlockState(hoverBlock.type, hoverBlock.index);
-        }
-
         if (ClickTest.selectedMaterial == "Nothing") return;
 
         if (Input.GetMouseButtonDown(0))
