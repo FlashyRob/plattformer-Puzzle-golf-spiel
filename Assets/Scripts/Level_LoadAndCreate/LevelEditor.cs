@@ -40,6 +40,7 @@ public class LevelEditor : MonoBehaviour
         4,
         4,
     };
+    private ChangeBlockCount[] materialCountObjects;
 
     List<string> blockName = new List<string>();
     List<string> texturesName = new List<string>();
@@ -60,6 +61,7 @@ public class LevelEditor : MonoBehaviour
         for (int i = 0; i < materialRotations.Length; i++)
             materialRotations[i] = 0;
         materialObjects = new GameObject[materials.Length];
+        materialCountObjects = new ChangeBlockCount[materials.Length];
 
 
         update = FindAnyObjectByType<Updates>();
@@ -211,6 +213,8 @@ public class LevelEditor : MonoBehaviour
             tm.color = new Color(0, 0, 0, 1);
             tm.fontSize = 22;
             tm.horizontalAlignment = HorizontalAlignmentOptions.Right;
+
+            materialCountObjects[i] = textItem.AddComponent<ChangeBlockCount>();
         }
     }
 
