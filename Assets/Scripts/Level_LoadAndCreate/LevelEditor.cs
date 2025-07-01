@@ -229,6 +229,19 @@ public class LevelEditor : MonoBehaviour
         return mousePos.x < 0 || mousePos.y < 0 ? false : true;
     }
 
+    void EditMaterialCount(int currentIndex, bool increaseByOne) // nur innerhalb der "place" if Schleife oder der "delete" else if schleife aufrufen!!! // wenn increaseByOne false ist dann wollen wir eins abziehen (sonst eins hinzufügen)
+    {
+        int currentCount = materialCounts[currentIndex];
+        if (increaseByOne)
+        {
+            materialCounts.SetValue(currentCount + 1, currentIndex);
+        }
+        else
+        {
+            materialCounts.SetValue(currentCount + 1, currentIndex);
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -301,10 +314,11 @@ public class LevelEditor : MonoBehaviour
             editorMode == "place"
         )
         {
+            int currentIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
             int posIndex = position.GetIndexFromXY((int) mousePos.x, (int)mousePos.y);
             blockData previousBlock = update.GetBlock(posIndex);
             currentBlockObject = GameObject.Find(currentBlockName);
-            if (previousBlock.type == currentBlockName) return;
+            if (previousBlock.type == currentBlockName || currentIndex <= 0 ) return;
             if (currentBlockObject != null)
             {
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
@@ -314,7 +328,7 @@ public class LevelEditor : MonoBehaviour
             GameObject newBlock = Instantiate(
                 currentBlockPrefab,
                 mousePos,
-                Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)]), 
+                Quaternion.Euler(0, 0, materialRotations[currentIndex]), 
                 createdBlocks.transform
             );
             newBlock.name = currentBlockName;
@@ -334,6 +348,7 @@ public class LevelEditor : MonoBehaviour
             ptBlock.connectios_right = new List<connections>();
             ptBlock.connectios_left = new List<connections>();
             reader.AddBlock(ptBlock);
+            EditMaterialCount(currentIndex, true);
         }
         else if (
             ((Input.GetKey(KeyCode.Mouse0) && mousePosChanged) ||
@@ -341,6 +356,7 @@ public class LevelEditor : MonoBehaviour
             editorMode == "delete"
         )
         {
+            int currentIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
@@ -348,6 +364,7 @@ public class LevelEditor : MonoBehaviour
             }
 
             reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+            EditMaterialCount(currentIndex, false);
         }
     }
     public void SetMaterial(string[] newMaterials)
