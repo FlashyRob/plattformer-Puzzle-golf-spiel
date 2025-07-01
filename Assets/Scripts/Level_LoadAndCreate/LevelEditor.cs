@@ -12,7 +12,6 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
-    private GameObject[] uiPrefabs;
     public GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
@@ -77,7 +76,6 @@ public class LevelEditor : MonoBehaviour
 
         block = Resources.LoadAll<GameObject>("Blocks");
         textures = Resources.LoadAll<GameObject>("Textures");
-        uiPrefabs = Resources.LoadAll<GameObject>("UIPrefabs");
 
         for (int i = 0; i < block.Length; i++)
         {
@@ -104,7 +102,7 @@ public class LevelEditor : MonoBehaviour
         }
         try
         {
-            Destroy(hud.transform.GetChild(0).gameObject);
+            Destroy(hud.transform.Find("EditorParent"));
         } catch { }
         createdBlocks = GameObject.Find("CreatedBlocks");
 

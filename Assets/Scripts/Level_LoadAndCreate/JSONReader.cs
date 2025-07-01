@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class JSONReader : MonoBehaviour
 {
-    public string saveName = "Level_0";
+    public string saveName = "tmp";
     public List<blockData> blockSafeFile;
 
     private ScannerinoCrocodilo scanner;
@@ -12,35 +12,61 @@ public class JSONReader : MonoBehaviour
 
     private string SavePath(string level_name)
     {
-        return Application.persistentDataPath+ "\\" +level_name +".json";
+        // in the build, players can create their own levels. These will be saved in AppData/LocalLow 
+        return Application.persistentDataPath + "\\" + level_name + ".json";
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        blockSafeFile = LoadLevel();
+        LoadLevel();
         RemoveBlock(1);
 
         scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
         update = FindAnyObjectByType<Updates>();
     }
 
-    public List<blockData> LoadLevel()
+    public void ClearLevel()
     {
-        string path = SavePath(saveName);
-        if (File.Exists(path))
+        blockSafeFile = new List<blockData>();
+    }
+
+    public void LoadLevel()
+    {
+        string json = GetLevelJson(saveName);
+        if (json != null)
         {
-            string json = File.ReadAllText(path);
             BlockList loaded = JsonUtility.FromJson<BlockList>(json);
-            Debug.Log("Loaded " + loaded.blocks.Count + " blocks from save file " + path);
-            return new List<blockData>(loaded.blocks);
+            blockSafeFile = new List<blockData>(loaded.blocks);
         }
         else
         {
-            Debug.LogWarning("Save file not found at: " + path);
-            return new List<blockData>();
+            ClearLevel();
         }
     }
+
+    private string GetLevelJson(string levelName)
+    {
+        // Try persistent data path first
+        string persistentPath = Path.Combine(Application.persistentDataPath, levelName + ".json");
+        if (File.Exists(persistentPath))
+        {
+            Debug.Log("Level loaded from " + persistentPath);
+            return File.ReadAllText(persistentPath);
+        }
+
+        // If not found, try loading from Resources
+        TextAsset textAsset = Resources.Load<TextAsset>("JSONLevelFiles/" + levelName);
+        if (textAsset != null)
+        {
+            Debug.Log("Level loaded from " + resourcesFolderPath);
+            return textAsset.text;
+        }
+
+        Debug.LogWarning("Level not found in persistent data or Resources: " + levelName);
+        return null;
+    }
+
 
     public void RemoveBlock(int index)
     {
@@ -159,7 +185,7 @@ public class JSONReader : MonoBehaviour
         };
         var j = JsonUtility.ToJson(b);
 
-        File.WriteAllText(SavePath(saveName), j);
+        SaveJson(saveName, j);
 
         if (!update)
         {
@@ -173,10 +199,60 @@ public class JSONReader : MonoBehaviour
         {
             Debug.LogWarning("JSON READER has no Update reference");
         }
-        
-
-       
     }
+
+
+    private string resourcesFolderPath = "Assets/Resources/JSONLevelFiles/";
+    private void SaveJson(string levelName, string json)
+    {
+#if UNITY_EDITOR
+        if (Application.isEditor)
+        {
+            // Save to Resources folder in editor mode (write to Assets folder)
+            string path = Path.Combine(resourcesFolderPath, levelName + ".json");
+            File.WriteAllText(path, json);
+            Debug.Log("Saved level to Resources folder: " + path);
+
+            // IMPORTANT: In Editor, refresh AssetDatabase so Unity notices the new file
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.ImportAsset(resourcesFolderPath + levelName + ".json");
+            UnityEditor.AssetDatabase.Refresh();
+#endif
+            return;
+        }
+#endif
+
+        // Save to persistentDataPath in builds
+        string savePath = Path.Combine(Application.persistentDataPath, levelName + ".json");
+        File.WriteAllText(savePath, json);
+        Debug.Log("Saved level to persistent data path: " + savePath);
+    }
+
+    public List<string> GetAllLevels()
+    {
+        var levels = new List<string>();
+
+        // 1. Get player saves from persistent data
+        string persistentPath = Application.persistentDataPath;
+        if (Directory.Exists(persistentPath))
+        {
+            foreach (var file in Directory.GetFiles(persistentPath, "*.json"))
+            {
+                levels.Add(Path.GetFileNameWithoutExtension(file));
+            }
+        }
+
+        // 2. Load all level TextAssets from Resources/JSONLevelFiles
+        TextAsset[] resourcesLevels = Resources.LoadAll<TextAsset>("JSONLevelFiles");
+        foreach (var ta in resourcesLevels)
+        {
+            if (!levels.Contains(ta.name))
+                levels.Add(ta.name);
+        }
+
+        return levels;
+    }
+
 
     [System.Serializable]
     public class BlockList
