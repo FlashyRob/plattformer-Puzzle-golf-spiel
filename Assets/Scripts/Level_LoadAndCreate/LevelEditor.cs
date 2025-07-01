@@ -58,6 +58,8 @@ public class LevelEditor : MonoBehaviour
     private GameObject currentBlockObject;
     private GameObject currentBlockPrefab;
 
+    public blockData hoverBlock;
+
     public void StartEditor()
     {
         materialRotations = new int[materials.Length];
@@ -243,7 +245,7 @@ public class LevelEditor : MonoBehaviour
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
-                blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                blockData getBlock = hoverBlock;
                 currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
                 getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
@@ -269,7 +271,6 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
         }
-
         if (ClickTest.selectedMaterial == "Nothing") return;
 
         if (Input.GetMouseButtonDown(0))
@@ -322,7 +323,7 @@ public class LevelEditor : MonoBehaviour
             {
                 if (!GenerateLevel.creative)
                 {
-                    blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                    blockData getBlock = hoverBlock;
                     int oldIndex = System.Array.IndexOf(materials, getBlock.type);
                     materialCounts[oldIndex] += 1;
                     materialCountObjects[oldIndex].update(materialCounts[oldIndex]);
@@ -368,7 +369,7 @@ public class LevelEditor : MonoBehaviour
             if (currentBlockObject != null)
             {
 
-                blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                blockData getBlock = hoverBlock;
                 int currentIndex = System.Array.IndexOf(materials, getBlock.type);
 
                 if (!GenerateLevel.creative)
