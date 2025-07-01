@@ -27,6 +27,7 @@ public class LevelEditor : MonoBehaviour
         "wire_t",
         "lamp",
         "battery",
+        "switch",
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
@@ -40,6 +41,7 @@ public class LevelEditor : MonoBehaviour
         8,
         4,
         4,
+        100,
     };
     private ChangeBlockCount[] materialCountObjects;
 
