@@ -321,7 +321,7 @@ public class LevelEditor : MonoBehaviour
             if (previousBlock.type == currentBlockName) return;
             if (!GenerateLevel.creative)
             {
-                if (materialCounts[currentIndex] <= 0) return;
+                if (materialCounts[currentIndex] <= 0 || !update.GetBlock(currentIndex).editable) return;
                 materialCounts[currentIndex] -= 1;
                 materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
             }
@@ -374,18 +374,22 @@ public class LevelEditor : MonoBehaviour
 
             if (currentBlockObject != null)
             {
+
                 blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
                 int currentIndex = System.Array.IndexOf(materials, getBlock.type);
+
+                if (!GenerateLevel.creative)
+                {
+                    if (!update.GetBlock(currentIndex).editable) return;
+                    materialCounts[currentIndex] += 1;
+                    materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
+                }
 
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
 
                 reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
  
-                if (!GenerateLevel.creative)
-                {
-                    materialCounts[currentIndex] += 1;
-                    materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
-                }
+
             }
         }
     }

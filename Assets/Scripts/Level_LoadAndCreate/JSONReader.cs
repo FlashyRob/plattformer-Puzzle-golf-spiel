@@ -161,7 +161,19 @@ public class JSONReader : MonoBehaviour
 
         File.WriteAllText(SavePath(saveName), j);
 
-        update.updateLoop = false;
+        if (!update)
+        {
+            update = FindAnyObjectByType<Updates>();
+        }
+        if (update)
+        {
+            update.updateLoop = false;
+        }
+        else
+        {
+            Debug.LogWarning("JSON READER has no Update reference");
+        }
+        
 
        
     }
