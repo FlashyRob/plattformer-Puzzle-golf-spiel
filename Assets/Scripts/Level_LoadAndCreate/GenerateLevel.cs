@@ -15,6 +15,7 @@ public class GenerateLevel : MonoBehaviour
     private GameObject createdBlocks;
 
     public static bool creative = true;
+    public static Vector3 mousePos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -73,5 +74,19 @@ public class GenerateLevel : MonoBehaviour
         {
             editor.StartEditor();
         }
+    }
+    void GetMousePos()
+    {
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = new Vector3(
+            Mathf.Round(mousePos.x),
+            Mathf.Round(mousePos.y),
+            0
+        );
+    }
+
+    private void Update()
+    {
+        GetMousePos();              
     }
 }

@@ -223,16 +223,6 @@ public class LevelEditor : MonoBehaviour
         }
     }
 
-    Vector3 GetMousePos()
-    {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos = new Vector3(
-            Mathf.Round(mousePos.x),
-            Mathf.Round(mousePos.y),
-            0
-        );
-        return mousePos;
-    }
     bool CheckValid(Vector3 mousePos)
     {
         return mousePos.x < 0 || mousePos.y < 0 ? false : true;
@@ -242,7 +232,7 @@ public class LevelEditor : MonoBehaviour
     void Update()
     {
         mousePosOld = mousePos;
-        mousePos = GetMousePos();
+        mousePos = GenerateLevel.mousePos;
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
 
