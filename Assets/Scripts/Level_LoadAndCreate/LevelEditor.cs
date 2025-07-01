@@ -169,6 +169,8 @@ public class LevelEditor : MonoBehaviour
             materialObjects[i] = blockSelector;
         }
 
+        if (GenerateLevel.creative) return;
+
         GameObject blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
         blockCountParent.transform.parent = editorParent.transform;
