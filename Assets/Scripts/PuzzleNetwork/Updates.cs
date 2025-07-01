@@ -7,6 +7,8 @@ public class Updates : MonoBehaviour
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
 
+    public bool updateLoop = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,59 +28,64 @@ public class Updates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < reader.blockSafeFile.Count; i++)
+        if (updateLoop)
         {
-            blockData block = reader.blockSafeFile[i];
-
-            switch  (block.type)
+            for (int i = 0; i < reader.blockSafeFile.Count; i++)
             {
-                case "wire_straight":
-                    HandleWireStraight(block.index, block);
-                    break;
-                case "wire_curve":
-                    HandleWireCorner(block.index, block);
-                    break;
-                case "wire_T":
-                    HandleWireT(block.index, block);
-                    break;
-                case "wire_corner":
-                    HandleWireCorner(block.index, block);
-                    break;
-                case "and_gate":
-                    HandleAndGate(block.index, block);
-                    break;
-                case "or_gate":
-                    HandleOrGate(block.index, block);
-                    break;
-                case "xor_gate":
-                    HandleXorGate(block.index, block);
-                    break;
-                case "not_gate":
-                    HandleNotGate(block.index, block);
-                    break;
-                case "lamp":
-                    HandleLamp(block.index, block);
-                    break;
-                case "door":
-                    HandleDoor(block.index, block);
-                    break;
-                case "flip_flop":
-                    HandleFlipFlop(block.index, block);
-                    break;
-                case "toggle":
-                    HandleToggle(block.index, block);
-                    break;
-                case "pulse":
-                    HandlePulse(block.index, block);
-                    break;
-                case "condensator":
-                    HandleCondensator(block.index, block);
-                    break;
-                case "battery":
-                    HandleBattery(block.index);
-                    break;
+                blockData block = reader.blockSafeFile[i];
+
+                switch (block.type)
+                {
+                    case "wire_straight":
+                        HandleWireStraight(block.index, block);
+                        break;
+                    case "wire_curve":
+                        HandleWireCorner(block.index, block);
+                        break;
+                    case "wire_T":
+                        HandleWireT(block.index, block);
+                        break;
+                    case "wire_corner":
+                        HandleWireCorner(block.index, block);
+                        break;
+                    case "and_gate":
+                        HandleAndGate(block.index, block);
+                        break;
+                    case "or_gate":
+                        HandleOrGate(block.index, block);
+                        break;
+                    case "xor_gate":
+                        HandleXorGate(block.index, block);
+                        break;
+                    case "not_gate":
+                        HandleNotGate(block.index, block);
+                        break;
+                    case "lamp":
+                        HandleLamp(block.index, block);
+                        break;
+                    case "door":
+                        HandleDoor(block.index, block);
+                        break;
+                    case "flip_flop":
+                        HandleFlipFlop(block.index, block);
+                        break;
+                    case "toggle":
+                        HandleToggle(block.index, block);
+                        break;
+                    case "pulse":
+                        HandlePulse(block.index, block);
+                        break;
+                    case "condensator":
+                        HandleCondensator(block.index, block);
+                        break;
+                    case "battery":
+                        HandleBattery(block.index);
+                        break;
+                }
             }
         }
+
+        
     }
     
     public void ResetConnections(int index, int side)
@@ -259,10 +266,10 @@ public class Updates : MonoBehaviour
     {
         EditVisualActive(i, 1);
 
-        EditBlockActiveSide(i, 0, 1);
-        EditBlockActiveSide(i, 1, 1);
-        EditBlockActiveSide(i, 2, 1);
-        EditBlockActiveSide(i, 3, 1);
+        EditBlockActiveSide(i, 0, true);
+        EditBlockActiveSide(i, 1, true);
+        EditBlockActiveSide(i, 2, true);
+        EditBlockActiveSide(i, 3, true);
     }
 
     private void ToggleLever(int i, blockData block)
@@ -271,17 +278,17 @@ public class Updates : MonoBehaviour
 
         if (block.visualActive == 1)
         {
-            EditBlockActiveSide(i, 0, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 2, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else
         {
-            EditBlockActiveSide(i, 0, 0);
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 2, 0);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
         }
     }
 
@@ -291,17 +298,17 @@ public class Updates : MonoBehaviour
 
         if (block.visualActive == 1)
         {
-            EditBlockActiveSide(i, 0, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 2, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else
         {
-            EditBlockActiveSide(i, 0, 0);
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 2, 0);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
         }
     }
 
@@ -311,17 +318,17 @@ public class Updates : MonoBehaviour
 
         if (block.visualActive == 1)
         {
-            EditBlockActiveSide(i, 0, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 2, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else
         {
-            EditBlockActiveSide(i, 0, 0);
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 2, 0);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
         }
     }
 
@@ -331,17 +338,17 @@ public class Updates : MonoBehaviour
 
         if (block.visualActive == 1)
         {
-            EditBlockActiveSide(i, 0, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 2, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else
         {
-            EditBlockActiveSide(i, 0, 0);
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 2, 0);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
         }
     }
      
@@ -376,8 +383,8 @@ public class Updates : MonoBehaviour
         if (IsAnyConnectionActive(block.inputDirections, i, 0) && IsAnyConnectionActive(block.inputDirections, i, 2))
         {
             EditVisualActive(i, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, true);
         } else EditVisualActive(i, 0);
     }
 
@@ -386,8 +393,8 @@ public class Updates : MonoBehaviour
         if (IsAnyConnectionActive(block.inputDirections, i, 0) || IsAnyConnectionActive(block.inputDirections, i, 2))
         {
             EditVisualActive(i, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else EditVisualActive(i, 0);
     }
@@ -397,8 +404,8 @@ public class Updates : MonoBehaviour
         if (IsAnyConnectionActive(block.inputDirections, i, 0) ^ IsAnyConnectionActive(block.inputDirections, i, 2))
         {
             EditVisualActive(i, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else EditVisualActive(i, 0);
     }
@@ -407,8 +414,8 @@ public class Updates : MonoBehaviour
         if (IsAnyConnectionActive(block.inputDirections, i, 0) ^ IsAnyConnectionActive(block.inputDirections, i, 2))
         {
             EditVisualActive(i, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, true);
             EditBlockState(i, 300);
         }
         else
@@ -436,22 +443,22 @@ public class Updates : MonoBehaviour
             {
                 EditVisualActive(i, 1);
 
-                EditBlockActiveSide(i, 1, 1);
-                EditBlockActiveSide(i, 3, 1);
+                EditBlockActiveSide(i, 1, true);
+                EditBlockActiveSide(i, 3, true);
             }
             else
             {
                 EditVisualActive(i, 0);
-                EditBlockActiveSide(i, 1, 0);
-                EditBlockActiveSide(i, 3, 0);
+                EditBlockActiveSide(i, 1, false);
+                EditBlockActiveSide(i, 3, false);
             }
         }
         else
         {
             EditVisualActive(i, 0);
             EditBlockState(i, 0);
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, false);
         }
     }
 
@@ -466,13 +473,13 @@ public class Updates : MonoBehaviour
 
                 if(block.state == 1)
                 {
-                    EditBlockActiveSide(i, 1, 1);
-                    EditBlockActiveSide(i, 3, 1);
+                    EditBlockActiveSide(i, 1, true);
+                    EditBlockActiveSide(i, 3, true);
                 }
                 else
                 {
-                    EditBlockActiveSide(i, 1, 0);
-                    EditBlockActiveSide(i, 3, 0);
+                    EditBlockActiveSide(i, 1, false);
+                    EditBlockActiveSide(i, 3, false);
                 }
             }
         }
@@ -488,15 +495,15 @@ public class Updates : MonoBehaviour
         {
             block.state = 0;
 
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 0);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, false);
         }
         if (IsAnyConnectionActive(block.inputDirections, i, 0))
         {
             block.state = 1;
 
-            EditBlockActiveSide(i, 1, 0);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, true);
         }
     }
 
@@ -505,8 +512,8 @@ public class Updates : MonoBehaviour
         if (!IsAnyConnectionActive(block.inputDirections, i, 0) && !IsAnyConnectionActive(block.inputDirections, i, 2))
         {
             EditVisualActive(i, 1);
-            EditBlockActiveSide(i, 1, 1);
-            EditBlockActiveSide(i, 3, 1);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 3, true);
         }
         else EditVisualActive(i, 0);
     }
@@ -533,10 +540,10 @@ public class Updates : MonoBehaviour
         block.meta = edit;
     }
 
-    public void EditBlockActiveSide(int index, int side, int edit)
+    public void EditBlockActiveSide(int index, int side, bool edit)
     {
         blockData block = GetBlock(index);
-        block.outputDirections[side] = edit;
+        block.activeSides[side] = edit;
     }
 
     public void EditVisualActive(int index, int edit)
