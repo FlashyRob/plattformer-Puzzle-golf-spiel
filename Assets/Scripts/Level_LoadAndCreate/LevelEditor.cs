@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 /// <summary>
 /// Creates UI elements and reacts to mous-clicks to create level blocks.
@@ -233,20 +234,6 @@ public class LevelEditor : MonoBehaviour
         return mousePos.x < 0 || mousePos.y < 0 ? false : true;
     }
 
-    void EditMaterialCount(int currentIndex, bool increaseByOne) // nur innerhalb der "place" if Schleife oder der "delete" else if schleife aufrufen!!! // wenn increaseByOne false ist dann wollen wir eins abziehen (sonst eins hinzufügen)
-    {
-        int currentCount = materialCounts[currentIndex];
-        if (increaseByOne)
-        {
-            materialCounts.SetValue(currentCount + 1, currentIndex);
-        }
-        else
-        {
-            materialCounts.SetValue(currentCount + 1, currentIndex);
-        }
-    }
-
-
     // Update is called once per frame
     void Update()
     {
@@ -322,9 +309,22 @@ public class LevelEditor : MonoBehaviour
             int posIndex = position.GetIndexFromXY((int) mousePos.x, (int)mousePos.y);
             blockData previousBlock = update.GetBlock(posIndex);
             currentBlockObject = GameObject.Find(currentBlockName);
-            if (previousBlock.type == currentBlockName || currentIndex <= 0 ) return;
+            if (previousBlock.type == currentBlockName) return;
+            if (!GenerateLevel.creative)
+            {
+                if (materialCounts[currentIndex] <= 0) return;
+                materialCounts[currentIndex] -= 1;
+                materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
+            }
             if (currentBlockObject != null)
             {
+                if (!GenerateLevel.creative)
+                {
+                    blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                    int oldIndex = System.Array.IndexOf(materials, getBlock.type);
+                    materialCounts[oldIndex] += 1;
+                    materialCountObjects[oldIndex].update(materialCounts[oldIndex]);
+                }
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
                 reader.RemoveBlock(posIndex);
             }
@@ -352,7 +352,6 @@ public class LevelEditor : MonoBehaviour
             ptBlock.connectios_right = new List<connections>();
             ptBlock.connectios_left = new List<connections>();
             reader.AddBlock(ptBlock);
-            EditMaterialCount(currentIndex, true);
         }
         else if (
             ((Input.GetKey(KeyCode.Mouse0) && mousePosChanged) ||
@@ -360,18 +359,23 @@ public class LevelEditor : MonoBehaviour
             editorMode == "delete"
         )
         {
-            int currentIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
-
             currentBlockObject = GameObject.Find(currentBlockName);
+
             if (currentBlockObject != null)
             {
+                blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                int currentIndex = System.Array.IndexOf(materials, getBlock.type);
+
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
+
+                reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+ 
+                if (!GenerateLevel.creative)
+                {
+                    materialCounts[currentIndex] += 1;
+                    materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
+                }
             }
-
-            reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
-
-            EditMaterialCount(currentIndex, false);
-            materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
         }
     }
     public void SetMaterial(string[] newMaterials)

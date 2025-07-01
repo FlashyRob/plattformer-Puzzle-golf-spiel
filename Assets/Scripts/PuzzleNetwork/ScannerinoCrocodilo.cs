@@ -65,7 +65,9 @@ public class ScannerinoCrocodilo : MonoBehaviour
 
         int safetyBreak = 0;
 
-        if(!general.CheckIfTwoBlocksAreConnected(index, nextScanns[0]))
+        Debug.Log("I will try to start the scan from here: " + index + " whilest actually starting here: " + nextScanns[0]);
+
+        if (!general.CheckIfTwoBlocksAreConnected(index, nextScanns[0]))
         {
             Debug.Log("No connections, since the block is not even connected at the side you told me to scann :(");
             return;
