@@ -61,6 +61,8 @@ public class GenerateLevel : MonoBehaviour
                 );
                 newBlock.name = blockName;
                 newBlock.AddComponent<RemoveBlock>();
+                UpdateCable updateCable = newBlock.GetComponent<UpdateCable>();
+                if (updateCable != null) updateCable.index = thisBlock.index;
             }
             catch { }
         }
