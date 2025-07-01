@@ -256,6 +256,8 @@ public class ScannerinoCrocodilo : MonoBehaviour
             ApplyConnectionData(foundPowerssources);
 
         }
+
+        update.updateLoop = true;
     }
 
     public void ApplyConnectionData(List<findBlock> foundConnections)
