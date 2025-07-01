@@ -47,7 +47,7 @@ public class Updates : MonoBehaviour
                     case "wire_curve":
                         HandleWireCorner(block.index, block);
                         break;
-                    case "wire_T":
+                    case "wire_t":
                         HandleWireT(block.index, block);
                         break;
                     case "wire_cross":
@@ -184,27 +184,31 @@ public class Updates : MonoBehaviour
         return false;
     }
 
-    private void HandleSwitch(int i, blockData block)
+    public void HandleSwitch(int i, blockData block)
     {
-        if (IsAnyConnectionActive(block, 3))
+        if(block.state == 1)
         {
-            SetVisualActive(i, 1);
-            if (block.state == 1)
+            if (IsAnyConnectionActive(block, 3))
             {
+                SetVisualActive(i, 1);
                 EditBlockActiveSide(i, 1, true);
             }
-            else EditBlockActiveSide(i, 1, false);
+            else
+            {
+                SetVisualActive(i, 0);
+                EditBlockActiveSide(i, 1, false);
+            }
         }
         else
         {
             SetVisualActive(i, 0);
             EditBlockActiveSide(i, 1, false);
         }
-        }
-        
-       
+    }
 
-    private void HandleWireStraight(int i, blockData block)
+
+
+    public void HandleWireStraight(int i, blockData block)
     {
         if (IsAnyConnectionActive(block, 3))
         {
@@ -219,7 +223,7 @@ public class Updates : MonoBehaviour
         SetVisualActive(i, 0);
     }
 
-    private void HandleWireCorner(int i, blockData block)
+    public void HandleWireCorner(int i, blockData block)
     {
 
         if (IsAnyConnectionActive(block, 0))
@@ -393,8 +397,6 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 3, false);
         }
     }
-
-
 
     public void SetPressurePlate(int i, blockData block, int newVal)
     {
