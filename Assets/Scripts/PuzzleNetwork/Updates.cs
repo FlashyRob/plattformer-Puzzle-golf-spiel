@@ -47,7 +47,7 @@ public class Updates : MonoBehaviour
                     case "wire_curve":
                         HandleWireCorner(block.index, block);
                         break;
-                    case "wire_T":
+                    case "wire_t":
                         HandleWireT(block.index, block);
                         break;
                     case "wire_cross":
@@ -184,27 +184,31 @@ public class Updates : MonoBehaviour
         return false;
     }
 
-    private void HandleSwitch(int i, blockData block)
+    public void HandleSwitch(int i, blockData block)
     {
-        if (IsAnyConnectionActive(block, 3))
+        if(block.state == 1)
         {
-            SetVisualActive(i, 1);
-            if (block.state == 1)
+            if (IsAnyConnectionActive(block, 3))
             {
+                SetVisualActive(i, 1);
                 EditBlockActiveSide(i, 1, true);
             }
-            else EditBlockActiveSide(i, 1, false);
+            else
+            {
+                SetVisualActive(i, 0);
+                EditBlockActiveSide(i, 1, false);
+            }
         }
         else
         {
             SetVisualActive(i, 0);
             EditBlockActiveSide(i, 1, false);
         }
-        }
-        
-       
+    }
 
-    private void HandleWireStraight(int i, blockData block)
+
+
+    public void HandleWireStraight(int i, blockData block)
     {
         if (IsAnyConnectionActive(block, 3))
         {
@@ -219,7 +223,7 @@ public class Updates : MonoBehaviour
         SetVisualActive(i, 0);
     }
 
-    private void HandleWireCorner(int i, blockData block)
+    public void HandleWireCorner(int i, blockData block)
     {
 
         if (IsAnyConnectionActive(block, 0))
@@ -317,9 +321,28 @@ public class Updates : MonoBehaviour
 
     public void ToggleLever(int i, blockData block)
     {
-        block.visualActive = (block.visualActive + 1) % 2;
+        block.state = (block.state + 1) % 2;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
+        {
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
+        }
+    }
+    public void ToggleSwitch(int i, blockData block)
+    {
+        block.state = (block.state + 1) % 2;
+
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -337,9 +360,9 @@ public class Updates : MonoBehaviour
 
     public void SetLever(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -357,9 +380,9 @@ public class Updates : MonoBehaviour
 
     public void SetButton(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -375,13 +398,11 @@ public class Updates : MonoBehaviour
         }
     }
 
-
-
     public void SetPressurePlate(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);

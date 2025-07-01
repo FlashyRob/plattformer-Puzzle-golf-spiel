@@ -23,7 +23,7 @@ public class PressurePlate : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player") || collision.collider.CompareTag("Box"))
         {
-            update.SetPressurePlate(update.GetBlock(index).index, update.GetBlock(index), 0);
+            //update.SetPressurePlate(update.GetBlock(index).index, update.GetBlock(index), 0);
         }
     }
 
@@ -31,7 +31,7 @@ public class PressurePlate : MonoBehaviour
     {
         if(collision.collider.CompareTag("Player") || collision.collider.CompareTag("Box"))
         {
-            update.SetPressurePlate(update.GetBlock(index).index, update.GetBlock(index), 1);
+            //update.SetPressurePlate(update.GetBlock(index).index, update.GetBlock(index), 1);
         }
     }
 
