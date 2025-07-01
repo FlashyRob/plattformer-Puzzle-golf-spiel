@@ -663,8 +663,7 @@ public class Updates : MonoBehaviour
                 return thisBlock;
             }
         }
-        return new blockData();
-        
+        return new blockData() { editable = true }; 
     }
      /*
     private int[] CheckConnectionSides(List <connections> inputConnections, List<connections> sources)

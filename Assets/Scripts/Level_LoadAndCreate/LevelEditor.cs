@@ -242,7 +242,6 @@ public class LevelEditor : MonoBehaviour
         mousePosOld = mousePos;
         mousePos = GetMousePos();
         if (!CheckValid(mousePos)) return;
-        if (ClickTest.selectedMaterial == "Nothing") return;
         if (CheckUIHover.hoverUI) return;
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
@@ -270,7 +269,7 @@ public class LevelEditor : MonoBehaviour
                     select.transform.rotation = currentBlockObject.transform.rotation;
                 }
             }
-            else
+            else if (ClickTest.selectedMaterial == "Nothing")
             {
                 select.transform.Rotate(new Vector3(0, 0, -90));
                 int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
@@ -278,6 +277,8 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
         }
+
+        if (ClickTest.selectedMaterial == "Nothing") return;
 
         if (Input.GetMouseButtonDown(0))
         {

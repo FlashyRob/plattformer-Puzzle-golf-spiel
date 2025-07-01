@@ -14,16 +14,10 @@ public class Schmoovement : MonoBehaviour
     float collidex = 0;
     float myx = 0;
     float controldamper = 1;
-    private Vector2 velocityDebug;
     public float moveSpeed;
     public float platformJump;
     bool Slide = false;
     bool CameFromAbove = false;
-    bool Sneaking = false;
-    float lastContactPointx = 0;
-    public bool Sneakdrop = false; 
-    bool OnLeftEdge = false;
-    bool OnRightEdge = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -80,23 +74,12 @@ public class Schmoovement : MonoBehaviour
                 jumpVelocity = 0;
             }
 
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                Sneaking = true;
-            }
-            else
-            {
-                Sneaking = false;
-            }
-
             if (inputKeyDownSpace>=1)
             {
-                Sneaking = false;
-
                 if (Grounded && !Walled)
                 {
                     Grounded = false;                  
-                    jumpVelocity = 9 + platformJump;
+                    jumpVelocity = 8.5f + platformJump;
                 }
 
                 if (Walled)
@@ -138,11 +121,6 @@ public class Schmoovement : MonoBehaviour
                 }
             }
 
-            if (Sneaking && Grounded)
-            {
-                controldamper = 0.5f;
-            }
-
             verticalVelocity = jumpVelocity + playerVel.y;
 
             if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity > 6)
@@ -179,42 +157,7 @@ public class Schmoovement : MonoBehaviour
                 }
             }
 
-            horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
-
-            if(Sneakdrop)
-            {
-                Debug.Log("I try to Sneakdrop");
-                if(transform.position.x < lastContactPointx || OnLeftEdge) // check if player is to the left of the contact point
-                {
-                    OnLeftEdge = true; // player is on the left edge of the contact point
-                    if(horizontalVelocity < 0)
-                    {
-                        horizontalVelocity = 0; // stop player from moving left
-                    }
-                    
-                    if (horizontalVelocity > 0)
-                    {
-                        Sneakdrop = false; 
-                        OnLeftEdge = false;
-                    }
-                }
-                else if (transform.position.x > lastContactPointx || OnRightEdge) // check if player is to the right of the contact point
-                {
-                    OnRightEdge = true; // player is on the right edge of the contact point
-                    if (horizontalVelocity > 0)
-                    {
-                        horizontalVelocity = 0; // stop player from moving right
-                    }
-
-                    if (horizontalVelocity < 0)
-                    {
-                       Sneakdrop = false; 
-                       OnRightEdge = false; 
-                    }
-                }
-                rb2d.MovePosition(new Vector2(lastContactPointx, transform.position.y)); // snap player to last contact point
-            }
-
+            horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;          
             rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
             if (inputKeyDownSpace >= 1)
             {
@@ -264,10 +207,6 @@ public class Schmoovement : MonoBehaviour
             }
             rb2d.linearVelocity = playerAndPlatform;
         }
-
-        velocityDebug = rb2d.linearVelocity; 
-        Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
-
     }
 
 
@@ -337,8 +276,8 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
             // we check the collision normal to see which direction the ground hit us from
 
+          
             controldamper = 1;
-            lastContactPointx = contact.point.x ; // remember the contact point for sneakdrop 
 
             if (normal.y > 0.5f && CameFromAbove)
             {
@@ -380,6 +319,7 @@ public class Schmoovement : MonoBehaviour
     private PlatformMovement currentPlatform;
     void OnCollisionExit2D(Collision2D coll)
     {
+        Debug.Log("Input did exit");
         if (coll.collider.CompareTag("MovingPlatform"))
         {
             currentPlatform = null;
@@ -388,19 +328,8 @@ public class Schmoovement : MonoBehaviour
         }
         if (coll.gameObject.tag == "Ground" || coll.gameObject.tag == "Box")
         {
-               if (Sneakdrop)
-            {
-                Sneakdrop = false;
-                OnLeftEdge = false;
-                OnRightEdge = false;
-            }
-
             if (Grounded)
             {
-                if (Sneaking)
-                {
-                    Sneakdrop = true;
-                }
                 secondJump = true;
                 Grounded = false; ;
             }
