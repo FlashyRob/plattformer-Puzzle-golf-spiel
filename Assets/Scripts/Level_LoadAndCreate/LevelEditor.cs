@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Creates UI elements and reacts to mous-clicks to create level blocks.
@@ -103,7 +104,7 @@ public class LevelEditor : MonoBehaviour
         RectTransform rt;
         HorizontalLayoutGroup lg;
         Image im;
-        TextMesh tm;
+        TMPro.TextMeshProUGUI tm;
 
         var editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -175,7 +176,7 @@ public class LevelEditor : MonoBehaviour
         rt.anchoredPosition = new Vector2(23, -50);
         rt.pivot = new Vector2(0, 0.5f);
         lg = blockCountParent.AddComponent<HorizontalLayoutGroup>();
-        lg.padding = new RectOffset(23, 0, 5, 0);
+        lg.padding = new RectOffset(22, 0, 5, 0);
         lg.childAlignment = TextAnchor.MiddleLeft;
         lg.spacing = 35;
         lg.childControlWidth = false;
@@ -198,15 +199,18 @@ public class LevelEditor : MonoBehaviour
             textItem.name = "Text";
             textItem.transform.parent = blockCount.transform;
             rt = textItem.AddComponent<RectTransform>();
+            rt.localPosition = new Vector3(0, 0, 0);
             rt.localScale = new Vector3(1, 1, 1);
             rt.anchorMin = new Vector2(0, 0);
             rt.anchorMax = new Vector2(1, 1);
+            rt.anchoredPosition = new Vector2(0, 0);
+            rt.sizeDelta = new Vector2(0, 0);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            tm = textItem.AddComponent<TextMesh>();
-            tm.text = "n/a";
+            tm = textItem.AddComponent<TMPro.TextMeshProUGUI>();
+            tm.text = materialCounts[i].ToString();
             tm.color = new Color(0, 0, 0, 1);
-            //tm.font = 
-            tm.fontSize = 25;
+            tm.fontSize = 22;
+            tm.horizontalAlignment = HorizontalAlignmentOptions.Right;
         }
     }
 
