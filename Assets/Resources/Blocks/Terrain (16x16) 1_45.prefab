@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2519232643662981711}
   m_Layer: 0
   m_Name: Terrain (16x16) 1_45
-  m_TagString: Ground
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
