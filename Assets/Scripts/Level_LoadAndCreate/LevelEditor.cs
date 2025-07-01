@@ -309,9 +309,22 @@ public class LevelEditor : MonoBehaviour
             int posIndex = position.GetIndexFromXY((int) mousePos.x, (int)mousePos.y);
             blockData previousBlock = update.GetBlock(posIndex);
             currentBlockObject = GameObject.Find(currentBlockName);
-            if (previousBlock.type == currentBlockName || materialCounts[currentIndex] <= 0 ) return;
+            if (previousBlock.type == currentBlockName) return;
+            if (!GenerateLevel.creative)
+            {
+                if (materialCounts[currentIndex] <= 0) return;
+                materialCounts[currentIndex] -= 1;
+                materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
+            }
             if (currentBlockObject != null)
             {
+                if (!GenerateLevel.creative)
+                {
+                    blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                    int oldIndex = System.Array.IndexOf(materials, getBlock.type);
+                    materialCounts[oldIndex] += 1;
+                    materialCountObjects[oldIndex].update(materialCounts[oldIndex]);
+                }
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
                 reader.RemoveBlock(posIndex);
             }
@@ -339,9 +352,6 @@ public class LevelEditor : MonoBehaviour
             ptBlock.connectios_right = new List<connections>();
             ptBlock.connectios_left = new List<connections>();
             reader.AddBlock(ptBlock);
-
-            materialCounts[currentIndex] -= 1;
-            materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
         }
         else if (
             ((Input.GetKey(KeyCode.Mouse0) && mousePosChanged) ||
@@ -356,12 +366,15 @@ public class LevelEditor : MonoBehaviour
                 blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
                 int currentIndex = System.Array.IndexOf(materials, getBlock.type);
 
-                reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
-                
-                materialCounts[currentIndex] += 1;
-                materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
-
                 currentBlockObject.GetComponent<RemoveBlock>().kill();
+
+                reader.RemoveBlock(position.GetIndexFromXY((int) mousePos.x, (int) mousePos.y));
+ 
+                if (!GenerateLevel.creative)
+                {
+                    materialCounts[currentIndex] += 1;
+                    materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
+                }
             }
         }
     }
