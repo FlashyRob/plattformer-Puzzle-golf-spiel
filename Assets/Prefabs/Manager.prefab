@@ -87,12 +87,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3304341615304926020}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7108ee250bf37f048bb7f04e16ca94aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocks: []
+  updateLoop: 0
 --- !u!114 &4404470125528920951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +114,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3304341615304926020}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57189c997baa5d842b3e418b7924bbac, type: 3}
   m_Name: 
@@ -122,15 +122,6 @@ MonoBehaviour:
   scannedBlockIndexes: 
   nextScanns: 
   visitedBlocks: 
-  powerSources:
-  - and_gate
-  - lever
-  - button
-  - preassure_plate
-  - or_gate
-  - xor_gate
-  - flip_flop
-  - toggle
 --- !u!114 &1112568111687650143
 MonoBehaviour:
   m_ObjectHideFlags: 0
