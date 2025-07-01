@@ -60,46 +60,41 @@ public class EditorToUpdateData : MonoBehaviour
         int[] directionsOutput = new int[4] { 0, 0, 0, 0 };
         int[] directionsInput = new int[4] { 0, 0, 0, 0 };
 
-        if (blockName == "wire_straight")
+        switch (blockName)
         {
-            directionsInput = new int[4] { 0, 1, 0, 1 };
-            directionsOutput = new int[4] { 0, 1, 0, 1 };
-        }
-        else if (blockName == "wire_curve")
-        {
-            directionsInput = new int[4] { 1, 1, 0, 0 };
-            directionsOutput = new int[4] { 1, 1, 0, 0 };
-        }
-        else if (blockName == "wire_t")
-        {
-            directionsInput = new int[4] { 1, 1, 0, 1 };
-            directionsOutput = new int[4] { 1, 1, 0, 1 };
-        }
-        else if (blockName == "wire_cross")
-        {
-            directionsInput = new int[4] { 1, 1, 1, 1 };
-            directionsOutput = new int[4] { 1, 1, 1, 1 };
-        }
-        else if (blockName == "lever")
-        {
-            directionsOutput = new int[4] { 1, 1, 1, 1 };
-        }
-        else if (blockName == "and_gate")
-        {
-            directionsInput = new int[4] { 1, 0, 1, 0 };
-            directionsOutput = new int[4] { 0, 1, 0, 1 };
-        }
-        else if (blockName == "lamp")
-        {
-            directionsInput = new int[4] { 0, 0, 0, 1 };
-        }
-        else if (blockName == "battery")
-        {
-            directionsOutput = new int[4] { 1, 0, 0, 0 };
-        }
-        else
-        {
-            directionsOutput = new int[4] { 0, 0, 0, 0 };
+            case "wire_straight":
+                directionsInput = new int[4] { 0, 1, 0, 1 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+            case "wire_curve":
+                directionsInput = new int[4] { 1, 1, 0, 0 };
+                directionsOutput = new int[4] { 1, 1, 0, 0 };
+                break;
+            case "wire_t":
+                directionsInput = new int[4] { 1, 1, 0, 1 };
+                directionsOutput = new int[4] { 1, 1, 0, 1 };
+                break;
+            case "wire_cross":
+                directionsInput = new int[4] { 1, 1, 1, 1 };
+                directionsOutput = new int[4] { 1, 1, 1, 1 };
+                break;
+            case "lever":
+                directionsOutput = new int[4] { 1, 1, 1, 1 };
+                break;
+            case "and_gate":
+                directionsInput = new int[4] { 1, 0, 1, 0 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+            case "lamp":
+                directionsInput = new int[4] { 0, 0, 0, 1 };
+                break;
+            case "battery":
+                directionsOutput = new int[4] { 0, 1, 0, 0 };
+                break;
+            case "switch":
+                directionsInput = new int[4] { 0, 0, 0, 1 };
+                directionsOutput = new int[4] { 0, 1, 0, 0 };
+                break;
         }
 
         connectors inOut;

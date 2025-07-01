@@ -50,8 +50,8 @@ public class Updates : MonoBehaviour
                     case "wire_T":
                         HandleWireT(block.index, block);
                         break;
-                    case "wire_corner":
-                        HandleWireCorner(block.index, block);
+                    case "wire_cross":
+                        HandelWireCross(block.index, block);
                         break;
                     case "and_gate":
                         HandleAndGate(block.index, block);
@@ -85,6 +85,9 @@ public class Updates : MonoBehaviour
                         break;
                     case "battery":
                         HandleBattery(block.index);
+                        break;
+                    case "switch":
+                        HandleSwitch(block.index, block);
                         break;
                 }
             }
@@ -181,6 +184,25 @@ public class Updates : MonoBehaviour
         return false;
     }
 
+    private void HandleSwitch(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            if (block.state == 1)
+            {
+                EditBlockActiveSide(i, 1, true);
+            }
+            else EditBlockActiveSide(i, 1, false);
+        }
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+        }
+        }
+        
+       
 
     private void HandleWireStraight(int i, blockData block)
     {
@@ -686,4 +708,6 @@ public struct blockData
     public bool[] activeSides;
     public bool editable;
     public bool clickkable;
+    public bool collidable;
+    public bool passable;
 }
