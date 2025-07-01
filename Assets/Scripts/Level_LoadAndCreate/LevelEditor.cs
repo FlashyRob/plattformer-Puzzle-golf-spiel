@@ -50,11 +50,14 @@ public class LevelEditor : MonoBehaviour
     private CheckWheatherTwoBlocksAreConnected position;
     private JSONReader reader;
     private EditorToUpdateData editorToUpdate;
+    private ToggleBlockState toggleState;
 
     private GameObject createdBlocks;
     private GameObject select;
     private GameObject currentBlockObject;
     private GameObject currentBlockPrefab;
+
+    public blockData hoverBlock;
 
     public void StartEditor()
     {
@@ -69,6 +72,7 @@ public class LevelEditor : MonoBehaviour
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         reader = FindAnyObjectByType<JSONReader>();
         editorToUpdate = FindAnyObjectByType<EditorToUpdateData>();
+        toggleState = FindAnyObjectByType<ToggleBlockState>();
 
 
         block = Resources.LoadAll<GameObject>("Blocks");
@@ -241,6 +245,7 @@ public class LevelEditor : MonoBehaviour
     {
         mousePosOld = mousePos;
         mousePos = GetMousePos();
+        hoverBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
 
@@ -251,7 +256,7 @@ public class LevelEditor : MonoBehaviour
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
-                blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                blockData getBlock = hoverBlock;
                 currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
                 getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
@@ -276,6 +281,11 @@ public class LevelEditor : MonoBehaviour
                 materialRotations[materialIndex] += -90;
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            toggleState.ChangeBlockState(hoverBlock.type, hoverBlock.index);
         }
 
         if (ClickTest.selectedMaterial == "Nothing") return;
@@ -330,7 +340,7 @@ public class LevelEditor : MonoBehaviour
             {
                 if (!GenerateLevel.creative)
                 {
-                    blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                    blockData getBlock = hoverBlock;
                     int oldIndex = System.Array.IndexOf(materials, getBlock.type);
                     materialCounts[oldIndex] += 1;
                     materialCountObjects[oldIndex].update(materialCounts[oldIndex]);
@@ -376,7 +386,7 @@ public class LevelEditor : MonoBehaviour
             if (currentBlockObject != null)
             {
 
-                blockData getBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+                blockData getBlock = hoverBlock;
                 int currentIndex = System.Array.IndexOf(materials, getBlock.type);
 
                 if (!GenerateLevel.creative)
