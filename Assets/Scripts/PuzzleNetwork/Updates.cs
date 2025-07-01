@@ -641,9 +641,9 @@ public class Updates : MonoBehaviour
     }
 
     public void EditBlockActiveSide(int index, int side, bool edit)
-    {
+    {    
         blockData block = GetBlock(index);
-        block.activeSides[side] = edit;
+        block.activeSides[side] = edit;   
     }
 
     public void EditVisualActive(int index, int edit)
@@ -715,7 +715,7 @@ public struct connections
 }
 
 [System.Serializable]
-public struct blockData
+public class blockData
 {
     public int index;
     public string type;

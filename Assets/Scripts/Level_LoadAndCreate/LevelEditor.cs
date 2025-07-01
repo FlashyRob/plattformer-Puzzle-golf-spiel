@@ -395,7 +395,7 @@ public class LevelEditor : MonoBehaviour
     public blockData GetBlockAt(int x, int y)
     {
         blockData blockData = new blockData();
-        blockData = (update.GetBlock(position.GetIndexFromXY(x, y)));
+        blockData = update.GetBlock(position.GetIndexFromXY(x, y));
         return blockData;
     }
 }
