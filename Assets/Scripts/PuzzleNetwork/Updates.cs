@@ -317,9 +317,28 @@ public class Updates : MonoBehaviour
 
     public void ToggleLever(int i, blockData block)
     {
-        block.visualActive = (block.visualActive + 1) % 2;
+        block.state = (block.state + 1) % 2;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
+        {
+            EditBlockActiveSide(i, 0, true);
+            EditBlockActiveSide(i, 1, true);
+            EditBlockActiveSide(i, 2, true);
+            EditBlockActiveSide(i, 3, true);
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, false);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 2, false);
+            EditBlockActiveSide(i, 3, false);
+        }
+    }
+    public void ToggleSwitch(int i, blockData block)
+    {
+        block.state = (block.state + 1) % 2;
+
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -337,9 +356,9 @@ public class Updates : MonoBehaviour
 
     public void SetLever(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -357,9 +376,9 @@ public class Updates : MonoBehaviour
 
     public void SetButton(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
@@ -379,9 +398,9 @@ public class Updates : MonoBehaviour
 
     public void SetPressurePlate(int i, blockData block, int newVal)
     {
-        block.visualActive = newVal;
+        block.state = newVal;
 
-        if (block.visualActive == 1)
+        if (block.state == 1)
         {
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
