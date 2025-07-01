@@ -270,6 +270,13 @@ public class LevelEditor : MonoBehaviour
                     select.transform.rotation = currentBlockObject.transform.rotation;
                 }
             }
+            else
+            {
+                select.transform.Rotate(new Vector3(0, 0, -90));
+                int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
+                materialRotations[materialIndex] += -90;
+                materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -339,6 +346,8 @@ public class LevelEditor : MonoBehaviour
             );
             newBlock.name = currentBlockName;
             newBlock.AddComponent<RemoveBlock>();
+            UpdateCable updateCable = newBlock.GetComponent<UpdateCable>();
+            if (updateCable != null) updateCable.index = posIndex;
 
             blockData ptBlock = new blockData();
             ptBlock.type = currentBlockPrefab.name;
