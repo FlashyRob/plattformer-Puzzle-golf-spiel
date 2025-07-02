@@ -17,6 +17,7 @@ public class LevelEditor : MonoBehaviour
     public Vector3 mousePos;
     public Vector3 mousePosOld;
     private string[] materials = new string[] {
+        "nothing",
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
         "Terrain (16x16) 1_68",
@@ -43,16 +44,30 @@ public class LevelEditor : MonoBehaviour
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
-        5,
-        3,
-        0,
-        1,
+        100,
+        100,
+        100,
+        1000,
         8,
         8,
         8,
         4,
         4,
         100,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+       
     };
     private ChangeBlockCount[] materialCountObjects;
 
@@ -243,6 +258,13 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GenerateLevel.editorActiveChanged)
+        {
+            if (GenerateLevel.editorActive)
+            {
+
+            }
+        }
         mousePosOld = mousePos;
         mousePos = GenerateLevel.mousePos;
 
@@ -345,7 +367,7 @@ public class LevelEditor : MonoBehaviour
                 materialCounts[currentIndex] -= 1;
                 materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
             }
-            if (currentBlockObject != null)
+            if (currentBlockObject != null && currentBlockName != "nothing")
             {
                 if (!GenerateLevel.creative)
                 {
