@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 376543024872344978}
   - component: {fileID: 8294968998525712236}
   - component: {fileID: -8566711254327481793}
+  - component: {fileID: -583425302613573568}
   m_Layer: 0
   m_Name: condensator
   m_TagString: Untagged
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1362165164153685703, guid: feb7a079e694fa94a93cd4aea1eec5c2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: feb7a079e694fa94a93cd4aea1eec5c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,3 +102,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+--- !u!114 &-583425302613573568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6951706937705065905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77986eb829a79b4086dc0142a53bb2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 733a3044f43470547936d257bdf816d6, type: 3}
+  - {fileID: 21300000, guid: 6c63233142537e241be9a4d4396d615a, type: 3}
+  - {fileID: 21300000, guid: c4a0aa8a4e32e084b878d2dc7a10e509, type: 3}
+  - {fileID: 21300000, guid: 99084351793f7764c98165942c1c2b9d, type: 3}
+  - {fileID: 21300000, guid: 1bb21fe46645fd7439e2261ebd98f17a, type: 3}
+  - {fileID: 21300000, guid: 47d98632f03ba62459905679b359a419, type: 3}
+  - {fileID: 21300000, guid: 11291eec947a4e348a6a7c757ded2b54, type: 3}
+  - {fileID: 21300000, guid: f67a02e55e0c8f546be203538f75f4b5, type: 3}
+  - {fileID: 21300000, guid: 62f6d2d8f2a07e74c9ecf97660fc5786, type: 3}
+  - {fileID: 21300000, guid: ff16f0f78dd637d42a30d5f887e32efc, type: 3}
+  - {fileID: 21300000, guid: 0623593c69d12d24d998661c509bf8a8, type: 3}
+  - {fileID: 21300000, guid: 9000c221cbceff94ea98d4edd2214194, type: 3}
+  - {fileID: 21300000, guid: dc40fb9f1c50c954db05280d85626e80, type: 3}
+  - {fileID: 21300000, guid: 1131a45d0a740d8468589e5aeba3bb7e, type: 3}

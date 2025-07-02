@@ -575,20 +575,31 @@ public class Updates : MonoBehaviour
         if (IsAnyConnectionActive(block, 0) || IsAnyConnectionActive(block, 2))
         {
             SetVisualActive(i, 1);
+
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
+
             EditBlockState(i, 300);
+
         }
         else
         {
             if (block.state > 0)
             {
                 EditBlockState(i, block.state - 1 );
+
+                SetVisualActive(i, 1);
+
+                EditBlockActiveSide(i, 1, true);
+                EditBlockActiveSide(i, 3, true);
             }
             else
             {
                 SetVisualActive(i, 0);
                 EditBlockState(i, 0);
+
+                EditBlockActiveSide(i, 1, false);
+                EditBlockActiveSide(i, 3, false);
             }
                 
         }
