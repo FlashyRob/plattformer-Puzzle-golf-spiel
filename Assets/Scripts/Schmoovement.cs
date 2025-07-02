@@ -92,13 +92,18 @@ public class Schmoovement : MonoBehaviour
                     {
                         // The wall is to the left
 
+
                         horizontalPush = -3.7f;
+
                     }
                     else
                     {
                         // The wall is to the right
 
+
                         horizontalPush = 3.7f;
+
+
                     }
                 }
                 }

@@ -22,7 +22,8 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_66",
         "door",
         "finish",
-        "trapdoor",
+        "trapdoor_left",
+        "trapdoor_right",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -74,9 +75,20 @@ public class LevelEditor : MonoBehaviour
 
     public void StartEditor()
     {
+        materialCounts = new int[materials.Length];
+
+        for (int i = 0; i < materialCounts.Length; i++)
+        {
+            materialCounts[i] = 99;
+        }
+
         materialRotations = new int[materials.Length];
+
         for (int i = 0; i < materialRotations.Length; i++)
+        {
             materialRotations[i] = 0;
+        }
+            
         materialObjects = new GameObject[materials.Length];
         if (materialCounts.Length < materials.Length)
         {
@@ -216,6 +228,7 @@ public class LevelEditor : MonoBehaviour
             }
             var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
+
             im.color = oc.color;
 
             materialObjects[i] = blockSelector;

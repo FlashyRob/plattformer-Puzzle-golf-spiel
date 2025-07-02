@@ -116,7 +116,7 @@ public class EditorToUpdateData : MonoBehaviour
                 directionsOutput = new int[4] { 0, 1, 0, 1 };
                 break;
             case "button":
-                directionsOutput = new int[4] { 0, 1, 0, 0 };
+                directionsOutput = new int[4] { 1, 1, 1, 1 };
                 break;
             case "door":
                 directionsInput = new int[4] { 1, 1, 1, 1 };
@@ -124,7 +124,10 @@ public class EditorToUpdateData : MonoBehaviour
             case "finish":
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 break;
-            case "trapdoor":
+            case "trapdoor_left":
+                directionsInput = new int[4] { 1, 1, 1, 1 };
+                break;
+            case "trapdoor_right":
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 break;
 
