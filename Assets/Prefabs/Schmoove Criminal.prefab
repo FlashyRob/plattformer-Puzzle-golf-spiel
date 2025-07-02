@@ -135,7 +135,6 @@ MonoBehaviour:
   secondJump: 0
   Walled: 0
   horizontalPush: 0
-  velocity: {x: 0, y: 0}
   moveSpeed: 5
   platformJump: 0
 --- !u!95 &2934691376798589745
@@ -194,8 +193,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.38}
-  m_Size: {x: 0.99, y: 0.0001}
+  m_Offset: {x: 0, y: -0.45}
+  m_Size: {x: 0.9, y: 0.0001}
   m_Direction: 0
 --- !u!61 &7364066366718279236
 BoxCollider2D:
