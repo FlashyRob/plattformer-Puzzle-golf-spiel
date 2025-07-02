@@ -95,6 +95,11 @@ public class Updates : MonoBehaviour
                     case "cross":
                         HandleCross(block.index, block);
                         break;
+                    case "button":
+                        HandleButton(block.index, block);
+                        break;
+
+
                 }
             }
         }
@@ -217,13 +222,27 @@ public class Updates : MonoBehaviour
         if (block.state == 1)
         {
            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 1, true);
         }
         else
         {
             SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
         }
     }
-
+    public void HandleButton(int i, blockData block)
+    {
+        if (block.state == 1)
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 1, true);
+        }
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+        }
+    }
 
     public void HandleWireStraight(int i, blockData block)
     {
@@ -456,21 +475,6 @@ public class Updates : MonoBehaviour
     public void SetButton(int i, blockData block, int newVal)
     {
         block.state = newVal;
-
-        if (block.state == 1)
-        {
-            EditBlockActiveSide(i, 0, true);
-            EditBlockActiveSide(i, 1, true);
-            EditBlockActiveSide(i, 2, true);
-            EditBlockActiveSide(i, 3, true);
-        }
-        else
-        {
-            EditBlockActiveSide(i, 0, false);
-            EditBlockActiveSide(i, 1, false);
-            EditBlockActiveSide(i, 2, false);
-            EditBlockActiveSide(i, 3, false);
-        }
     }
 
     public void SetPressurePlate(int i, blockData block, int newVal)
