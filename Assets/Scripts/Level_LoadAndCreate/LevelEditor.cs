@@ -235,6 +235,7 @@ public class LevelEditor : MonoBehaviour
         mousePos = GenerateLevel.mousePos;
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
+        hoverBlock = GetBlockAt((int) mousePos.x, (int) mousePos.y);
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
 
@@ -281,6 +282,14 @@ public class LevelEditor : MonoBehaviour
             {
                 editorMode = "place";
             }
+        }
+
+        if (reader.BlockExists(position.getDirectionFromXY((int)mousePos.x, (int)mousePos.y)))
+        {
+            select.SetActive(false);
+        } else
+        {
+            select.SetActive(true);
         }
 
         bool mousePosChanged = !(mousePos == mousePosOld);
