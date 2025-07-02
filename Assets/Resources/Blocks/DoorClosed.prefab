@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2383226567114532883}
   - component: {fileID: 2568708433078250005}
   - component: {fileID: 7193988912475893909}
+  - component: {fileID: 4345204043567820045}
   m_Layer: 0
   m_Name: DoorClosed
   m_TagString: Ground
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 961198867711218230}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 149, y: 44.5, z: 0}
+  m_LocalPosition: {x: 148.501, y: 44.175, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -134,3 +135,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &4345204043567820045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961198867711218230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 939423b2b08bc2b4384b422c7a699621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 0
