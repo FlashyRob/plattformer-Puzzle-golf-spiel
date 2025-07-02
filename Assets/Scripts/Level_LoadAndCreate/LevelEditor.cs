@@ -70,6 +70,8 @@ public class LevelEditor : MonoBehaviour
 
     public blockData hoverBlock;
 
+    GameObject blockCountParent;
+
     public void StartEditor()
     {
         materialRotations = new int[materials.Length];
@@ -205,7 +207,7 @@ public class LevelEditor : MonoBehaviour
 
         if (GenerateLevel.creative) return;
 
-        GameObject blockCountParent = new GameObject();
+        blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
         blockCountParent.transform.parent = viewPort.transform;
         rt = blockCountParent.AddComponent<RectTransform>();
@@ -262,6 +264,20 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == false)
+        {
+            Debug.Log("creative an");
+            GenerateLevel.creative = true;
+            blockCountParent.SetActive(false);
+            return;
+        }
+        else if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == true)
+        {
+            Debug.Log("creative aus");
+            GenerateLevel.creative = false;
+            blockCountParent.SetActive(true);
+            return;
+        }
         if (GenerateLevel.editorActiveChanged)
         {
             if (GenerateLevel.editorActive)

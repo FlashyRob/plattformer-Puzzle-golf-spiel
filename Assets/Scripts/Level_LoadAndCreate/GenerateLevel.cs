@@ -22,7 +22,7 @@ public class GenerateLevel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+            position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         if (!position)
         {
             position = gameObject.AddComponent<CheckWheatherTwoBlocksAreConnected>();
