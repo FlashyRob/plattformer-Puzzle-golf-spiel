@@ -354,6 +354,14 @@ public class LevelEditor : MonoBehaviour
             ptBlock.connectios_bottom = new List<connections>();
             ptBlock.connectios_right = new List<connections>();
             ptBlock.connectios_left = new List<connections>();
+            if (GenerateLevel.creative)  // Für spätere Version einbauen, dass man im Editor mit einer Taste togglen kann das der block non editable wird. Diese müssten graphisch gehighlighted werde und könnten dann vom spieler abgebaut werden und in dessen inventar kommen
+            {
+                ptBlock.editable = false;
+            }
+            else
+            {
+                ptBlock.editable = true;
+            }
             reader.AddBlock(ptBlock);
         }
         else if (
