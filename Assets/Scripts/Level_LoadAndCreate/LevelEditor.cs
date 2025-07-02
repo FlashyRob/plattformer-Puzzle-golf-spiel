@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEditor;
 
 /// <summary>
 /// Creates UI elements and reacts to mous-clicks to create level blocks.
@@ -48,7 +46,7 @@ public class LevelEditor : MonoBehaviour
         8,
         4,
         4,
-        100,
+        10,
     };
     private ChangeBlockCount[] materialCountObjects;
 
@@ -73,6 +71,15 @@ public class LevelEditor : MonoBehaviour
         for (int i = 0; i < materialRotations.Length; i++)
             materialRotations[i] = 0;
         materialObjects = new GameObject[materials.Length];
+        if (materialCounts.Length < materials.Length)
+        {
+            int[] oldCount = materialCounts;
+            materialCounts = new int[materials.Length];
+            for (int i = 0; i < oldCount.Length; i++)
+            {
+                materialCounts[i] = oldCount[i];
+            }
+        }
         materialCountObjects = new ChangeBlockCount[materials.Length];
 
 
@@ -115,11 +122,12 @@ public class LevelEditor : MonoBehaviour
         createdBlocks = GameObject.Find("CreatedBlocks");
 
         RectTransform rt;
-        HorizontalLayoutGroup lg;
+        GridLayoutGroup lg;
         Image im;
         TMPro.TextMeshProUGUI tm;
+        ScrollRect sr;
 
-        var editorParent = new GameObject();
+        GameObject editorParent = new GameObject();
         editorParent.name = "EditorParent";
         editorParent.transform.parent = hud.transform;
         editorParent.layer = 5;
@@ -133,26 +141,38 @@ public class LevelEditor : MonoBehaviour
         im = editorParent.AddComponent<Image>();
         im.color = new Color(164f / 256f, 164f / 256f, 164f / 256f);
         editorParent.AddComponent<CheckUIHover>();
+        sr = editorParent.AddComponent<ScrollRect>();
+        sr.horizontal = false;
+
+        GameObject viewPort = new GameObject();
+        viewPort.name = "ViewPort";
+        viewPort.transform.parent = editorParent.transform;
+        rt = viewPort.AddComponent<RectTransform>();
+        rt.localScale = new Vector3(1, 1, 1);
+        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.anchoredPosition = new Vector2(0, 0);
+        rt.sizeDelta = new Vector2(0, 0);
+        rt.pivot = new Vector2(0, 0);
+
+        sr.viewport = rt;
+        sr.content = rt;
 
         GameObject blockSelectorParent = new GameObject();
         blockSelectorParent.name = "BlockSelectorParent";
-        blockSelectorParent.transform.parent = editorParent.transform;
+        blockSelectorParent.transform.parent = viewPort.transform;
         rt = blockSelectorParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
-        rt.localPosition = new Vector2(-200, 40);
         rt.anchorMin = new Vector2(0, 0);
         rt.anchorMax = new Vector2(1, 1);
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 0);
         rt.pivot = new Vector2(0, 0.5f);
-        lg = blockSelectorParent.AddComponent<HorizontalLayoutGroup>();
-        lg.padding = new RectOffset(20, 0, 0, 0);
-        lg.spacing = 10;
-        lg.childAlignment = TextAnchor.MiddleLeft;
-        lg.childControlWidth = false;
-        lg.childControlHeight = false;
-        lg.childForceExpandWidth = false;
-        lg.childForceExpandHeight = false;
+        lg = blockSelectorParent.AddComponent<GridLayoutGroup>();
+        lg.padding = new RectOffset(10, 0, 10, 0);
+        lg.childAlignment = TextAnchor.UpperLeft;
+        lg.cellSize = new Vector2(40, 40);
+        lg.spacing = new Vector2(10, 10);
 
         for (int i = 0; i < materials.Length; i++)
         {
@@ -162,7 +182,6 @@ public class LevelEditor : MonoBehaviour
             rt = blockSelector.AddComponent<RectTransform>();
             rt.localScale = new Vector3(1, 1, 1);
             rt.anchoredPosition = new Vector2(45, -40);
-            rt.sizeDelta = new Vector2(50, 50);
             rt.pivot = new Vector2(0.5f, 0.5f);
             blockSelector.AddComponent<ClickTest>();
             im = blockSelector.AddComponent<Image>();
@@ -183,21 +202,19 @@ public class LevelEditor : MonoBehaviour
 
         GameObject blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
-        blockCountParent.transform.parent = editorParent.transform;
+        blockCountParent.transform.parent = viewPort.transform;
         rt = blockCountParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
-        rt.anchorMin = new Vector2(0, 1);
-        rt.anchorMax = new Vector2(0, 1);
-        rt.anchoredPosition = new Vector2(23, -50);
+        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.anchoredPosition = new Vector2(0, 0);
+        rt.sizeDelta = new Vector2(0, 0);
         rt.pivot = new Vector2(0, 0.5f);
-        lg = blockCountParent.AddComponent<HorizontalLayoutGroup>();
-        lg.padding = new RectOffset(22, 0, 5, 0);
-        lg.childAlignment = TextAnchor.MiddleLeft;
-        lg.spacing = 35;
-        lg.childControlWidth = false;
-        lg.childControlHeight = false;
-        lg.childForceExpandWidth = false;
-        lg.childForceExpandHeight = false;
+        lg = blockCountParent.AddComponent<GridLayoutGroup>();
+        lg.padding = new RectOffset(25, 0, 25, 0);
+        lg.childAlignment = TextAnchor.UpperLeft;
+        lg.cellSize = new Vector2(25, 25);
+        lg.spacing = new Vector2(25, 25);
 
         for (int i = 0; i < materials.Length; i++) { 
             GameObject blockCount = new GameObject();
@@ -205,10 +222,10 @@ public class LevelEditor : MonoBehaviour
             blockCount.transform.parent = blockCountParent.transform;
             rt = blockCount.AddComponent<RectTransform>();
             rt.localScale = new Vector3(1, 1, 1);
-            rt.sizeDelta = new Vector2(25, 25);
             rt.pivot = new Vector2(0.5f, 0.5f);
             im = blockCount.AddComponent<Image>();
             im.color = new Color(1, 1, 1, 0.5f);
+            im.raycastTarget = false;
 
             GameObject textItem = new GameObject();
             textItem.name = "Text";
@@ -226,6 +243,7 @@ public class LevelEditor : MonoBehaviour
             tm.color = new Color(0, 0, 0, 1);
             tm.fontSize = 22;
             tm.horizontalAlignment = HorizontalAlignmentOptions.Right;
+            tm.raycastTarget = false;
 
             materialCountObjects[i] = textItem.AddComponent<ChangeBlockCount>();
         }
