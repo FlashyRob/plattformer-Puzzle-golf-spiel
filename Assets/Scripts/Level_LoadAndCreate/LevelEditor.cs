@@ -12,7 +12,6 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
-    private GameObject[] uiPrefabs;
     public GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
@@ -77,7 +76,6 @@ public class LevelEditor : MonoBehaviour
 
         block = Resources.LoadAll<GameObject>("Blocks");
         textures = Resources.LoadAll<GameObject>("Textures");
-        uiPrefabs = Resources.LoadAll<GameObject>("UIPrefabs");
 
         for (int i = 0; i < block.Length; i++)
         {
@@ -104,7 +102,7 @@ public class LevelEditor : MonoBehaviour
         }
         try
         {
-            Destroy(hud.transform.GetChild(0).gameObject);
+            Destroy(hud.transform.Find("EditorParent"));
         } catch { }
         createdBlocks = GameObject.Find("CreatedBlocks");
 
@@ -237,6 +235,7 @@ public class LevelEditor : MonoBehaviour
         mousePos = GenerateLevel.mousePos;
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
+        hoverBlock = GetBlockAt((int) mousePos.x, (int) mousePos.y);
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
 
@@ -263,7 +262,7 @@ public class LevelEditor : MonoBehaviour
                     select.transform.rotation = currentBlockObject.transform.rotation;
                 }
             }
-            else if (ClickTest.selectedMaterial == "Nothing")
+            else if (ClickTest.selectedMaterial != "Nothing")
             {
                 select.transform.Rotate(new Vector3(0, 0, -90));
                 int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
@@ -271,11 +270,13 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.Rotate(new Vector3(0, 0, -90));
             }
         }
+
         if (ClickTest.selectedMaterial == "Nothing") return;
+        bool blockExists = reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y));
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y)))
+            if (blockExists)
             {
                 editorMode = "delete";
             }
@@ -289,6 +290,14 @@ public class LevelEditor : MonoBehaviour
         if (mousePosChanged)
         {
             select.transform.position = mousePos;
+
+            if (blockExists)
+            {
+                select.SetActive(false);
+            } else
+            {
+                select.SetActive(true);
+            }
         }
 
         if (ClickTest.changed)
@@ -309,7 +318,7 @@ public class LevelEditor : MonoBehaviour
         )
         {
             int currentIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
-            int posIndex = position.GetIndexFromXY((int) mousePos.x, (int)mousePos.y);
+            int posIndex = position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y);
             blockData previousBlock = update.GetBlock(posIndex);
             currentBlockObject = GameObject.Find(currentBlockName);
             if (previousBlock.type == currentBlockName) return;
@@ -356,6 +365,14 @@ public class LevelEditor : MonoBehaviour
             ptBlock.connectios_bottom = new List<connections>();
             ptBlock.connectios_right = new List<connections>();
             ptBlock.connectios_left = new List<connections>();
+            if (GenerateLevel.creative)  // Für spätere Version einbauen, dass man im Editor mit einer Taste togglen kann das der block non editable wird. Diese müssten graphisch gehighlighted werde und könnten dann vom spieler abgebaut werden und in dessen inventar kommen
+            {
+                ptBlock.editable = false;
+            }
+            else
+            {
+                ptBlock.editable = true;
+            }
             reader.AddBlock(ptBlock);
         }
         else if (
@@ -396,7 +413,7 @@ public class LevelEditor : MonoBehaviour
     public blockData GetBlockAt(int x, int y)
     {
         blockData blockData = new blockData();
-        blockData = (update.GetBlock(position.GetIndexFromXY(x, y)));
+        blockData = update.GetBlock(position.GetIndexFromXY(x, y));
         return blockData;
     }
 }

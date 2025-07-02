@@ -3,15 +3,18 @@ using UnityEngine;
 public class UpdateSwitch : MonoBehaviour
 
 {
-    public int index;
+    private int index;
     private Updates update;
-    SpriteRenderer spriteRenderer;
-
+    private CheckWheatherTwoBlocksAreConnected position;
+    private SpriteRenderer spriteRenderer;
     private Sprite spriteOff;
+
     public Sprite spriteOn;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+        index = position.GetIndexFromXY((int) transform.position.x, (int) transform.position.y);
         update = FindAnyObjectByType<Updates>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteOff = spriteRenderer.sprite;

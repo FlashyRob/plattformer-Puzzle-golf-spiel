@@ -18,7 +18,7 @@ public class GenerateLevel : MonoBehaviour
     public static Vector3 mousePos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         if (!position)
@@ -38,8 +38,24 @@ public class GenerateLevel : MonoBehaviour
         }
 
         createdBlocks = new GameObject("CreatedBlocks");
+        reader.LoadLevel();
+        Load();
 
-        reader.blockSafeFile = reader.LoadLevel();
+        LevelEditor editor;
+        editor = FindAnyObjectByType<LevelEditor>();
+        if (editor != null)
+        {
+            editor.StartEditor();
+        }
+    }   
+    public void Load()
+    {
+        // remove all blocks to clear (if we are loading a different level file)
+        int childCount = createdBlocks.transform.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            GameObject.Destroy(createdBlocks.transform.GetChild(i).gameObject);
+        }
 
         for (int i = 0; i < reader.blockSafeFile.Count; i++)
         {
@@ -68,12 +84,6 @@ public class GenerateLevel : MonoBehaviour
             catch { }
         }
 
-        LevelEditor editor;
-        editor = FindAnyObjectByType<LevelEditor>();
-        if (editor != null)
-        {
-            editor.StartEditor();
-        }
     }
     void GetMousePos()
     {
