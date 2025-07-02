@@ -15,10 +15,14 @@ public class LevelEditor : MonoBehaviour
     public Vector3 mousePos;
     public Vector3 mousePosOld;
     private string[] materials = new string[] {
+        "nothing",
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
         "Terrain (16x16) 1_68",
         "Terrain (16x16) 1_66",
+        "door",
+        "finish",
+        "trapdoor",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -32,15 +36,16 @@ public class LevelEditor : MonoBehaviour
         "xor_gate",
         "lever",
         "cross",
-        "condensator"
+        "condensator",
+        "button"
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
-        5,
-        3,
-        0,
-        1,
+        100,
+        100,
+        100,
+        1000,
         8,
         8,
         8,
@@ -191,7 +196,7 @@ public class LevelEditor : MonoBehaviour
                 Debug.LogError("Could not find blockName index for for material " + materials[i], blockSelector);
                 continue;
             }
-            var oc = block[materialPrefabIdx].GetComponent<SpriteRenderer>();
+            var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
             im.color = oc.color;
 
@@ -257,6 +262,13 @@ public class LevelEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GenerateLevel.editorActiveChanged)
+        {
+            if (GenerateLevel.editorActive)
+            {
+
+            }
+        }
         mousePosOld = mousePos;
         mousePos = GenerateLevel.mousePos;
 
@@ -273,22 +285,25 @@ public class LevelEditor : MonoBehaviour
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
+                update.updateLoop = false;
+
                 blockData getBlock = hoverBlock;
-                currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
+                if (GenerateLevel.creative == true || hoverBlock.editable == true)
+                    currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
-                getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
-                getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
-                getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
-                getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
-                reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
+                    getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
+                    getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
+                    getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
+                    getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
+                    reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
 
-                int materialIndex = System.Array.IndexOf(materials, getBlock.type);
-                materialRotations[materialIndex] = getBlock.direction;
-                materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
-                if (getBlock.type == ClickTest.selectedMaterial)
-                {
-                    select.transform.rotation = currentBlockObject.transform.rotation;
-                }
+                    int materialIndex = System.Array.IndexOf(materials, getBlock.type);
+                    materialRotations[materialIndex] = getBlock.direction;
+                    materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
+                    if (getBlock.type == ClickTest.selectedMaterial)
+                    {
+                        select.transform.rotation = currentBlockObject.transform.rotation;
+                    }
             }
             else if (ClickTest.selectedMaterial != "Nothing")
             {
@@ -333,7 +348,7 @@ public class LevelEditor : MonoBehaviour
             ClickTest.changed = false;
             currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
             SpriteRenderer selectSprite = select.GetComponent<SpriteRenderer>();
-            SpriteRenderer prefabSprite = currentBlockPrefab.GetComponent<SpriteRenderer>();
+            SpriteRenderer prefabSprite = currentBlockPrefab.GetComponentInChildren<SpriteRenderer>();
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
             select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)] * -90);
@@ -356,7 +371,7 @@ public class LevelEditor : MonoBehaviour
                 materialCounts[currentIndex] -= 1;
                 materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
             }
-            if (currentBlockObject != null)
+            if (currentBlockObject != null && currentBlockName != "nothing")
             {
                 if (!GenerateLevel.creative)
                 {
@@ -419,7 +434,8 @@ public class LevelEditor : MonoBehaviour
 
                 if (!GenerateLevel.creative)
                 {
-                    if (!update.GetBlock(currentIndex).editable) return;
+                    if (currentIndex == -1) { Debug.LogError("Block abgebaut, der nicht im Inf ist"); return; };
+                    if (!hoverBlock.editable) return;
                     materialCounts[currentIndex] += 1;
                     materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
                 }

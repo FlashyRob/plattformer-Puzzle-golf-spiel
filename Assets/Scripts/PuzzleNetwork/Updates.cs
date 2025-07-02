@@ -71,6 +71,12 @@ public class Updates : MonoBehaviour
                     case "door":
                         HandleDoor(block.index, block);
                         break;
+                    case "finish":
+                        HandleFinish(block.index, block);
+                        break;
+                    case "trapdoor":
+                        HandleTrapdoor(block.index, block);
+                        break;
                     case "flip_flop":
                         HandleFlipFlop(block.index, block);
                         break;
@@ -94,6 +100,9 @@ public class Updates : MonoBehaviour
                         break;
                     case "cross":
                         HandleCross(block.index, block);
+                        break;
+                    case "button":
+                        HandleButton(block.index, block);
                         break;
                 }
             }
@@ -217,13 +226,27 @@ public class Updates : MonoBehaviour
         if (block.state == 1)
         {
            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 1, true);
         }
         else
         {
             SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
         }
     }
-
+    public void HandleButton(int i, blockData block)
+    {
+        if (block.state == 1)
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 1, true);
+        }
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+        }
+    }
 
     public void HandleWireStraight(int i, blockData block)
     {
@@ -456,21 +479,6 @@ public class Updates : MonoBehaviour
     public void SetButton(int i, blockData block, int newVal)
     {
         block.state = newVal;
-
-        if (block.state == 1)
-        {
-            EditBlockActiveSide(i, 0, true);
-            EditBlockActiveSide(i, 1, true);
-            EditBlockActiveSide(i, 2, true);
-            EditBlockActiveSide(i, 3, true);
-        }
-        else
-        {
-            EditBlockActiveSide(i, 0, false);
-            EditBlockActiveSide(i, 1, false);
-            EditBlockActiveSide(i, 2, false);
-            EditBlockActiveSide(i, 3, false);
-        }
     }
 
     public void SetPressurePlate(int i, blockData block, int newVal)
@@ -493,10 +501,6 @@ public class Updates : MonoBehaviour
         }
     }
      
-    private void SetVisualAvive(int i, blockData block, int newVal)
-    {
-        block.visualActive = newVal;
-    }
 
     private void HandleDoor(int i, blockData block)
     {
@@ -520,6 +524,59 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             return;
         }
+        Debug.Log("Door has no strom");
+        SetVisualActive(i, 0);
+    }
+
+    private void HandleFinish(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        Debug.Log("Door has no strom");
+        SetVisualActive(i, 0);
+    }
+
+    private void HandleTrapdoor(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        Debug.Log("Door has no strom");
         SetVisualActive(i, 0);
     }
 
