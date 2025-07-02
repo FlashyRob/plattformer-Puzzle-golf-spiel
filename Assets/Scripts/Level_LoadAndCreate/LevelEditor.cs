@@ -42,6 +42,18 @@ public class LevelEditor : MonoBehaviour
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
+<<<<<<< Updated upstream
+=======
+        500,
+        300,
+        2000,
+        100,
+        800,
+        800,
+        800,
+        400,
+        400,
+>>>>>>> Stashed changes
         100,
         100,
         100,

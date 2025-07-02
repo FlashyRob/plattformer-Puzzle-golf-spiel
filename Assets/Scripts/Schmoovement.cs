@@ -67,7 +67,11 @@ public class Schmoovement : MonoBehaviour
         {
             if (inputKeySpace)
             {
+<<<<<<< Updated upstream
                 jumpVelocity = 0.05f;
+=======
+                jumpVelocity = 0.08f;
+>>>>>>> Stashed changes
             }
             else
             {
@@ -91,13 +95,21 @@ public class Schmoovement : MonoBehaviour
                     {
                         // The wall is to the left
 
+<<<<<<< Updated upstream
                         horizontalPush = -3.7f;
+=======
+                        horizontalPush = -4;
+>>>>>>> Stashed changes
                     }
                     else
                     {
                         // The wall is to the right
 
+<<<<<<< Updated upstream
                         horizontalPush = 3.7f;
+=======
+                        horizontalPush = 4;
+>>>>>>> Stashed changes
                     }
                 }
             }
