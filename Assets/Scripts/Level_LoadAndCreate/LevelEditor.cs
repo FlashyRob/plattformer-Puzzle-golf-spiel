@@ -136,6 +136,7 @@ public class LevelEditor : MonoBehaviour
         Image im;
         TMPro.TextMeshProUGUI tm;
         ScrollRect sr;
+        Mask mk;
 
         GameObject editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -164,13 +165,28 @@ public class LevelEditor : MonoBehaviour
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 0);
         rt.pivot = new Vector2(0, 0);
+        im = viewPort.AddComponent<Image>();
+        im.color = new Color(0, 0, 0, 1f / 256f);
+        mk = viewPort.AddComponent<Mask>();
 
         sr.viewport = rt;
+
+        GameObject content = new GameObject();
+        content.name = "Content";
+        content.transform.parent = viewPort.transform;
+        rt = content.AddComponent<RectTransform>();
+        rt.localScale = new Vector3(1, 1, 1);
+        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.anchoredPosition = new Vector2(0, 0);
+        rt.sizeDelta = new Vector2(0, 50);
+        rt.pivot = new Vector2(0, 0);
+
         sr.content = rt;
 
         GameObject blockSelectorParent = new GameObject();
         blockSelectorParent.name = "BlockSelectorParent";
-        blockSelectorParent.transform.parent = viewPort.transform;
+        blockSelectorParent.transform.parent = content.transform;
         rt = blockSelectorParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchorMin = new Vector2(0, 0);
@@ -213,7 +229,7 @@ public class LevelEditor : MonoBehaviour
 
         blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
-        blockCountParent.transform.parent = viewPort.transform;
+        blockCountParent.transform.parent = content.transform;
         rt = blockCountParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchorMin = new Vector2(0, 0);
