@@ -21,6 +21,9 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_47",
         "Terrain (16x16) 1_68",
         "Terrain (16x16) 1_66",
+        "door",
+        "finish",
+        "trapdoor",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -172,7 +175,7 @@ public class LevelEditor : MonoBehaviour
                 Debug.LogError("Could not find blockName index for for material " + materials[i], blockSelector);
                 continue;
             }
-            var oc = block[materialPrefabIdx].GetComponent<SpriteRenderer>();
+            var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
             im.color = oc.color;
 
@@ -315,7 +318,7 @@ public class LevelEditor : MonoBehaviour
             ClickTest.changed = false;
             currentBlockPrefab = block[blockName.IndexOf(ClickTest.selectedMaterial)];
             SpriteRenderer selectSprite = select.GetComponent<SpriteRenderer>();
-            SpriteRenderer prefabSprite = currentBlockPrefab.GetComponent<SpriteRenderer>();
+            SpriteRenderer prefabSprite = currentBlockPrefab.GetComponentInChildren<SpriteRenderer>();
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
             select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)] * -90);
