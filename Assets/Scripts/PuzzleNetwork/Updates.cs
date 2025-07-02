@@ -104,8 +104,6 @@ public class Updates : MonoBehaviour
                     case "button":
                         HandleButton(block.index, block);
                         break;
-
-
                 }
             }
         }
