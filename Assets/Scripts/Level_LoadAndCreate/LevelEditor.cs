@@ -255,6 +255,8 @@ public class LevelEditor : MonoBehaviour
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
+                update.updateLoop = false;
+
                 blockData getBlock = hoverBlock;
                 currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
