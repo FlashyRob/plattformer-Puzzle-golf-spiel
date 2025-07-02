@@ -33,7 +33,8 @@ public class LevelEditor : MonoBehaviour
         "not_gate",
         "xor_gate",
         "lever",
-        "cross"
+        "cross",
+        "condensator"
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;

@@ -258,6 +258,8 @@ public class Updates : MonoBehaviour
 
     private void HandleCross(int i, blockData block)
     {
+        SetVisualActive(i, 0);
+
         if (IsAnyConnectionActive(block, 0))
         {
             SetVisualActive(i, 1);

@@ -111,6 +111,11 @@ public class EditorToUpdateData : MonoBehaviour
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 directionsOutput = new int[4] { 1, 1, 1, 1 };
                 break;
+            case "condensator":
+                directionsInput = new int[4] { 1, 0, 1, 0 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+
         }
 
         connectors inOut;

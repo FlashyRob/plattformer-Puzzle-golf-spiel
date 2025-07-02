@@ -179,6 +179,11 @@ public class JSONReader : MonoBehaviour
 
     public void SaveSaveFile()
     {
+
+        if (update.updateLoop == true)
+        {
+            return;
+        }
         // Debug.Log("Saved " + BlockSafeFile.Count + " blocks to save file " + SavePath(DefaultSaveFile));
 
         BlockList b = new BlockList
@@ -206,7 +211,7 @@ public class JSONReader : MonoBehaviour
 
     public void BlockWasEdited()
     {
-
+        update.updateLoop = false;
     }
 
 
