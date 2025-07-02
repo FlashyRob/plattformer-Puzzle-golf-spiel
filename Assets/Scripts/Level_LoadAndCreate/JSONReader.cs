@@ -24,6 +24,8 @@ public class JSONReader : MonoBehaviour
 
         scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
         update = FindAnyObjectByType<Updates>();
+
+        InvokeRepeating("SaveSaveFile", 5, 30);
     }
 
     public void ClearLevel()
@@ -75,7 +77,7 @@ public class JSONReader : MonoBehaviour
             if (blockSafeFile[i].index == index)
             {
                 blockSafeFile.RemoveAt(i);
-                SafeSafeFile();
+                BlockWasEdited();
             }
         }
 
@@ -111,7 +113,7 @@ public class JSONReader : MonoBehaviour
     {
         blockSafeFile.Add(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
 
     public void EditBlock(blockData block)
@@ -119,7 +121,7 @@ public class JSONReader : MonoBehaviour
         RemoveBlock(block.index);
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
 
     public bool BlockExists(int index)
@@ -138,7 +140,7 @@ public class JSONReader : MonoBehaviour
         block.direction = newVal;
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
 
     public void EditBlockType(blockData block, string newVal)
@@ -147,7 +149,7 @@ public class JSONReader : MonoBehaviour
         block.type = newVal;
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
     public void EditBlockState(blockData block, int newVal)
     {
@@ -155,7 +157,7 @@ public class JSONReader : MonoBehaviour
         block.state = newVal;
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
 
     public void EditBlockMeta(blockData block, string newVal)
@@ -164,7 +166,7 @@ public class JSONReader : MonoBehaviour
         block.meta = newVal;
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
     public void EditBlockVisualActive(blockData block, int newVal)
     {
@@ -172,10 +174,10 @@ public class JSONReader : MonoBehaviour
         block.visualActive = newVal;
         AddBlock(block);
 
-        SafeSafeFile();
+        BlockWasEdited();
     }
 
-    public void SafeSafeFile()
+    public void SaveSaveFile()
     {
         // Debug.Log("Saved " + BlockSafeFile.Count + " blocks to save file " + SavePath(DefaultSaveFile));
 
@@ -199,6 +201,12 @@ public class JSONReader : MonoBehaviour
         {
             Debug.LogWarning("JSON READER has no Update reference");
         }
+
+    }
+
+    public void BlockWasEdited()
+    {
+
     }
 
 
