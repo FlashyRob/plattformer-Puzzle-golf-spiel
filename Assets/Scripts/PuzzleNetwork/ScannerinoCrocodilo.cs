@@ -10,7 +10,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
     public List<int> visitedBlocks = new List<int>();
     public List<findBlock> foundInputBlocks = new List<findBlock>();
 
-    private string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "battery", "toggle"  };
+    private string[] powerSources = new string[] { "and_gate", "lever", "button", "preassure_plate", "or_gate", "xor_gate", "flip_flop", "battery", "toggle", "switch", "or_gate", "not_gate", "xor_gate", "cross"};
 
     private CheckWheatherTwoBlocksAreConnected general;
     private Updates update;

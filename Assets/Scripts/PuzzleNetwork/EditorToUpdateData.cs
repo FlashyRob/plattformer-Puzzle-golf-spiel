@@ -78,9 +78,6 @@ public class EditorToUpdateData : MonoBehaviour
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 directionsOutput = new int[4] { 1, 1, 1, 1 };
                 break;
-            case "lever":
-                directionsOutput = new int[4] { 1, 1, 1, 1 };
-                break;
             case "and_gate":
                 directionsInput = new int[4] { 1, 0, 1, 0 };
                 directionsOutput = new int[4] { 0, 1, 0, 1 };
@@ -94,6 +91,25 @@ public class EditorToUpdateData : MonoBehaviour
             case "switch":
                 directionsInput = new int[4] { 0, 0, 0, 1 };
                 directionsOutput = new int[4] { 0, 1, 0, 0 };
+                break;
+            case "xor_gate":
+                directionsInput = new int[4] { 1, 0, 1, 0 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+            case "not_gate":
+                directionsInput = new int[4] { 1, 0, 1, 0 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+            case "or_gate":
+                directionsInput = new int[4] { 1, 0, 1, 0 };
+                directionsOutput = new int[4] { 0, 1, 0, 1 };
+                break;
+            case "lever":
+                directionsOutput = new int[4] { 0, 1, 0, 0 };
+                break;
+            case "cross":
+                directionsInput = new int[4] { 1, 1, 1, 1 };
+                directionsOutput = new int[4] { 1, 1, 1, 1 };
                 break;
         }
 

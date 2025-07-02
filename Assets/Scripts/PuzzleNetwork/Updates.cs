@@ -89,6 +89,12 @@ public class Updates : MonoBehaviour
                     case "switch":
                         HandleSwitch(block.index, block);
                         break;
+                    case "lever":
+                        HandleLever(block.index, block);
+                        break;
+                    case "cross":
+                        HandleCross(block.index, block);
+                        break;
                 }
             }
         }
@@ -168,7 +174,7 @@ public class Updates : MonoBehaviour
     public bool isActive(int index, int side)
     {
         blockData thisBlock = GetBlock(index);
-        var l = thisBlock.activeSides[side];
+        var l = thisBlock.activeSides[(side + thisBlock.direction) % 4];
         return (l);
     }
 
@@ -206,6 +212,17 @@ public class Updates : MonoBehaviour
         }
     }
 
+    public void HandleLever(int i, blockData block)
+    {
+        if (block.state == 1)
+        {
+           SetVisualActive(i, 1);
+        }
+        else
+        {
+            SetVisualActive(i, 0);
+        }
+    }
 
 
     public void HandleWireStraight(int i, blockData block)
@@ -237,6 +254,54 @@ public class Updates : MonoBehaviour
             return;
         }
         SetVisualActive(i, 0);
+    }
+
+    private void HandleCross(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 2, true);
+            return;
+        }
+        else
+        {
+            EditBlockActiveSide(i, 2, false);
+        }
+
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 3, true);
+            return;
+        }
+        else
+        {
+            EditBlockActiveSide(i, 3, false);
+        }
+
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 0, true);
+            return;
+        }
+        else
+        {
+            EditBlockActiveSide(i, 0, false);
+        }
+
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            EditBlockActiveSide(i, 1, true);
+            return;
+        }
+        else
+        {
+            EditBlockActiveSide(i, 1, false);
+        }
+
     }
 
     private void HandleWireT(int i, blockData block)
@@ -329,6 +394,8 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 2, true);
             EditBlockActiveSide(i, 3, true);
+
+            SetVisualActive(i, 1);
         }
         else
         {
@@ -336,6 +403,8 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, false);
             EditBlockActiveSide(i, 2, false);
             EditBlockActiveSide(i, 3, false);
+
+            SetVisualActive(i, 0);
         }
     }
     public void ToggleSwitch(int i, blockData block)
@@ -368,6 +437,8 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 2, true);
             EditBlockActiveSide(i, 3, true);
+
+            SetVisualActive(i, 1);
         }
         else
         {
@@ -375,6 +446,8 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, false);
             EditBlockActiveSide(i, 2, false);
             EditBlockActiveSide(i, 3, false);
+
+            SetVisualActive(i, 0);
         }
     }
 
@@ -455,7 +528,13 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
-        } else SetVisualActive(i, 0);
+        }
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, false);
+        }
     }
 
     private void HandleOrGate(int i, blockData block)
@@ -466,7 +545,12 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
         }
-        else SetVisualActive(i, 0);
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, false);
+        }
     }
 
     private void HandleXorGate(int i, blockData block)
@@ -477,11 +561,16 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
         }
-        else SetVisualActive(i, 0);
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, false);
+        }
     }
     private void HandleCondensator(int i, blockData block)
     {
-        if (IsAnyConnectionActive(block, 0) ^ IsAnyConnectionActive(block, 2))
+        if (IsAnyConnectionActive(block, 0) || IsAnyConnectionActive(block, 2))
         {
             SetVisualActive(i, 1);
             EditBlockActiveSide(i, 1, true);
@@ -505,7 +594,7 @@ public class Updates : MonoBehaviour
 
     private void HandlePulse(int i, blockData block)
     {
-        if (IsAnyConnectionActive(block, 0) ^ IsAnyConnectionActive(block, 2))
+        if (IsAnyConnectionActive(block, 0) || IsAnyConnectionActive(block, 2))
         {
             EditBlockState(i, block.state + 1);
 
@@ -585,7 +674,12 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
         }
-        else SetVisualActive(i, 0);
+        else
+        {
+            SetVisualActive(i, 0);
+            EditBlockActiveSide(i, 1, false);
+            EditBlockActiveSide(i, 3, false);
+        }
     }
 
     public bool IsAnyConnectionActive(blockData block, int side)

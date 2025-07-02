@@ -24,9 +24,16 @@ public class LevelEditor : MonoBehaviour
         "wire_curve",
         "wire_straight",
         "wire_t",
+        "wire_cross",
         "lamp",
         "battery",
         "switch",
+        "and_gate",
+        "or_gate",
+        "not_gate",
+        "xor_gate",
+        "lever",
+        "cross"
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
@@ -233,6 +240,9 @@ public class LevelEditor : MonoBehaviour
     {
         mousePosOld = mousePos;
         mousePos = GenerateLevel.mousePos;
+
+        hoverBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
+
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
 
@@ -254,6 +264,11 @@ public class LevelEditor : MonoBehaviour
 
                 int materialIndex = System.Array.IndexOf(materials, getBlock.type);
                 int directionDegree = (getBlock.direction + 1) * -90;
+
+                Debug.Log(getBlock.type);
+
+                Debug.Log(materialIndex);
+
                 materialRotations[materialIndex] = directionDegree;
                 materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
                 if (getBlock.type == ClickTest.selectedMaterial)
