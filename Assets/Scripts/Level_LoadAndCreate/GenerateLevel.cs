@@ -14,7 +14,7 @@ public class GenerateLevel : MonoBehaviour
 
     private GameObject createdBlocks;
 
-    public static bool creative = true;
+    public static bool creative = false;
     public static Vector3 mousePos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
