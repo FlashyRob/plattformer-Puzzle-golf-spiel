@@ -42,10 +42,10 @@ public class LevelEditor : MonoBehaviour
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
-        100,
-        100,
-        100,
-        1000,
+        10,
+        10,
+        10,
+        10,
         8,
         8,
         8,
@@ -221,8 +221,6 @@ public class LevelEditor : MonoBehaviour
             materialObjects[i] = blockSelector;
         }
 
-        if (GenerateLevel.creative) return;
-
         blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
         blockCountParent.transform.parent = content.transform;
@@ -239,7 +237,7 @@ public class LevelEditor : MonoBehaviour
         lg.cellSize = new Vector2(25, 25);
         lg.spacing = new Vector2(25, 25);
 
-        for (int i = 0; i < materials.Length; i++) { 
+        for (int i = 0; i < materialCounts.Length; i++) { 
             GameObject blockCount = new GameObject();
             blockCount.name = materials[i];
             blockCount.transform.parent = blockCountParent.transform;
@@ -270,6 +268,10 @@ public class LevelEditor : MonoBehaviour
 
             materialCountObjects[i] = textItem.AddComponent<ChangeBlockCount>();
         }
+
+        if (GenerateLevel.creative) {
+            blockCountParent.SetActive(false);
+        }
     }
 
     bool CheckValid(Vector3 mousePos)
@@ -282,33 +284,23 @@ public class LevelEditor : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == false)
         {
-            Debug.Log("creative an");
             GenerateLevel.creative = true;
             blockCountParent.SetActive(false);
             return;
         }
         else if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == true)
         {
-            Debug.Log("creative aus");
             GenerateLevel.creative = false;
             blockCountParent.SetActive(true);
             return;
         }
-        if (GenerateLevel.editorActiveChanged)
-        {
-            if (GenerateLevel.editorActive)
-            {
 
-            }
-        }
         mousePosOld = mousePos;
         mousePos = GenerateLevel.mousePos;
-
         hoverBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
 
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
-        hoverBlock = GetBlockAt((int) mousePos.x, (int) mousePos.y);
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
 
@@ -337,7 +329,7 @@ public class LevelEditor : MonoBehaviour
                         select.transform.rotation = currentBlockObject.transform.rotation;
                     }
             }
-            else if (ClickTest.selectedMaterial != "Nothing")
+            else if (ClickTest.selectedMaterial != "nothing")
             {
                 int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
                 materialRotations[materialIndex] += 1;
@@ -345,8 +337,9 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.rotation = Quaternion.Euler(0, 0, materialRotations[materialIndex] * -90);
             }
         }
-
-        if (ClickTest.selectedMaterial == "Nothing") return;
+        
+        if (ClickTest.selectedMaterial == "nothing" && ClickTest.changed) select.SetActive(false);
+        if (ClickTest.selectedMaterial == "nothing") return;
         bool blockExists = reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y));
 
         if (Input.GetMouseButtonDown(0))
@@ -384,6 +377,7 @@ public class LevelEditor : MonoBehaviour
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
             select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)] * -90);
+            select.SetActive(true);
         }
 
         if (
@@ -460,9 +454,7 @@ public class LevelEditor : MonoBehaviour
 
             if (currentBlockObject != null)
             {
-
-                blockData getBlock = hoverBlock;
-                int currentIndex = System.Array.IndexOf(materials, getBlock.type);
+                int currentIndex = System.Array.IndexOf(materials, hoverBlock.type);
 
                 if (!GenerateLevel.creative)
                 {

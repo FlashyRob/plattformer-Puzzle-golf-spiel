@@ -17,7 +17,6 @@ public class GenerateLevel : MonoBehaviour
     public static bool creative = true;
     public static Vector3 mousePos;
     public static bool editorActive = true;
-    public static bool editorActiveChanged = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
