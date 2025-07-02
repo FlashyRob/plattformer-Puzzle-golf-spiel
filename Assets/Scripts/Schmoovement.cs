@@ -128,6 +128,7 @@ public class Schmoovement : MonoBehaviour
                 jumpVelocity = 4;
                 secondJump = false;
                 controldamper = 1;
+                animator.SetBool("isDJ", true);
             }
 
             verticalVelocity = jumpVelocity + playerVel.y;
@@ -138,6 +139,7 @@ public class Schmoovement : MonoBehaviour
                 verticalVelocity = 8;
                 secondJump = false;
                 controldamper = 1;
+                animator.SetBool("isDJ", true);
             }
 
             horizontalPush = horizontalPush * 0.95f;
@@ -178,6 +180,20 @@ public class Schmoovement : MonoBehaviour
             else
             {
                 animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+            }
+
+            if(Grounded || Walled)
+            {
+                animator.SetBool("isDJ", false);
+            }
+
+            if(rb2d.linearVelocity.y < 0)
+            {
+                animator.SetBool("isFalling", true);
+            }
+            else
+            {
+                animator.SetBool("isFalling", false);
             }
 
             if (!isFacingRight && horizontalVelocity > 0)
