@@ -84,8 +84,8 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                    jumpVelocity = 10;
-                    controldamper = 0.3f;
+                    jumpVelocity = 11;
+                    controldamper = 0.8f;
                     Slide = false;
                     if (collidex > myx)
                     {
@@ -127,6 +127,7 @@ public class Schmoovement : MonoBehaviour
             {
                 jumpVelocity = 4;
                 secondJump = false;
+                controldamper = 1;
             }
 
             verticalVelocity = jumpVelocity + playerVel.y;
@@ -136,6 +137,7 @@ public class Schmoovement : MonoBehaviour
             {
                 verticalVelocity = 8;
                 secondJump = false;
+                controldamper = 1;
             }
 
             horizontalPush = horizontalPush * 0.95f;
@@ -151,9 +153,9 @@ public class Schmoovement : MonoBehaviour
                 {
                     verticalVelocity = -3;
                 }
-                else if (verticalVelocity < -1.5f)
+                else if (verticalVelocity < 3)
                 {
-                    verticalVelocity = -1.5f;
+                    verticalVelocity = -3;
                 }
             }
 
