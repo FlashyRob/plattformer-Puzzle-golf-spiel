@@ -74,7 +74,10 @@ public class Updates : MonoBehaviour
                     case "finish":
                         HandleFinish(block.index, block);
                         break;
-                    case "trapdoor":
+                    case "trapdoor_left":
+                        HandleTrapdoor(block.index, block);
+                        break;
+                    case "trapdoor_right":
                         HandleTrapdoor(block.index, block);
                         break;
                     case "flip_flop":
@@ -524,7 +527,7 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             return;
         }
-        Debug.Log("Door has no strom");
+
         SetVisualActive(i, 0);
     }
 
@@ -550,7 +553,7 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             return;
         }
-        Debug.Log("Door has no strom");
+
         SetVisualActive(i, 0);
     }
 
@@ -576,7 +579,7 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             return;
         }
-        Debug.Log("Door has no strom");
+
         SetVisualActive(i, 0);
     }
 

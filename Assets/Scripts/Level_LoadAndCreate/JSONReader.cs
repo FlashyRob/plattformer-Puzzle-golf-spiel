@@ -241,6 +241,16 @@ public class JSONReader : MonoBehaviour
         Debug.Log("Saved level to persistent data path: " + savePath);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SaveSaveFile();
+            scanner.Scanner();
+            update.updateLoop = true;
+        }
+    }
+
     public List<string> GetAllLevels()
     {
         var levels = new List<string>();

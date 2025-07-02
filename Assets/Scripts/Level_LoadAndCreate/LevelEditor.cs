@@ -22,7 +22,8 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_66",
         "door",
         "finish",
-        "trapdoor",
+        "trapdoor_left",
+        "trapdoor_right",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -41,30 +42,9 @@ public class LevelEditor : MonoBehaviour
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
-    private int[] materialCounts = new int[] {
-<<<<<<< Updated upstream
-=======
-        500,
-        300,
-        2000,
-        100,
-        800,
-        800,
-        800,
-        400,
-        400,
->>>>>>> Stashed changes
-        100,
-        100,
-        100,
-        1000,
-        8,
-        8,
-        8,
-        4,
-        4,
-        10,
-    };
+
+    private int[] materialCounts;
+
     private ChangeBlockCount[] materialCountObjects;
 
     List<string> blockName = new List<string>();
@@ -86,9 +66,20 @@ public class LevelEditor : MonoBehaviour
 
     public void StartEditor()
     {
+        materialCounts = new int[materials.Length];
+
+        for (int i = 0; i < materialCounts.Length; i++)
+        {
+            materialCounts[i] = 99;
+        }
+
         materialRotations = new int[materials.Length];
+
         for (int i = 0; i < materialRotations.Length; i++)
+        {
             materialRotations[i] = 0;
+        }
+            
         materialObjects = new GameObject[materials.Length];
         if (materialCounts.Length < materials.Length)
         {
@@ -212,6 +203,7 @@ public class LevelEditor : MonoBehaviour
             }
             var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
+
             im.color = oc.color;
 
             materialObjects[i] = blockSelector;
