@@ -71,6 +71,12 @@ public class Updates : MonoBehaviour
                     case "door":
                         HandleDoor(block.index, block);
                         break;
+                    case "finish":
+                        HandleFinish(block.index, block);
+                        break;
+                    case "trapdoor":
+                        HandleTrapdoor(block.index, block);
+                        break;
                     case "flip_flop":
                         HandleFlipFlop(block.index, block);
                         break;
@@ -497,10 +503,6 @@ public class Updates : MonoBehaviour
         }
     }
      
-    private void SetVisualAvive(int i, blockData block, int newVal)
-    {
-        block.visualActive = newVal;
-    }
 
     private void HandleDoor(int i, blockData block)
     {
@@ -524,6 +526,59 @@ public class Updates : MonoBehaviour
             SetVisualActive(i, 1);
             return;
         }
+        Debug.Log("Door has no strom");
+        SetVisualActive(i, 0);
+    }
+
+    private void HandleFinish(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        Debug.Log("Door has no strom");
+        SetVisualActive(i, 0);
+    }
+
+    private void HandleTrapdoor(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        Debug.Log("Door has no strom");
         SetVisualActive(i, 0);
     }
 
