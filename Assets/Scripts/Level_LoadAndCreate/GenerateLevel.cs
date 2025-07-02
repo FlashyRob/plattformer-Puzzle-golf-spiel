@@ -14,7 +14,7 @@ public class GenerateLevel : MonoBehaviour
 
     private GameObject createdBlocks;
 
-    public static bool creative = false;
+    public static bool creative = true;
     public static Vector3 mousePos;
     public static bool editorActive = true;
     public static bool editorActiveChanged = false;
@@ -22,7 +22,7 @@ public class GenerateLevel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+            position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         if (!position)
         {
             position = gameObject.AddComponent<CheckWheatherTwoBlocksAreConnected>();
