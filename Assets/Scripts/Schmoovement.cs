@@ -67,7 +67,7 @@ public class Schmoovement : MonoBehaviour
         {
             if (inputKeySpace)
             {
-                jumpVelocity = 0.012f;
+                jumpVelocity = 0.05f;
             }
             else
             {
@@ -79,25 +79,25 @@ public class Schmoovement : MonoBehaviour
                 if (Grounded && !Walled)
                 {
                     Grounded = false;                  
-                    jumpVelocity = 8.5f + platformJump;
+                    jumpVelocity = 9 + platformJump;
                 }
 
                 if (Walled)
                 {
-                    jumpVelocity = 11;
+                    jumpVelocity = 9;
                     controldamper = 0.8f;
                     Slide = false;
                     if (collidex > myx)
                     {
                         // The wall is to the left
 
-                        horizontalPush = -3;
+                        horizontalPush = -3.7f;
                     }
                     else
                     {
                         // The wall is to the right
 
-                        horizontalPush = 3;
+                        horizontalPush = 3.7f;
                     }
                 }
             }
@@ -113,11 +113,6 @@ public class Schmoovement : MonoBehaviour
                     {
                         jumpVelocity = -0.5f;
                     }
-
-                }
-                else
-                {
-                    jumpVelocity = 0;
                 }
             }
 
@@ -125,7 +120,7 @@ public class Schmoovement : MonoBehaviour
 
             if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity > 6)
             {
-                jumpVelocity = 4;
+                jumpVelocity = 5;
                 secondJump = false;
                 controldamper = 1;
                 animator.SetBool("isDJ", true);
@@ -136,7 +131,7 @@ public class Schmoovement : MonoBehaviour
             if (inputKeyDownSpace>=1 && secondJump && !Walled && verticalVelocity < 6)
           
             {
-                verticalVelocity = 8;
+                verticalVelocity = 9;
                 secondJump = false;
                 controldamper = 1;
                 animator.SetBool("isDJ", true);

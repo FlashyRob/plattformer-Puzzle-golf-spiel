@@ -14,7 +14,7 @@ public class GenerateLevel : MonoBehaviour
 
     private GameObject createdBlocks;
 
-    public static bool creative = false;
+    public static bool creative = true;
     public static Vector3 mousePos;
     public static bool editorActive = true;
     public static bool editorActiveChanged = false;
