@@ -258,22 +258,25 @@ public class LevelEditor : MonoBehaviour
             currentBlockObject = GameObject.Find(currentBlockName);
             if (currentBlockObject != null)
             {
+                update.updateLoop = false;
+
                 blockData getBlock = hoverBlock;
-                currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
+                if (GenerateLevel.creative == true || hoverBlock.editable == true)
+                    currentBlockObject.transform.Rotate(new Vector3(0, 0, -90));
 
-                getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
-                getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
-                getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
-                getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
-                reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
+                    getBlock.inputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).inputDirections;
+                    getBlock.inputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.inputDirections, getBlock.direction);
+                    getBlock.outputDirections = editorToUpdate.BlockNamesToDirections(getBlock.type).outputDirections;
+                    getBlock.outputDirections = editorToUpdate.directions1AndDirectionToDirection2(getBlock.outputDirections, getBlock.direction);
+                    reader.EditBlockDirection(getBlock, (getBlock.direction + 1) % 4);
 
-                int materialIndex = System.Array.IndexOf(materials, getBlock.type);
-                materialRotations[materialIndex] = getBlock.direction;
-                materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
-                if (getBlock.type == ClickTest.selectedMaterial)
-                {
-                    select.transform.rotation = currentBlockObject.transform.rotation;
-                }
+                    int materialIndex = System.Array.IndexOf(materials, getBlock.type);
+                    materialRotations[materialIndex] = getBlock.direction;
+                    materialObjects[materialIndex].transform.rotation = currentBlockObject.transform.rotation;
+                    if (getBlock.type == ClickTest.selectedMaterial)
+                    {
+                        select.transform.rotation = currentBlockObject.transform.rotation;
+                    }
             }
             else if (ClickTest.selectedMaterial != "Nothing")
             {
@@ -404,7 +407,8 @@ public class LevelEditor : MonoBehaviour
 
                 if (!GenerateLevel.creative)
                 {
-                    if (!update.GetBlock(currentIndex).editable) return;
+                    if (currentIndex == -1) { Debug.LogError("Block abgebaut, der nicht im Inf ist"); return; };
+                    if (!hoverBlock.editable) return;
                     materialCounts[currentIndex] += 1;
                     materialCountObjects[currentIndex].update(materialCounts[currentIndex]);
                 }
