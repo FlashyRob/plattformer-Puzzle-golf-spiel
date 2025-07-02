@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine.UI;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class LevelCreatorUI : MonoBehaviour
 {
@@ -11,18 +12,18 @@ public class LevelCreatorUI : MonoBehaviour
     private TMP_Dropdown knownLevels;
     private Button saveButton;
     private Button loadButton;
+    private Button playButton;
     private Button exitButton;
     private JSONReader reader;
     private GenerateLevel generateLevel;
-    private RectTransform rect;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rect = GetComponent<RectTransform>();
+        var rect = GetComponent<RectTransform>();
         saveButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "SaveButton");
         loadButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "LoadButton");
+        playButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "PlayButton");
         exitButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "ExitButton");
         saveAsInput = rect.GetComponentsInChildren<TMP_InputField>(true).FirstOrDefault(t => t.name == "SaveAsInput");
         knownLevels = rect.GetComponentsInChildren<TMP_Dropdown>(true).FirstOrDefault(t => t.name == "KnownLevels");
@@ -37,6 +38,7 @@ public class LevelCreatorUI : MonoBehaviour
         saveButton.onClick.AddListener(OnSave);
         loadButton.onClick.AddListener(OnLoad);
         exitButton.onClick.AddListener(OnExit);
+        playButton.onClick.AddListener(OnPlay);
     }
 
     void UpdateKnownLevels()
@@ -93,7 +95,7 @@ public class LevelCreatorUI : MonoBehaviour
             saveAsInput.placeholder.color = Color.black;
             reader.saveName = saveAsInput.text;
             Debug.Log("Save Level as " + reader.saveName);
-            reader.SaveSaveFile();
+            reader.SaveSaveFile(true);
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);
         }
@@ -119,8 +121,25 @@ public class LevelCreatorUI : MonoBehaviour
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 
+    public void OnPlay()
+    {
+        Debug.Log("Play");
+        OnSave();
+        if (saveAsInput.text != "")
+        {
+            SelectedLevelPersistent.Instance.level = reader.saveName;
+            SceneManager.LoadScene("PlayMode");
+        }
+
+    }
+
     public void OnExit()
     {
-        Debug.LogError("On Button Exit is not implemented yet");
+        Debug.Log("Application Quit. (Only works in build)");
+        Application.Quit();
+        return;
+        var reader = FindAnyObjectByType<JSONReader>();
+        SelectedLevelPersistent.Instance.level = reader.saveName;
+        SceneManager.LoadScene("MainMenu");
     }
 }

@@ -10,20 +10,21 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
-    public GameObject hud;
+    private GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
     public Vector3 mousePosOld;
     private string[] materials = new string[] {
         "nothing",
+        "PlayerStart",
+        "finish",
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
         "Terrain (16x16) 1_68",
         "Terrain (16x16) 1_66",
-        "door",
-        "finish",
-        "trapdoor_left",
-        "trapdoor_right",
+        "Terrain (16x16) 1_56",
+        "Terrain (16x16) 1_57",
+        "Terrain (16x16) 1_58",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -31,6 +32,9 @@ public class LevelEditor : MonoBehaviour
         "lamp",
         "battery",
         "switch",
+        "door",
+        "trapdoor_left",
+        "trapdoor_right",
         "and_gate",
         "or_gate",
         "not_gate",
@@ -38,7 +42,11 @@ public class LevelEditor : MonoBehaviour
         "lever",
         "cross",
         "condensator",
-        "button"
+        "button",
+        "Terrain (16x16) 1_15",
+        "Box",
+        "MoveablePlatformHorizontal",
+        "MoveablePlatformVertical",
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
@@ -146,6 +154,7 @@ public class LevelEditor : MonoBehaviour
         TMPro.TextMeshProUGUI tm;
         ScrollRect sr;
         Mask mk;
+        ContentSizeFitter sf;
 
         GameObject editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -163,6 +172,7 @@ public class LevelEditor : MonoBehaviour
         editorParent.AddComponent<CheckUIHover>();
         sr = editorParent.AddComponent<ScrollRect>();
         sr.horizontal = false;
+        sr.movementType = ScrollRect.MovementType.Clamped;
 
         GameObject viewPort = new GameObject();
         viewPort.name = "ViewPort";
@@ -208,6 +218,9 @@ public class LevelEditor : MonoBehaviour
         lg.childAlignment = TextAnchor.UpperLeft;
         lg.cellSize = new Vector2(40, 40);
         lg.spacing = new Vector2(10, 10);
+        sf = blockSelectorParent.AddComponent<ContentSizeFitter>();
+        sf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        sf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         for (int i = 0; i < materials.Length; i++)
         {
@@ -249,6 +262,9 @@ public class LevelEditor : MonoBehaviour
         lg.childAlignment = TextAnchor.UpperLeft;
         lg.cellSize = new Vector2(25, 25);
         lg.spacing = new Vector2(25, 25);
+        sf = blockCountParent.AddComponent<ContentSizeFitter>();
+        sf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        sf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         for (int i = 0; i < materialCounts.Length; i++) { 
             GameObject blockCount = new GameObject();
@@ -283,7 +299,12 @@ public class LevelEditor : MonoBehaviour
         }
 
         if (GenerateLevel.creative) {
+            
             blockCountParent.SetActive(false);
+        }
+        if (!GenerateLevel.editorActive)
+        {
+            editorParent.SetActive(false);
         }
     }
 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ddd5e887ef2466345885c5850d57b7d4
+guid: 985e3b86e7082db4b9e23afae8fa6a77
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2599116650747471989
-    second: finish_0
+      213: -230015185788209140
+    second: SpawnPos_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,11 +46,11 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.25}
   spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -100,45 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: finish_0
+      name: SpawnPos_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 0
-        width: 16
-        height: 29
-      alignment: 9
-      pivot: {x: 0.5, y: 0.2758}
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b87d4664d251eebd0800000000000000
-      internalID: -2599116650747471989
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: finish_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 0
-        width: 16
-        height: 29
-      alignment: 9
-      pivot: {x: 0.5, y: 0.2758}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6fc03dec52bb55b4cb7dd61cc1f7796c
-      internalID: 746763227
+      spriteID: c08f52e3862deccf0800000000000000
+      internalID: -230015185788209140
       vertices: []
       indices: 
       edges: []
@@ -147,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 422d4f34aad91bb41ad1c9c201c45593
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -157,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      finish_0: -2599116650747471989
-      finish_1: 746763227
+      SpawnPos_0: -230015185788209140
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

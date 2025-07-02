@@ -1,22 +1,31 @@
 using UnityEngine;
-using UnityEngine.U2D;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
-public class Door : MonoBehaviour
+public class LevelFinish : MonoBehaviour
 {
-    public int index;
+    private int index;
     private Updates update;
     private CheckWheatherTwoBlocksAreConnected general;
     int blockstate = 0;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private BoxCollider2D FinishTriggerCollider;
+
+    private void Start()
     {
+        FinishTriggerCollider = GetComponent<BoxCollider2D>();
         update = FindAnyObjectByType<Updates>();
         general = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         index = general.GetIndexFromXY((int)transform.position.x, (int)transform.position.y);
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Schmoovement>())
+        {
+            Debug.Log("Level Finished. Sending back to Level Creator...");
+            SceneManager.LoadScene("LevelCreator");
+        }
+    }
 
-    // Update is called once per frame
     void Update()
     {
         blockData block = update.GetBlock(index);
@@ -24,13 +33,11 @@ public class Door : MonoBehaviour
         {
             if (block.visualActive == 1)
             {
-                transform.GetChild(0).gameObject.SetActive(false);
-                transform.GetChild(1).gameObject.SetActive(true);
+                FinishTriggerCollider.enabled = true;
             }
             else
             {
-                transform.GetChild(0).gameObject.SetActive(true);
-                transform.GetChild(1).gameObject.SetActive(false);
+                FinishTriggerCollider.enabled = false;
             }
             blockstate = block.visualActive;
         }
