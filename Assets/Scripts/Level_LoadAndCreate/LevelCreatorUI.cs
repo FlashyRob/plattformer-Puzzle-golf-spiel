@@ -93,7 +93,7 @@ public class LevelCreatorUI : MonoBehaviour
             saveAsInput.placeholder.color = Color.black;
             reader.saveName = saveAsInput.text;
             Debug.Log("Save Level as " + reader.saveName);
-            reader.SafeSafeFile();
+            reader.SaveSaveFile();
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);
         }
