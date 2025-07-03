@@ -340,7 +340,6 @@ public class Schmoovement : MonoBehaviour
                 GroundedTimer = 8;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
                 currentPlatform = coll.gameObject.GetComponent<ForceTransfer>();
             }
 
