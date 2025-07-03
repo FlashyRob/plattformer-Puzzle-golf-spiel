@@ -23,6 +23,8 @@ public class LevelCreatorUI : MonoBehaviour
     private Button cancelDeleteButton;
     private TMP_Text confirmDeleteText;
 
+    private bool levelSaved = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -115,7 +117,10 @@ public class LevelCreatorUI : MonoBehaviour
             reader.saveName = saveAsInput.text;
             Debug.Log("Save Level as " + reader.saveName);
             var scannerino = FindAnyObjectByType<ScannerinoCrocodilo>();
-            scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scan;
+            if (!levelSaved) // avoid running the scanner over a level where we haven't changed anything.
+            {
+                scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scan;
+            }
             reader.SaveSaveFile(true);
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);
@@ -169,11 +174,13 @@ public class LevelCreatorUI : MonoBehaviour
 
     public void LevelSaved()
     {
+        levelSaved = true;
         saveAsInput.textComponent.fontStyle = FontStyles.Normal;
     }
 
     public void LevelUnsaved()
     {
+        levelSaved = false;
         saveAsInput.textComponent.fontStyle = FontStyles.Italic;
     }
 

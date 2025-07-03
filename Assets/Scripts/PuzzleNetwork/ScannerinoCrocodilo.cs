@@ -28,11 +28,14 @@ public class ScannerinoCrocodilo : MonoBehaviour
         //{
         //    scannedBlockIndexes.Add(i);
         //}
+
+        /*
         var levelGenator = FindAnyObjectByType<GenerateLevel>();
         if (!levelGenator.playMode)
         {
             Invoke("Scanner", 2f);
         }
+        */
     }
 
 
