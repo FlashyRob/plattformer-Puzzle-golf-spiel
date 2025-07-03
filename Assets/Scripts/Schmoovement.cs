@@ -20,11 +20,12 @@ public class Schmoovement : MonoBehaviour
     public float platformJump;
     bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
+    private float WalljumpWhileSliding = 0;
+    private bool StayingOnGround = false;
     private Push push;
     [HideInInspector]
     public Vector2 PushBoost;
     public bool gettingBoosted = false;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -105,7 +106,7 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                    jumpVelocity = 11;
+                    jumpVelocity = 12 * WalljumpWhileSliding;
                     wallSlideCooldown = 0.05f; // blocks slide for 0.2 seconds
                     Walled = false;
 
@@ -129,6 +130,7 @@ public class Schmoovement : MonoBehaviour
                     {
                         horizontalPush = 0.8f;
                         jumpVelocity = -6;
+                        WalljumpWhileSliding = 1.5f;
 
                         if (Input.GetKey(KeyCode.A))
                         {
@@ -140,12 +142,14 @@ public class Schmoovement : MonoBehaviour
                             Debug.Log("Execute");
                             controldamper = 0.4f;
                             jumpVelocity = -3;
+                            WalljumpWhileSliding = 1.25f;
                         }
                     }
                     else    // The wall is to the right
                     {
                         horizontalPush = -0.8f;
                         jumpVelocity = -6;
+                        WalljumpWhileSliding = 1.5f;
 
                         if (Input.GetKey(KeyCode.D))
                         {
@@ -158,13 +162,14 @@ public class Schmoovement : MonoBehaviour
                             Debug.Log("Execute");
                             controldamper = 0.4f;
                             jumpVelocity = -3;
+                            WalljumpWhileSliding = 1.25f;
                         }
                     }
-
                 }
                 else
                 {
                     controldamper = 1;
+                    WalljumpWhileSliding = 1;
                 }
             }
         }
@@ -306,21 +311,12 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
-
-            /*if (rb2d.linearVelocity.y <= 0)
-            {
-                CameFromAbove = true;
-            }
-            else
-            {
-                CameFromAbove = false;
-            }*/
         }
     }
     
     void OnCollisionStay2D(Collision2D coll)
     {
-
+        Debug.Log("Collision");
         if (coll.collider.CompareTag("MovingPlatform"))
         {
             // we use collider bounds of platform and player to see if we are on top of the platform
@@ -348,9 +344,8 @@ public class Schmoovement : MonoBehaviour
         {
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
-            // we check the collision normal to see which direction the ground hit us from
-         
-            if (normal.y > 0.5f )//&& CameFromAbove)
+                                             // we check the collision normal to see which direction the ground hit us from
+            if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
                 GroundedTimer = 8;
@@ -375,7 +370,7 @@ public class Schmoovement : MonoBehaviour
             if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
-                Grounded = true;
+                GroundedTimer = 8;
                 Walled = false;
                 secondJump = false;
             }
