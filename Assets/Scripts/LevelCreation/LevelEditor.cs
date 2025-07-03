@@ -48,6 +48,7 @@ public class LevelEditor : MonoBehaviour
         "Box",
         "MoveablePlatformHorizontal",
         "MoveablePlatformVertical",
+        "dot",
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
