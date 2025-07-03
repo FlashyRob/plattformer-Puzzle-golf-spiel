@@ -20,7 +20,6 @@ public class Schmoovement : MonoBehaviour
     public float platformJump;
     bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
-    private float WalljumpWhileSliding = 0;
     private bool StayingOnGround = false;
     private Push push;
     [HideInInspector]
@@ -106,7 +105,8 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                    jumpVelocity = 12 * WalljumpWhileSliding;
+                   // playerVel.y = 0;
+                    jumpVelocity = 11;
                     wallSlideCooldown = 0.05f; // blocks slide for 0.2 seconds
                     Walled = false;
 
@@ -130,7 +130,6 @@ public class Schmoovement : MonoBehaviour
                     {
                         horizontalPush = 0.8f;
                         jumpVelocity = -6;
-                        WalljumpWhileSliding = 1.5f;
 
                         if (Input.GetKey(KeyCode.A))
                         {
@@ -142,14 +141,12 @@ public class Schmoovement : MonoBehaviour
                             Debug.Log("Execute");
                             controldamper = 0.4f;
                             jumpVelocity = -3;
-                            WalljumpWhileSliding = 1.25f;
                         }
                     }
                     else    // The wall is to the right
                     {
                         horizontalPush = -0.8f;
                         jumpVelocity = -6;
-                        WalljumpWhileSliding = 1.5f;
 
                         if (Input.GetKey(KeyCode.D))
                         {
@@ -162,14 +159,12 @@ public class Schmoovement : MonoBehaviour
                             Debug.Log("Execute");
                             controldamper = 0.4f;
                             jumpVelocity = -3;
-                            WalljumpWhileSliding = 1.25f;
                         }
                     }
                 }
                 else
                 {
                     controldamper = 1;
-                    WalljumpWhileSliding = 1;
                 }
             }
         }
