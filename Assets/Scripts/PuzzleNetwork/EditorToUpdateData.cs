@@ -133,6 +133,9 @@ public class EditorToUpdateData : MonoBehaviour
             case "push":
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 break;
+            case "pressureplate":
+                directionsOutput = new int[4] { 1, 1, 1, 1 };
+                break;
 
         }
 
