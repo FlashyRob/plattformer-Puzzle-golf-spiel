@@ -80,6 +80,9 @@ public class Updates : MonoBehaviour
                     case "trapdoor_right":
                         HandleTrapdoor(block.index, block);
                         break;
+                    case "push":
+                        HandlePush(block.index, block);
+                        break;
                     case "flip_flop":
                         HandleFlipFlop(block.index, block);
                         break;
@@ -558,6 +561,32 @@ public class Updates : MonoBehaviour
     }
 
     private void HandleTrapdoor(int i, blockData block)
+    {
+        if (IsAnyConnectionActive(block, 0))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 1))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 2))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+        if (IsAnyConnectionActive(block, 3))
+        {
+            SetVisualActive(i, 1);
+            return;
+        }
+
+        SetVisualActive(i, 0);
+    }
+
+    private void HandlePush(int i, blockData block)
     {
         if (IsAnyConnectionActive(block, 0))
         {

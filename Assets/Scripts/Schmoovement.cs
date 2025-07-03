@@ -20,6 +20,10 @@ public class Schmoovement : MonoBehaviour
     bool Slide = false;
     bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
+    private Push push;
+    [HideInInspector]
+    public Vector2 PushBoost;
+    public bool gettingBoosted = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,6 +33,7 @@ public class Schmoovement : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();
         capsule2d = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
+        push = FindAnyObjectByType<Push>();
     }
 
     // Update is called once per frame
@@ -173,9 +178,18 @@ public class Schmoovement : MonoBehaviour
                 }
             }
 
+            verticalVelocity += PushBoost.y;
             horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
 
+            if(gettingBoosted)
+            {
+                horizontalVelocity = PushBoost.x;
+            }
+
             rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
+            PushBoost = Vector2.zero;
+            gettingBoosted = false;
+
             if (inputKeyDownSpace >= 1)
             {
                 inputKeyDownSpace--;
@@ -222,7 +236,8 @@ public class Schmoovement : MonoBehaviour
         // move with platforms
         if (currentPlatform && !inputKeySpace)
         {
-            Vector2 platformVel = currentPlatform.velocity;
+            Vector2 platformVel = currentPlatform.GetVelocity();
+            Debug.Log("Got velocity " + platformVel + " from platform " + currentPlatform.name);
 
             Vector2 playerAndPlatform = new Vector2();
             // Always add horizontal platform motion when we stand on the platform
@@ -234,9 +249,12 @@ public class Schmoovement : MonoBehaviour
             // this setup allows you to jump though the platform without snapping to the platform and loosing your velocity.
             if (Mathf.Abs(playerVel.y - platformVel.y) <= Mathf.Abs(platformVel.y * 0.05f))
             {
+                Debug.Log("transfer y force to player "+ platformVel.y);
                 playerAndPlatform.y = platformVel.y;
             }
+            Debug.Log("playerAndPlatform " + playerAndPlatform);
             rb2d.linearVelocity = playerAndPlatform;
+            Debug.Log("rb2d.linearVelocity " + rb2d.linearVelocity);
         }
 
         velocityDebug = rb2d.linearVelocity; 
@@ -302,7 +320,7 @@ public class Schmoovement : MonoBehaviour
                 Walled = false;
                 secondJump = false;
                 Slide = false;
-                currentPlatform = coll.gameObject.GetComponent<PlatformMovement>();
+                currentPlatform = coll.gameObject.GetComponent<ForceTransfer>();
             }
 
         }
@@ -331,6 +349,7 @@ public class Schmoovement : MonoBehaviour
                 myx = transform.position.x;
             }
         }
+
         if (coll.gameObject.tag == "Box")
         {
             ContactPoint2D contact = coll.contacts[0];
@@ -351,7 +370,7 @@ public class Schmoovement : MonoBehaviour
     }
 
 
-    private PlatformMovement currentPlatform;
+    private ForceTransfer currentPlatform;
     void OnCollisionExit2D(Collision2D coll)
     {
         if (coll.collider.CompareTag("MovingPlatform"))

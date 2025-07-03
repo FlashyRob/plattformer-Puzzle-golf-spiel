@@ -130,6 +130,9 @@ public class EditorToUpdateData : MonoBehaviour
             case "trapdoor_right":
                 directionsInput = new int[4] { 1, 1, 1, 1 };
                 break;
+            case "push":
+                directionsInput = new int[4] { 1, 1, 1, 1 };
+                break;
 
         }
 
