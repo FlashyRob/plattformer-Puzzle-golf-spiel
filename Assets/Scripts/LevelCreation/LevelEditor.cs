@@ -141,6 +141,7 @@ public class LevelEditor : MonoBehaviour
         Initialize();
 
         screenWidthOld = Screen.width;
+        content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y - 70);
     }
 
 
