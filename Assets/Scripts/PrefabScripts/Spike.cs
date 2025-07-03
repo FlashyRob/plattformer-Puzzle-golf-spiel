@@ -19,21 +19,23 @@ public class Spike : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (generate.playMode == true)
         {
-            collision.gameObject.GetComponent<Animator>().SetBool("isDead", true);
-            Invoke("Die", 0.08f);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.gameObject.GetComponent<Animator>().SetBool("isDead", true);
+                Invoke("Die", 0.08f);
+            }
         }
-
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (generate.playMode == true)
-        {
+        
+        
             collision.gameObject.GetComponent<Animator>().SetBool("isDead", false);
             
-        }
+        
     }
 
     public void Die()
