@@ -51,6 +51,64 @@ public class LevelEditor : MonoBehaviour
         "MoveablePlatformHorizontal",
         "MoveablePlatformVertical",
         "dot",
+        "Terrain (16x16) 1_60",
+        "Terrain (16x16) 1_61",
+        "Terrain (16x16) 1_62",
+        "Terrain (16x16) 1_63",
+        "Terrain (16x16) 1_64",
+        "Terrain (16x16) 1_65",
+        "Terrain (16x16) 1_66",
+
+        "Terrain (16x16) 1_79",
+        "Terrain (16x16) 1_80",
+        "Terrain (16x16) 1_81",
+        "Terrain (16x16) 1_82",
+        "Terrain (16x16) 1_83",
+        "Terrain (16x16) 1_93",
+        "Terrain (16x16) 1_94",
+        "Terrain (16x16) 1_95",
+
+        "Terrain (16x16) 1_10",
+        "Terrain (16x16) 1_11",
+        "Terrain (16x16) 1_12",
+        "Terrain (16x16) 1_13",
+
+        "Terrain (16x16) 1_0",
+        "Terrain (16x16) 1_1",
+        "Terrain (16x16) 1_2",
+        "Terrain (16x16) 1_3",
+        "Terrain (16x16) 1_4",
+
+        "Terrain (16x16) 1_27",
+        "Terrain (16x16) 1_28",
+        "Terrain (16x16) 1_29",
+        "Terrain (16x16) 1_30",
+        "Terrain (16x16) 1_40",
+        "Terrain (16x16) 1_41",
+        "Terrain (16x16) 1_42",
+
+        "Terrain (16x16) 1_96",
+        "Terrain (16x16) 1_97",
+        "Terrain (16x16) 1_98",
+        "Terrain (16x16) 1_99",
+        "Terrain (16x16) 1_100",
+        "Terrain (16x16) 1_114",
+        "Terrain (16x16) 1_115",
+        "Terrain (16x16) 1_116",
+        "Terrain (16x16) 1_117",
+        "Terrain (16x16) 1_118",
+        "Terrain (16x16) 1_132",
+        "Terrain (16x16) 1_133",
+        "Terrain (16x16) 1_134",
+
+        "left mouse",
+        "right mouse",
+
+
+
+
+
+
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
