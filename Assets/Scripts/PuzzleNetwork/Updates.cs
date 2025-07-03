@@ -44,6 +44,12 @@ public class Updates : MonoBehaviour
                     case "wire_straight":
                         HandleWireStraight(block.index, block);
                         break;
+                    case "wire block curve":
+                        HandleWireStraight(block.index, block);
+                        break;
+                    case "wire block":
+                        HandleWireStraight(block.index, block);
+                        break;
                     case "wire_curve":
                         HandleWireCorner(block.index, block);
                         break;
@@ -493,6 +499,8 @@ public class Updates : MonoBehaviour
 
         if (block.state == 1)
         {
+            SetVisualActive(i, 1);
+
             EditBlockActiveSide(i, 0, true);
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 2, true);
@@ -500,6 +508,8 @@ public class Updates : MonoBehaviour
         }
         else
         {
+            SetVisualActive(i, 0);
+
             EditBlockActiveSide(i, 0, false);
             EditBlockActiveSide(i, 1, false);
             EditBlockActiveSide(i, 2, false);

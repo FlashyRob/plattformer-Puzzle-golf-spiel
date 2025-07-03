@@ -20,11 +20,11 @@ public class Schmoovement : MonoBehaviour
     public float platformJump;
     bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
+    private bool StayingOnGround = false;
     private Push push;
     [HideInInspector]
     public Vector2 PushBoost;
     public bool gettingBoosted = false;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -105,6 +105,7 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
+                   // playerVel.y = 0;
                     jumpVelocity = 11;
                     wallSlideCooldown = 0.05f; // blocks slide for 0.2 seconds
                     Walled = false;
@@ -160,7 +161,6 @@ public class Schmoovement : MonoBehaviour
                             jumpVelocity = -3;
                         }
                     }
-
                 }
                 else
                 {
@@ -306,21 +306,12 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
-
-            /*if (rb2d.linearVelocity.y <= 0)
-            {
-                CameFromAbove = true;
-            }
-            else
-            {
-                CameFromAbove = false;
-            }*/
         }
     }
     
     void OnCollisionStay2D(Collision2D coll)
     {
-
+        Debug.Log("Collision");
         if (coll.collider.CompareTag("MovingPlatform"))
         {
             // we use collider bounds of platform and player to see if we are on top of the platform
@@ -348,9 +339,8 @@ public class Schmoovement : MonoBehaviour
         {
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
-            // we check the collision normal to see which direction the ground hit us from
-         
-            if (normal.y > 0.5f )//&& CameFromAbove)
+                                             // we check the collision normal to see which direction the ground hit us from
+            if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
                 GroundedTimer = 8;
@@ -375,7 +365,7 @@ public class Schmoovement : MonoBehaviour
             if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
-                Grounded = true;
+                GroundedTimer = 8;
                 Walled = false;
                 secondJump = false;
             }
