@@ -14,6 +14,8 @@ public class LevelEditor : MonoBehaviour
     public string editorMode = "place";
     public Vector3 mousePos;
     public Vector3 mousePosOld;
+    private float screenWidthOld;
+
     private string[] materials = new string[] {
         "nothing",
         "PlayerStart",
@@ -25,6 +27,7 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_56",
         "Terrain (16x16) 1_57",
         "Terrain (16x16) 1_58",
+        "LargeSpike",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -48,6 +51,65 @@ public class LevelEditor : MonoBehaviour
         "Box",
         "MoveablePlatformHorizontal",
         "MoveablePlatformVertical",
+        "dot",
+        "Terrain (16x16) 1_60",
+        "Terrain (16x16) 1_61",
+        "Terrain (16x16) 1_62",
+        "Terrain (16x16) 1_63",
+        "Terrain (16x16) 1_64",
+        "Terrain (16x16) 1_65",
+        "Terrain (16x16) 1_66",
+
+        "Terrain (16x16) 1_79",
+        "Terrain (16x16) 1_80",
+        "Terrain (16x16) 1_81",
+        "Terrain (16x16) 1_82",
+        "Terrain (16x16) 1_83",
+        "Terrain (16x16) 1_93",
+        "Terrain (16x16) 1_94",
+        "Terrain (16x16) 1_95",
+
+        "Terrain (16x16) 1_10",
+        "Terrain (16x16) 1_11",
+        "Terrain (16x16) 1_12",
+        "Terrain (16x16) 1_13",
+
+        "Terrain (16x16) 1_0",
+        "Terrain (16x16) 1_1",
+        "Terrain (16x16) 1_2",
+        "Terrain (16x16) 1_3",
+        "Terrain (16x16) 1_4",
+
+        "Terrain (16x16) 1_27",
+        "Terrain (16x16) 1_28",
+        "Terrain (16x16) 1_29",
+        "Terrain (16x16) 1_30",
+        "Terrain (16x16) 1_40",
+        "Terrain (16x16) 1_41",
+        "Terrain (16x16) 1_42",
+
+        "Terrain (16x16) 1_96",
+        "Terrain (16x16) 1_97",
+        "Terrain (16x16) 1_98",
+        "Terrain (16x16) 1_99",
+        "Terrain (16x16) 1_100",
+        "Terrain (16x16) 1_114",
+        "Terrain (16x16) 1_115",
+        "Terrain (16x16) 1_116",
+        "Terrain (16x16) 1_117",
+        "Terrain (16x16) 1_118",
+        "Terrain (16x16) 1_132",
+        "Terrain (16x16) 1_133",
+        "Terrain (16x16) 1_134",
+
+        "left mouse",
+        "right mouse",
+
+
+
+
+
+
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
@@ -80,6 +142,8 @@ public class LevelEditor : MonoBehaviour
 
     public blockData hoverBlock;
 
+    GameObject content;
+    GameObject blockSelectorParent;
     GameObject blockCountParent;
 
     public void StartEditor()
@@ -134,6 +198,9 @@ public class LevelEditor : MonoBehaviour
         select.name = "select";
 
         Initialize();
+
+        screenWidthOld = Screen.width;
+        content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y - 70);
     }
 
 
@@ -191,7 +258,7 @@ public class LevelEditor : MonoBehaviour
 
         sr.viewport = rt;
 
-        GameObject content = new GameObject();
+        content = new GameObject();
         content.name = "Content";
         content.transform.parent = viewPort.transform;
         rt = content.AddComponent<RectTransform>();
@@ -200,20 +267,20 @@ public class LevelEditor : MonoBehaviour
         rt.anchorMax = new Vector2(1, 1);
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 50);
-        rt.pivot = new Vector2(0, 0);
+        rt.pivot = new Vector2(0.5f, 1);
 
         sr.content = rt;
 
-        GameObject blockSelectorParent = new GameObject();
+        blockSelectorParent = new GameObject();
         blockSelectorParent.name = "BlockSelectorParent";
         blockSelectorParent.transform.parent = content.transform;
         rt = blockSelectorParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
-        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMin = new Vector2(0, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 0);
-        rt.pivot = new Vector2(0, 0.5f);
+        rt.pivot = new Vector2(0.5f, 1);
         lg = blockSelectorParent.AddComponent<GridLayoutGroup>();
         lg.padding = new RectOffset(10, 0, 10, 0);
         lg.childAlignment = TextAnchor.UpperLeft;
@@ -242,8 +309,8 @@ public class LevelEditor : MonoBehaviour
             }
             var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
-
             im.color = oc.color;
+            im.preserveAspect = true;
 
             materialObjects[i] = blockSelector;
         }
@@ -253,11 +320,11 @@ public class LevelEditor : MonoBehaviour
         blockCountParent.transform.parent = content.transform;
         rt = blockCountParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
-        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMin = new Vector2(0, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 0);
-        rt.pivot = new Vector2(0, 0.5f);
+        rt.pivot = new Vector2(0.5f, 1);
         lg = blockCountParent.AddComponent<GridLayoutGroup>();
         lg.padding = new RectOffset(25, 0, 25, 0);
         lg.childAlignment = TextAnchor.UpperLeft;
@@ -328,6 +395,12 @@ public class LevelEditor : MonoBehaviour
             GenerateLevel.creative = false;
             blockCountParent.SetActive(true);
             return;
+        }
+
+        if (screenWidthOld != Screen.width)
+        {
+            screenWidthOld = Screen.width;
+            content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y - 70);
         }
 
         mousePosOld = mousePos;

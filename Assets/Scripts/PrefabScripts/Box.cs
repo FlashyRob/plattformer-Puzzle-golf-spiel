@@ -9,7 +9,14 @@ public class Box : MonoBehaviour
 
     private void Start()
     {
+        var generateLevel = FindAnyObjectByType<GenerateLevel>();
         rb2d = GetComponent<Rigidbody2D>();
+        if (!generateLevel.playMode)
+        {
+            Destroy(rb2d);
+            GetComponent<SpriteRenderer>().color -= new Color(0, 0 , 0, 0.5f);
+            enabled = false;
+        }
     }
 
 
