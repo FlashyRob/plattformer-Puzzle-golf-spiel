@@ -51973,18 +51973,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Schmoove Criminal
       objectReference: {fileID: 0}
-    - target: {fileID: 7364066366718279236, guid: 5990190dbe5ffc14d9cac7601620141f, type: 3}
-      propertyPath: m_Size.x
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7364066366718279236, guid: 5990190dbe5ffc14d9cac7601620141f, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7364066366718279236, guid: 5990190dbe5ffc14d9cac7601620141f, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.75
-      objectReference: {fileID: 0}
     - target: {fileID: 9044012855235598658, guid: 5990190dbe5ffc14d9cac7601620141f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 38.45
