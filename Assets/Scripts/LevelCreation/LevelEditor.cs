@@ -10,12 +10,14 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
-    public GameObject hud;
+    private GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
     public Vector3 mousePosOld;
     private string[] materials = new string[] {
         "nothing",
+        "PlayerStart",
+        "finish",
         "Terrain (16x16) 1_46",
         "Terrain (16x16) 1_47",
         "Terrain (16x16) 1_68",
@@ -24,6 +26,9 @@ public class LevelEditor : MonoBehaviour
         "finish",
         "trapdoor",
         "box",
+        "Terrain (16x16) 1_56",
+        "Terrain (16x16) 1_57",
+        "Terrain (16x16) 1_58",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -31,6 +36,9 @@ public class LevelEditor : MonoBehaviour
         "lamp",
         "battery",
         "switch",
+        "door",
+        "trapdoor_left",
+        "trapdoor_right",
         "and_gate",
         "or_gate",
         "not_gate",
@@ -38,15 +46,19 @@ public class LevelEditor : MonoBehaviour
         "lever",
         "cross",
         "condensator",
-        "button"
+        "button",
+        "Terrain (16x16) 1_15",
+        "Box",
+        "MoveablePlatformHorizontal",
+        "MoveablePlatformVertical",
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
-        100,
-        100,
-        100,
-        1000,
+        10,
+        10,
+        10,
+        10,
         8,
         8,
         8,
@@ -75,9 +87,20 @@ public class LevelEditor : MonoBehaviour
 
     public void StartEditor()
     {
+        materialCounts = new int[materials.Length];
+
+        for (int i = 0; i < materialCounts.Length; i++)
+        {
+            materialCounts[i] = 99;
+        }
+
         materialRotations = new int[materials.Length];
+
         for (int i = 0; i < materialRotations.Length; i++)
+        {
             materialRotations[i] = 0;
+        }
+            
         materialObjects = new GameObject[materials.Length];
         if (materialCounts.Length < materials.Length)
         {
@@ -134,6 +157,8 @@ public class LevelEditor : MonoBehaviour
         Image im;
         TMPro.TextMeshProUGUI tm;
         ScrollRect sr;
+        Mask mk;
+        ContentSizeFitter sf;
 
         GameObject editorParent = new GameObject();
         editorParent.name = "EditorParent";
@@ -151,6 +176,7 @@ public class LevelEditor : MonoBehaviour
         editorParent.AddComponent<CheckUIHover>();
         sr = editorParent.AddComponent<ScrollRect>();
         sr.horizontal = false;
+        sr.movementType = ScrollRect.MovementType.Clamped;
 
         GameObject viewPort = new GameObject();
         viewPort.name = "ViewPort";
@@ -162,13 +188,28 @@ public class LevelEditor : MonoBehaviour
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 0);
         rt.pivot = new Vector2(0, 0);
+        im = viewPort.AddComponent<Image>();
+        im.color = new Color(0, 0, 0, 1f / 256f);
+        mk = viewPort.AddComponent<Mask>();
 
         sr.viewport = rt;
+
+        GameObject content = new GameObject();
+        content.name = "Content";
+        content.transform.parent = viewPort.transform;
+        rt = content.AddComponent<RectTransform>();
+        rt.localScale = new Vector3(1, 1, 1);
+        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMax = new Vector2(1, 1);
+        rt.anchoredPosition = new Vector2(0, 0);
+        rt.sizeDelta = new Vector2(0, 50);
+        rt.pivot = new Vector2(0, 0);
+
         sr.content = rt;
 
         GameObject blockSelectorParent = new GameObject();
         blockSelectorParent.name = "BlockSelectorParent";
-        blockSelectorParent.transform.parent = viewPort.transform;
+        blockSelectorParent.transform.parent = content.transform;
         rt = blockSelectorParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchorMin = new Vector2(0, 0);
@@ -181,6 +222,9 @@ public class LevelEditor : MonoBehaviour
         lg.childAlignment = TextAnchor.UpperLeft;
         lg.cellSize = new Vector2(40, 40);
         lg.spacing = new Vector2(10, 10);
+        sf = blockSelectorParent.AddComponent<ContentSizeFitter>();
+        sf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        sf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         for (int i = 0; i < materials.Length; i++)
         {
@@ -201,16 +245,15 @@ public class LevelEditor : MonoBehaviour
             }
             var oc = block[materialPrefabIdx].GetComponentInChildren<SpriteRenderer>();
             im.sprite = oc.sprite;
+
             im.color = oc.color;
 
             materialObjects[i] = blockSelector;
         }
 
-        if (GenerateLevel.creative) return;
-
         blockCountParent = new GameObject();
         blockCountParent.name = "BlockCountParent";
-        blockCountParent.transform.parent = viewPort.transform;
+        blockCountParent.transform.parent = content.transform;
         rt = blockCountParent.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
         rt.anchorMin = new Vector2(0, 0);
@@ -223,8 +266,11 @@ public class LevelEditor : MonoBehaviour
         lg.childAlignment = TextAnchor.UpperLeft;
         lg.cellSize = new Vector2(25, 25);
         lg.spacing = new Vector2(25, 25);
+        sf = blockCountParent.AddComponent<ContentSizeFitter>();
+        sf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+        sf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-        for (int i = 0; i < materials.Length; i++) { 
+        for (int i = 0; i < materialCounts.Length; i++) { 
             GameObject blockCount = new GameObject();
             blockCount.name = materials[i];
             blockCount.transform.parent = blockCountParent.transform;
@@ -255,6 +301,15 @@ public class LevelEditor : MonoBehaviour
 
             materialCountObjects[i] = textItem.AddComponent<ChangeBlockCount>();
         }
+
+        if (GenerateLevel.creative) {
+            
+            blockCountParent.SetActive(false);
+        }
+        if (!GenerateLevel.editorActive)
+        {
+            editorParent.SetActive(false);
+        }
     }
 
     bool CheckValid(Vector3 mousePos)
@@ -267,33 +322,23 @@ public class LevelEditor : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == false)
         {
-            Debug.Log("creative an");
             GenerateLevel.creative = true;
             blockCountParent.SetActive(false);
             return;
         }
         else if (Input.GetKeyDown(KeyCode.C) && GenerateLevel.creative == true)
         {
-            Debug.Log("creative aus");
             GenerateLevel.creative = false;
             blockCountParent.SetActive(true);
             return;
         }
-        if (GenerateLevel.editorActiveChanged)
-        {
-            if (GenerateLevel.editorActive)
-            {
 
-            }
-        }
         mousePosOld = mousePos;
         mousePos = GenerateLevel.mousePos;
-
         hoverBlock = GetBlockAt((int)mousePos.x, (int)mousePos.y);
 
         if (!CheckValid(mousePos)) return;
         if (CheckUIHover.hoverUI) return;
-        hoverBlock = GetBlockAt((int) mousePos.x, (int) mousePos.y);
 
         string currentBlockName = "block:" + mousePos.x + "," + mousePos.y;
 
@@ -322,7 +367,7 @@ public class LevelEditor : MonoBehaviour
                         select.transform.rotation = currentBlockObject.transform.rotation;
                     }
             }
-            else if (ClickTest.selectedMaterial != "Nothing")
+            else if (ClickTest.selectedMaterial != "nothing")
             {
                 int materialIndex = System.Array.IndexOf(materials, ClickTest.selectedMaterial);
                 materialRotations[materialIndex] += 1;
@@ -330,8 +375,9 @@ public class LevelEditor : MonoBehaviour
                 materialObjects[materialIndex].transform.rotation = Quaternion.Euler(0, 0, materialRotations[materialIndex] * -90);
             }
         }
-
-        if (ClickTest.selectedMaterial == "Nothing") return;
+        
+        if (ClickTest.selectedMaterial == "nothing" && ClickTest.changed) select.SetActive(false);
+        if (ClickTest.selectedMaterial == "nothing") return;
         bool blockExists = reader.BlockExists(position.GetIndexFromXY((int)mousePos.x, (int)mousePos.y));
 
         if (Input.GetMouseButtonDown(0))
@@ -369,6 +415,7 @@ public class LevelEditor : MonoBehaviour
             selectSprite.sprite = prefabSprite.sprite;
             selectSprite.color = prefabSprite.color - new Color(0, 0, 0, 0.5f);
             select.transform.rotation = Quaternion.Euler(0, 0, materialRotations[System.Array.IndexOf(materials, ClickTest.selectedMaterial)] * -90);
+            select.SetActive(true);
         }
 
         if (
@@ -445,9 +492,7 @@ public class LevelEditor : MonoBehaviour
 
             if (currentBlockObject != null)
             {
-
-                blockData getBlock = hoverBlock;
-                int currentIndex = System.Array.IndexOf(materials, getBlock.type);
+                int currentIndex = System.Array.IndexOf(materials, hoverBlock.type);
 
                 if (!GenerateLevel.creative)
                 {

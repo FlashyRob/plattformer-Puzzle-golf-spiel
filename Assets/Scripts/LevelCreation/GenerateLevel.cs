@@ -17,12 +17,29 @@ public class GenerateLevel : MonoBehaviour
     public static bool creative = true;
     public static Vector3 mousePos;
     public static bool editorActive = true;
-    public static bool editorActiveChanged = false;
+
+    public bool playMode = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-            position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+        if (playMode)
+        {
+            Debug.Log("creative set to false");
+            creative = false;
+            editorActive = false;
+            // maybe let the levelJson decide if the editor should be Active
+            // even if there is no LevelCreatorUI to indicate that we are in create mode
+        }
+        else
+        {
+            Debug.Log("creative set to true");
+            creative = true;
+            editorActive = true;
+        }
+
+
+        position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
         if (!position)
         {
             position = gameObject.AddComponent<CheckWheatherTwoBlocksAreConnected>();
@@ -49,6 +66,7 @@ public class GenerateLevel : MonoBehaviour
         {
             editor.StartEditor();
         }
+
     }   
     public void Load()
     {

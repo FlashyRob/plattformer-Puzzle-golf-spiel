@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4395560875247111421}
   - component: {fileID: 5102391892853054629}
   m_Layer: 0
-  m_Name: trapdoor
+  m_Name: trapdoor_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

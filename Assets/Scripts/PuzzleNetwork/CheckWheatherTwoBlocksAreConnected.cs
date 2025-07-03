@@ -35,7 +35,10 @@ public class CheckWheatherTwoBlocksAreConnected : MonoBehaviour
 
         return (xy);
     }
-
+    public int GetIndexFromXY(Vector3 position)
+    {
+        return GetIndexFromXY((int)position.x, (int)position.y);
+    }
     public int GetIndexFromXY(int x, int y)
     {
         int index = x + y * worldX;

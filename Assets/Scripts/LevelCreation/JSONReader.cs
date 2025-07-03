@@ -19,6 +19,11 @@ public class JSONReader : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        SelectedLevelPersistent selectedLevel = FindAnyObjectByType<SelectedLevelPersistent>();
+        if (selectedLevel)
+        {
+            saveName = selectedLevel.level;
+        }
         LoadLevel();
         RemoveBlock(1);
 
@@ -177,11 +182,15 @@ public class JSONReader : MonoBehaviour
         BlockWasEdited();
     }
 
-    public void SaveSaveFile()
+    public void SaveSaveFile(bool pauseUpdateLoop = false)
     {
-
+        if (pauseUpdateLoop) // allows us to force a save if the user presses the button
+        {
+            update.updateLoop = false;
+        }
         if (update.updateLoop == true)
         {
+            Debug.Log("Rejected Saving the file. Update loop is running");
             return;
         }
         // Debug.Log("Saved " + BlockSafeFile.Count + " blocks to save file " + SavePath(DefaultSaveFile));
@@ -239,6 +248,16 @@ public class JSONReader : MonoBehaviour
         string savePath = Path.Combine(Application.persistentDataPath, levelName + ".json");
         File.WriteAllText(savePath, json);
         Debug.Log("Saved level to persistent data path: " + savePath);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SaveSaveFile();
+            scanner.Scanner();
+            update.updateLoop = true;
+        }
     }
 
     public List<string> GetAllLevels()
