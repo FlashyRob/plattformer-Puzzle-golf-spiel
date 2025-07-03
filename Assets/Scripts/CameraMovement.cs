@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
         {
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
-            transform.position += new Vector3(horizontal, vertical, 0);
+            transform.position += new Vector3(horizontal * 0.09f, vertical * 0.09f, 0);
         } else
         {
             Vector3 targetPosition = target.position + offset;
