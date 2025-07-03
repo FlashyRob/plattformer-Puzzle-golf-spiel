@@ -2,13 +2,12 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
-public class PlatformMovement : MonoBehaviour
+public class PlatformMovement : ForceTransfer
 {
     public float speed;
     public int startingPoint;
     public Transform[] points;
-    [HideInInspector]
-    public Vector2 velocity;
+    private Vector2 velocity;
     private Rigidbody2D rb;
 
     private Vector2 lastPosition;
@@ -21,6 +20,11 @@ public class PlatformMovement : MonoBehaviour
         transform.position = points[startingPoint].position;
         rb.MovePosition(points[startingPoint].position);
         lastPosition = rb.position;
+    }
+
+    public override Vector2 GetVelocity()
+    {
+        return velocity;
     }
 
     // Update is called once per frame
@@ -46,5 +50,6 @@ public class PlatformMovement : MonoBehaviour
         //movement = ((Vector2)transform.position - lastPosition);
         lastPosition = newPostion;
     }
+
 
 }

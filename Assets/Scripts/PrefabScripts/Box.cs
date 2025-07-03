@@ -4,6 +4,8 @@ public class Box : MonoBehaviour
 {
     private PlatformMovement currentPlatform;
     private Rigidbody2D rb2d;
+    [HideInInspector]
+    public Vector2 PushBoost;
 
     private void Start()
     {
@@ -22,8 +24,10 @@ public class Box : MonoBehaviour
     {
         if (currentPlatform)
         {
-            rb2d.linearVelocity = currentPlatform.velocity;
+            rb2d.linearVelocity = currentPlatform.GetVelocity();
         }
+        rb2d.linearVelocity += PushBoost;
+        PushBoost = Vector2.zero;
     }
     private void OnCollisionStay2D(Collision2D collision)
     {

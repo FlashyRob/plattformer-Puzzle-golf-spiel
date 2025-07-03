@@ -36,6 +36,7 @@ public class LevelEditor : MonoBehaviour
         "battery",
         "switch",
         "door",
+        "push",
         "trapdoor_left",
         "trapdoor_right",
         "and_gate",
