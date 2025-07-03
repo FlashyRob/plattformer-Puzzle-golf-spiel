@@ -17,7 +17,6 @@ public class Schmoovement : MonoBehaviour
     private Vector2 velocityDebug;
     public float moveSpeed = 5;
     public float platformJump;
-    bool Slide = false;
     bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
 
@@ -60,11 +59,11 @@ public class Schmoovement : MonoBehaviour
 
     float verticalVelocity = 0;
     float horizontalVelocity;
+    float jumpVelocity;
     void FixedUpdate()
     {
         // Fixed Update is called multiple times while update is called once.
         // we are perform the movmement in fixed update to allow accurate moving platform tracking
-        float jumpVelocity;
         wallSlideCooldown -= Time.fixedDeltaTime;
 
         if (processInput)
@@ -89,27 +88,19 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                    jumpVelocity = 9;
-                    controldamper = 0.8f;
-                    Slide = false;
-                    wallSlideCooldown = 0.2f; // blocks slide for 0.2 seconds
+                    jumpVelocity = 11;
+                    wallSlideCooldown = 0.05f; // blocks slide for 0.2 seconds
+                    Walled = false;
 
                     if (collidex > myx)
                     {
                         // The wall is to the left
-
-
-                        horizontalPush = -3.7f;
-
+                        horizontalPush = -4.5f;
                     }
                     else
                     {
                         // The wall is to the right
-
-
-                        horizontalPush = 3.7f;
-
-
+                        horizontalPush = 4.5f;
                     }
                 }
             }
@@ -117,107 +108,140 @@ public class Schmoovement : MonoBehaviour
             {
                 if (Walled && !Grounded && wallSlideCooldown <= 0)
                 {
-                    if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                    if (collidex > myx)    // The wall is to the left
+                    {
+                        horizontalPush = 0.8f;
+                        jumpVelocity = -6;
+
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            horizontalPush = 0;
+                            controldamper = 2;
+                        }
+                        if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("Execute");
+                            controldamper = 0.4f;
+                            jumpVelocity = -3;
+                        }
+                    }
+                    else    // The wall is to the right
+                    {
+                        horizontalPush = -0.8f;
+                        jumpVelocity = -6;
+
+                        if (Input.GetKey(KeyCode.D))
+                        {
+                            horizontalPush = 0;
+                            controldamper = 2;
+                        }
+
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("Execute");
+                            controldamper = 0.4f;
+                            jumpVelocity = -3;
+                        }
+                    }
+                  /*  if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                     {
                         jumpVelocity = -2;
                     }
                     else
                     {
                         jumpVelocity = -0.5f;
-                    }
-                }
-            }
-
-            verticalVelocity = jumpVelocity + playerVel.y;
-
-            if (inputKeyDownSpace >= 1 && secondJump && !Walled && verticalVelocity > 6)
-            {
-                    jumpVelocity = 5;
-                secondJump = false;
-                    controldamper = 1;
-                    animator.SetBool("isDJ", true);
-            }
-
-            verticalVelocity = jumpVelocity + playerVel.y;
-
-                if (inputKeyDownSpace >= 1 && secondJump && !Walled && verticalVelocity < 6)
-          
-            {
-                    verticalVelocity = 9;
-                secondJump = false;
-                    controldamper = 1;
-                    animator.SetBool("isDJ", true);
-            }
-
-            horizontalPush = horizontalPush * 0.95f;
-
-            if (horizontalPush < 0.5 && horizontalPush > -0.5)
-            {
-                horizontalPush = 0;
-            }
-
-            if (Walled && !Grounded && wallSlideCooldown <= 0)
-            {
-                if(rb2d.linearVelocity.y >= 0)
-                {
-                    Debug.Log("I stopped");
-                    verticalVelocity = -2; 
-                }
-                if ((inputKeyA || inputKeyD) && verticalVelocity < -3)
-                {
-                    verticalVelocity = -3;
-                }
-                    else if (verticalVelocity < 3)
-                {
-                    verticalVelocity = -3;
-                }
-            }
-
-            horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
-
-            rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
-            if (inputKeyDownSpace >= 1)
-            {
-                inputKeyDownSpace--;
-            }
-            processInput = false;
-
-            // set animation parameters
-            animator.SetFloat("Speed", rb2d.linearVelocity.x);
-            animator.SetBool("isWalled", Walled);
-            animator.SetBool("isGrounded", Grounded);
-            if (Grounded)
-            {
-                animator.SetFloat("JumpSpeed", 0);
-            }
-            else
-            {
-                animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
-            }
-
-                if (Grounded || Walled)
-                {
-                    animator.SetBool("isDJ", false);
-                }
-
-                if (rb2d.linearVelocity.y < 0)
-                {
-                    animator.SetBool("isFalling", true);
+                    }*/
                 }
                 else
                 {
-                    animator.SetBool("isFalling", false);
+                    controldamper = 1;
                 }
-
-            if (!isFacingRight && horizontalVelocity > 0)
-            {
-                Flip();
-            }
-            else if (isFacingRight && horizontalVelocity < 0)
-            {
-                Flip();
             }
         }
+            
+        verticalVelocity = jumpVelocity + playerVel.y;
+
+        if (inputKeyDownSpace >= 1 && secondJump && !Walled && verticalVelocity > 6)
+        {
+            jumpVelocity = 5;
+            secondJump = false;
+            animator.SetBool("isDJ", true);
+        }
+
+        verticalVelocity = jumpVelocity + playerVel.y;
+
+        if (inputKeyDownSpace >= 1 && secondJump && !Walled && verticalVelocity < 6)
+          
+        {
+            verticalVelocity = 9;
+            secondJump = false;
+            animator.SetBool("isDJ", true);
+        }
+
+        horizontalPush = horizontalPush * 0.95f;
+
+        if (horizontalPush < 0.5 && horizontalPush > -0.5)
+        {
+            horizontalPush = 0;
+        }
+
+        if (Walled && !Grounded && wallSlideCooldown <= 0)
+        {
+            if ((inputKeyA || inputKeyD) && verticalVelocity < -3)
+            {
+                verticalVelocity = -3;
+            }
+            else if (verticalVelocity < -3)
+            {
+                verticalVelocity = -3;
+            }
+        }
+
+        horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
+
+        rb2d.linearVelocity = new Vector2(horizontalVelocity, verticalVelocity);
+        if (inputKeyDownSpace >= 1)
+        {
+            inputKeyDownSpace--;
+        }
+        processInput = false;
+
+        // set animation parameters
+        animator.SetFloat("Speed", rb2d.linearVelocity.x);
+        animator.SetBool("isWalled", Walled);
+        animator.SetBool("isGrounded", Grounded);
+        if (Grounded)
+        {
+            animator.SetFloat("JumpSpeed", 0);
+        }
+        else
+        {
+            animator.SetFloat("JumpSpeed", rb2d.linearVelocity.y);
+        }
+
+            if (Grounded || Walled)
+            {
+                animator.SetBool("isDJ", false);
+            }
+
+            if (rb2d.linearVelocity.y < 0)
+            {
+                animator.SetBool("isFalling", true);
+            }
+            else
+            {
+                animator.SetBool("isFalling", false);
+            }
+
+        if (!isFacingRight && horizontalVelocity > 0)
+        {
+            Flip();
+        }
+        else if (isFacingRight && horizontalVelocity < 0)
+        {
+            Flip();
+        }
+        
 
         // move with platforms
         if (currentPlatform && !inputKeySpace)
@@ -270,12 +294,6 @@ public class Schmoovement : MonoBehaviour
             {
                 CameFromAbove = false;
             }
-
-            if (Mathf.Abs(normal.x) > 0.5f)
-            {
-                // The vector mostly points in x or -x direction. So we've hit a wall
-                Slide = true;
-            }
         }
     }
     
@@ -301,7 +319,6 @@ public class Schmoovement : MonoBehaviour
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
                 currentPlatform = coll.gameObject.GetComponent<PlatformMovement>();
             }
 
@@ -311,9 +328,6 @@ public class Schmoovement : MonoBehaviour
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
             // we check the collision normal to see which direction the ground hit us from
-
-
-            controldamper = 1;
          
             if (normal.y > 0.5f && CameFromAbove)
             {
@@ -321,7 +335,6 @@ public class Schmoovement : MonoBehaviour
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
             }
             else if (Mathf.Abs(normal.x) > 0.5f)
             {
@@ -337,15 +350,12 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
             // we check the collision normal to see which direction the ground hit us from
 
-            controldamper = 1;
-
             if (normal.y > 0.5f)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
                 Grounded = true;
                 Walled = false;
                 secondJump = false;
-                Slide = false;
             }
         }
     }
@@ -371,11 +381,10 @@ public class Schmoovement : MonoBehaviour
             if (Walled)
             {
                 Walled = false;
-            }
-
-            if (Slide)
-            {
-                Slide = false;
+                if(wallSlideCooldown == 0)
+                {
+                    horizontalPush = 0;
+                }
             }
         }
     }
