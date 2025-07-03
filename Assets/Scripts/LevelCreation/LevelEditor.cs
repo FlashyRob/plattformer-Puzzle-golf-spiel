@@ -398,9 +398,10 @@ public class LevelEditor : MonoBehaviour
             blockCountParent.SetActive(true);
             return;
         }
-
-        if (screenWidthOld != Screen.width)
+        if (screenWidthOld != Screen.width && blockSelectorParent.GetComponent<RectTransform>().sizeDelta != Vector2.zero)
         {
+            // during first Update loop blockSelectorParent's sizeDelta is 0
+            // In the next frame that gets updated by it's content size fitter
             screenWidthOld = Screen.width;
             content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y);
         }

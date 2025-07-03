@@ -311,7 +311,6 @@ public class Schmoovement : MonoBehaviour
     
     void OnCollisionStay2D(Collision2D coll)
     {
-        Debug.Log("Collision");
         if (coll.collider.CompareTag("MovingPlatform"))
         {
             // we use collider bounds of platform and player to see if we are on top of the platform

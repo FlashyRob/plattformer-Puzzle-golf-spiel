@@ -186,6 +186,11 @@ public class JSONReader : MonoBehaviour
         BlockWasEdited();
     }
 
+    public void SaveSaveFile()
+    {
+        SaveSaveFile(false);
+    }
+
     public void SaveSaveFile(bool pauseUpdateLoop = false)
     {
         if (pauseUpdateLoop) // allows us to force a save if the user presses the button
