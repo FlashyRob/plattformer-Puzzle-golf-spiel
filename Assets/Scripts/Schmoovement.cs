@@ -264,8 +264,6 @@ public class Schmoovement : MonoBehaviour
         }
 
         velocityDebug = rb2d.linearVelocity; 
-        Camera.main.transform.position = transform.position + new Vector3(0, 0, -100);
-
     }
 
 
