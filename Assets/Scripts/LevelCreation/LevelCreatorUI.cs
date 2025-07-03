@@ -95,6 +95,8 @@ public class LevelCreatorUI : MonoBehaviour
             saveAsInput.placeholder.color = Color.black;
             reader.saveName = saveAsInput.text;
             Debug.Log("Save Level as " + reader.saveName);
+            var scannerino = FindAnyObjectByType<ScannerinoCrocodilo>();
+            scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scann
             reader.SaveSaveFile(true);
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);

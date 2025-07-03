@@ -11,7 +11,7 @@ public class ScannerinoEditor : Editor
 
         ScannerinoCrocodilo scanner = (ScannerinoCrocodilo)target;
 
-        if (GUILayout.Button("Scann"))
+        if (GUILayout.Button("Scan"))
         {
             scanner.Scanner();
         }
