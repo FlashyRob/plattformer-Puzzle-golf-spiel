@@ -23,6 +23,7 @@ public class LevelEditor : MonoBehaviour
         "door",
         "finish",
         "trapdoor",
+        "box",
         "wire_curve",
         "wire_straight",
         "wire_t",
