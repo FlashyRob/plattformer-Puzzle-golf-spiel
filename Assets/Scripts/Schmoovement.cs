@@ -14,11 +14,11 @@ public class Schmoovement : MonoBehaviour
     private bool isFacingRight;
     float collidex = 0;
     float myx = 0;
-    float controldamper = 1;
+    float slidecontroldamper = 1;
+    float aircontroldamper = 1;
     private Vector2 velocityDebug;
     public float moveSpeed = 5;
     public float platformJump;
-    bool CameFromAbove = false;
     private float wallSlideCooldown = 0f;
     private bool StayingOnGround = false;
     private Push push;
@@ -105,20 +105,19 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                   // playerVel.y = 0;
-                    jumpVelocity = 11;
-                    wallSlideCooldown = 0.05f; // blocks slide for 0.2 seconds
-                    Walled = false;
+                    jumpVelocity = 11.5f;
+                    wallSlideCooldown = 0.05f; // blocks slide for 0.05 seconds
+                    aircontroldamper = 0.8f;
 
                     if (collidex > myx)
                     {
                         // The wall is to the left
-                        horizontalPush = -4.5f;
+                        horizontalPush = -3.7f;
                     }
                     else
                     {
                         // The wall is to the right
-                        horizontalPush = 4.5f;
+                        horizontalPush = 3.7f;
                     }
                 }
             }
@@ -134,12 +133,12 @@ public class Schmoovement : MonoBehaviour
                         if (Input.GetKey(KeyCode.A))
                         {
                             horizontalPush = 0;
-                            controldamper = 2;
+                            slidecontroldamper = 2;
                         }
                         if (Input.GetKey(KeyCode.D))
                         {
                             Debug.Log("Execute");
-                            controldamper = 0.4f;
+                            slidecontroldamper = 0.4f;
                             jumpVelocity = -3;
                         }
                     }
@@ -151,20 +150,20 @@ public class Schmoovement : MonoBehaviour
                         if (Input.GetKey(KeyCode.D))
                         {
                             horizontalPush = 0;
-                            controldamper = 2;
+                            slidecontroldamper = 2;
                         }
 
                         if (Input.GetKey(KeyCode.A))
                         {
                             Debug.Log("Execute");
-                            controldamper = 0.4f;
+                            slidecontroldamper = 0.4f;
                             jumpVelocity = -3;
                         }
                     }
                 }
                 else
                 {
-                    controldamper = 1;
+                    slidecontroldamper = 1;
                 }
             }
         }
@@ -176,6 +175,7 @@ public class Schmoovement : MonoBehaviour
             jumpVelocity = 5;
             secondJump = false;
             animator.SetBool("isDJ", true);
+            aircontroldamper = 1;
         }
 
         verticalVelocity = jumpVelocity + playerVel.y;
@@ -186,6 +186,7 @@ public class Schmoovement : MonoBehaviour
             verticalVelocity = 9;
             secondJump = false;
             animator.SetBool("isDJ", true);
+            aircontroldamper = 1;
         }
 
         horizontalPush = horizontalPush * 0.95f;
@@ -208,7 +209,7 @@ public class Schmoovement : MonoBehaviour
         }
 
             verticalVelocity += PushBoost.y;
-            horizontalVelocity = (inputHorizontalAxis * controldamper + horizontalPush) * moveSpeed;
+            horizontalVelocity = (inputHorizontalAxis * slidecontroldamper * aircontroldamper + horizontalPush) * moveSpeed;
 
             if(gettingBoosted)
             {
@@ -306,6 +307,7 @@ public class Schmoovement : MonoBehaviour
             Vector2 normal = contact.normal; // has length of 1
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
+            aircontroldamper = 1;
         }
     }
     
