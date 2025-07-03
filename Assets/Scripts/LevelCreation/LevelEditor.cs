@@ -204,7 +204,7 @@ public class LevelEditor : MonoBehaviour
         content.transform.parent = viewPort.transform;
         rt = content.AddComponent<RectTransform>();
         rt.localScale = new Vector3(1, 1, 1);
-        rt.anchorMin = new Vector2(0, 0);
+        rt.anchorMin = new Vector2(0, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.anchoredPosition = new Vector2(0, 0);
         rt.sizeDelta = new Vector2(0, 50);
