@@ -9,6 +9,7 @@ public class JSONReader : MonoBehaviour
 
     private ScannerinoCrocodilo scanner;
     private Updates update;
+    private LevelCreatorUI levelCreatorUI;
 
     private string SavePath(string level_name)
     {
@@ -16,21 +17,41 @@ public class JSONReader : MonoBehaviour
         return Application.persistentDataPath + "\\" + level_name + ".json";
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void Awake()
     {
         SelectedLevelPersistent selectedLevel = FindAnyObjectByType<SelectedLevelPersistent>();
         if (selectedLevel)
         {
             saveName = selectedLevel.level;
         }
+        else
+        {
+            if (!Application.isEditor)// I dont want the tmp.json to show up in the build game
+            {
+                saveName = "";
+                var availableLevels = GetAllLevels();
+                foreach(var level in availableLevels)
+                {
+                    if(level != "tmp")
+                    {
+                        saveName = level;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
         LoadLevel();
         RemoveBlock(1);
-        
-        
 
         scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
         update = FindAnyObjectByType<Updates>();
+        levelCreatorUI = FindAnyObjectByType<LevelCreatorUI>();
 
         InvokeRepeating("SaveSaveFile", 5, 30);
     }
@@ -224,12 +245,24 @@ public class JSONReader : MonoBehaviour
         {
             Debug.LogWarning("JSON READER has no Update reference");
         }
+        if (levelCreatorUI)
+        {
+            levelCreatorUI.LevelSaved();
+        }
+        Debug.Log("File Saved");
 
     }
+
+
 
     public void BlockWasEdited()
     {
         update.updateLoop = false;
+        if (levelCreatorUI)
+        {
+            levelCreatorUI.LevelUnsaved();
+        }
+
     }
 
 
@@ -258,6 +291,44 @@ public class JSONReader : MonoBehaviour
         File.WriteAllText(savePath, json);
         Debug.Log("Saved level to persistent data path: " + savePath);
     }
+
+    public void DeleteJson(string levelName)
+    {
+#if UNITY_EDITOR
+        if (Application.isEditor)
+        {
+            // Delete from Resources folder in Editor mode
+            string path = Path.Combine(resourcesFolderPath, levelName + ".json");
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                Debug.Log("Deleted level from Resources folder: " + path);
+
+                // Refresh AssetDatabase so Unity notices the file is gone
+                UnityEditor.AssetDatabase.DeleteAsset(resourcesFolderPath + levelName + ".json");
+                UnityEditor.AssetDatabase.Refresh();
+            }
+            else
+            {
+                Debug.LogWarning("Level not found in Resources folder: " + path);
+            }
+            return;
+        }
+#endif
+
+        // Delete from persistentDataPath in builds
+        string savePath = Path.Combine(Application.persistentDataPath, levelName + ".json");
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log("Deleted level from persistent data path: " + savePath);
+        }
+        else
+        {
+            Debug.LogWarning("Level not found in persistent data path: " + savePath);
+        }
+    }
+
 
     private void Update()
     {

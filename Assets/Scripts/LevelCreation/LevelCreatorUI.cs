@@ -17,6 +17,12 @@ public class LevelCreatorUI : MonoBehaviour
     private JSONReader reader;
     private GenerateLevel generateLevel;
 
+    private Button maybeDeleteButton;
+    private Transform confirmDeletePanel;
+    private Button performDeleteButton;
+    private Button cancelDeleteButton;
+    private TMP_Text confirmDeleteText;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +31,11 @@ public class LevelCreatorUI : MonoBehaviour
         loadButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "LoadButton");
         playButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "PlayButton");
         exitButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "ExitButton");
+        maybeDeleteButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "MaybeDeleteButton");
+        confirmDeletePanel = rect.Find("ConfirmDelete");
+        performDeleteButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "PerformDeleteButton");
+        cancelDeleteButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "CancelDeleteButton");
+        confirmDeleteText = rect.GetComponentsInChildren<TMP_Text>(true).FirstOrDefault(t => t.name == "ConfirmDeleteText");
         saveAsInput = rect.GetComponentsInChildren<TMP_InputField>(true).FirstOrDefault(t => t.name == "SaveAsInput");
         knownLevels = rect.GetComponentsInChildren<TMP_Dropdown>(true).FirstOrDefault(t => t.name == "KnownLevels");
         reader = FindAnyObjectByType<JSONReader>();
@@ -39,6 +50,14 @@ public class LevelCreatorUI : MonoBehaviour
         loadButton.onClick.AddListener(OnLoad);
         exitButton.onClick.AddListener(OnExit);
         playButton.onClick.AddListener(OnPlay);
+        knownLevels.onValueChanged.AddListener(OnLoad);
+
+        maybeDeleteButton.onClick.AddListener(OnMaybeDelete);
+        performDeleteButton.onClick.AddListener(OnPerformDelete);
+        cancelDeleteButton.onClick.AddListener(OnCancelDelete);
+
+        confirmDeletePanel.gameObject.SetActive(false);
+
     }
 
     void UpdateKnownLevels()
@@ -96,7 +115,7 @@ public class LevelCreatorUI : MonoBehaviour
             reader.saveName = saveAsInput.text;
             Debug.Log("Save Level as " + reader.saveName);
             var scannerino = FindAnyObjectByType<ScannerinoCrocodilo>();
-            scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scann
+            scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scan;
             reader.SaveSaveFile(true);
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);
@@ -104,14 +123,17 @@ public class LevelCreatorUI : MonoBehaviour
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 
+    public void OnLoad(int selected)
+    {
+        OnLoad();
+    }
+
     public void OnLoad()
     {
         var selected = knownLevels.options[knownLevels.value].text;
         if(selected == "Empty")
         {
-            reader.saveName = "tmp";
-            reader.ClearLevel();
-            saveAsInput.text = "";
+            ClearLevel();
         }
         else
         {
@@ -143,5 +165,64 @@ public class LevelCreatorUI : MonoBehaviour
         var reader = FindAnyObjectByType<JSONReader>();
         SelectedLevelPersistent.Instance.level = reader.saveName;
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LevelSaved()
+    {
+        saveAsInput.textComponent.fontStyle = FontStyles.Normal;
+    }
+
+    public void LevelUnsaved()
+    {
+        saveAsInput.textComponent.fontStyle = FontStyles.Italic;
+    }
+
+    public void OnMaybeDelete()
+    {
+        confirmDeletePanel.gameObject.SetActive(true);
+        confirmDeleteText.text = "Delete level " + knownLevels.options[knownLevels.value].text +" ?";
+    }
+    private void ClearLevel()
+    {
+        Debug.Log("Clear Level");
+        reader.saveName = "tmp";
+        reader.ClearLevel();
+        saveAsInput.text = "";
+        UpdateKnownLevels();
+    }
+    public void OnPerformDelete()
+    {
+        Debug.Log("On Perform Delete");
+        confirmDeletePanel.gameObject.SetActive(false);
+        var selected = knownLevels.options[knownLevels.value].text;
+        Debug.Log("selected " + selected);
+        if (selected == "Empty")
+        {
+            ClearLevel();
+            generateLevel.Load();
+            return;
+        }
+        // there is one level other than "empty" that is selected
+        int value = knownLevels.value;
+        var levelToDelete = knownLevels.options[value].text;
+        int next_value = (value + 1) % knownLevels.options.Count;
+        var next_level = knownLevels.options[next_value].text;
+        if(next_level == "Empty")
+        {
+            ClearLevel();
+            generateLevel.Load();
+            return;
+        }
+
+        reader.saveName = next_level;
+        generateLevel.Load();
+        reader.DeleteJson(levelToDelete);
+        UpdateKnownLevels();
+        DisplaySaveName(reader.saveName);
+    }
+
+    public void OnCancelDelete()
+    {
+        confirmDeletePanel.gameObject.SetActive(false);
     }
 }
