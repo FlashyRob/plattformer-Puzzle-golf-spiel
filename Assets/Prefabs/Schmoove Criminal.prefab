@@ -137,6 +137,8 @@ MonoBehaviour:
   horizontalPush: 0
   moveSpeed: 5
   platformJump: 0
+  PushBoost: {x: 0, y: 0}
+  gettingBoosted: 0
 --- !u!95 &2934691376798589745
 Animator:
   serializedVersion: 7
@@ -203,7 +205,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5960512320716567424}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -240,5 +242,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 0.1}
+  m_Size: {x: 0.9, y: 0.1}
   m_EdgeRadius: 0
