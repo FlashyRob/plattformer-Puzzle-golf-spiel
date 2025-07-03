@@ -200,9 +200,6 @@ public class LevelEditor : MonoBehaviour
         select.name = "select";
 
         Initialize();
-
-        screenWidthOld = Screen.width;
-        content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y - 70);
     }
 
 
@@ -402,7 +399,7 @@ public class LevelEditor : MonoBehaviour
         if (screenWidthOld != Screen.width)
         {
             screenWidthOld = Screen.width;
-            content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y - 70);
+            content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, blockSelectorParent.GetComponent<RectTransform>().sizeDelta.y);
         }
 
         mousePosOld = mousePos;
