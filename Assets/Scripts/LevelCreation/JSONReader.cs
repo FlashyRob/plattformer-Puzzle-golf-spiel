@@ -26,6 +26,8 @@ public class JSONReader : MonoBehaviour
         }
         LoadLevel();
         RemoveBlock(1);
+        
+        
 
         scanner = FindAnyObjectByType<ScannerinoCrocodilo>();
         update = FindAnyObjectByType<Updates>();
@@ -45,6 +47,8 @@ public class JSONReader : MonoBehaviour
         {
             BlockList loaded = JsonUtility.FromJson<BlockList>(json);
             blockSafeFile = new List<blockData>(loaded.blocks);
+
+            
         }
         else
         {
