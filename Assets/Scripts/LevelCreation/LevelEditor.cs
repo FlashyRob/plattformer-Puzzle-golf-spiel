@@ -27,6 +27,7 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_56",
         "Terrain (16x16) 1_57",
         "Terrain (16x16) 1_58",
+        "LargeSpike",
         "wire_curve",
         "wire_straight",
         "wire_t",
@@ -49,6 +50,7 @@ public class LevelEditor : MonoBehaviour
         "Box",
         "MoveablePlatformHorizontal",
         "MoveablePlatformVertical",
+        "dot",
     }; 
     private int[] materialRotations;
     private GameObject[] materialObjects;
