@@ -105,6 +105,8 @@ public class LevelEditor : MonoBehaviour
         "left mouse",
         "right mouse",
 
+        "pressureplate",
+
 
 
 
