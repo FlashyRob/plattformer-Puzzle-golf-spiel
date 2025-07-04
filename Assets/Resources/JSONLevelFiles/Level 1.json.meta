@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/JSONLevelFiles/Level 1.json.meta
 guid: 6e06926243c3135428514c04a94b15ea
+========
+guid: 0ace6ecf5435a60409f3c9e1f8381e90
+>>>>>>>> f1aa52b4afece102586676e601d93545493de6ef:Assets/Resources/JSONLevelFiles/AndGateLevel.json.meta
 TextScriptImporter:
   externalObjects: {}
   userData: 

@@ -45,7 +45,7 @@ public class Updates : MonoBehaviour
                         HandleWireStraight(block.index, block);
                         break;
                     case "wire block curve":
-                        HandleWireCorner(block.index, block);
+                        HandleWireStraight(block.index, block);
                         break;
                     case "wire block":
                         HandleWireStraight(block.index, block);
