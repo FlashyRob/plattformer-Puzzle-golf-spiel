@@ -23,11 +23,12 @@ public class LevelCreatorUI : MonoBehaviour
     private Button cancelDeleteButton;
     private TMP_Text confirmDeleteText;
 
-    private bool levelSaved = true;
+    public bool levelSaved = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("LevelCreator UI start");
         var rect = GetComponent<RectTransform>();
         saveButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "SaveButton");
         loadButton = rect.GetComponentsInChildren<Button>(true).FirstOrDefault(t => t.name == "LoadButton");
@@ -71,13 +72,13 @@ public class LevelCreatorUI : MonoBehaviour
         // Prepare new option list
         var newOptions = new List<TMP_Dropdown.OptionData>
             {
-                new TMP_Dropdown.OptionData("Empty")
+                new TMP_Dropdown.OptionData("Empty", null, Color.blue)
             };
 
         foreach (var level in levels)
         {
             if (level == "tmp") continue;
-            newOptions.Add(new TMP_Dropdown.OptionData(level));
+            newOptions.Add(new TMP_Dropdown.OptionData(level, null, Color.red));
         }
 
         knownLevels.AddOptions(newOptions);
@@ -120,8 +121,8 @@ public class LevelCreatorUI : MonoBehaviour
             if (!levelSaved) // avoid running the scanner over a level where we haven't changed anything.
             {
                 scannerino.Scanner(); // ensure the network is scanned before saving the level because the play Mode does scan;
+                reader.SaveSaveFile(true);
             }
-            reader.SaveSaveFile(true);
             UpdateKnownLevels();
             DisplaySaveName(reader.saveName);
         }
@@ -212,20 +213,30 @@ public class LevelCreatorUI : MonoBehaviour
         // there is one level other than "empty" that is selected
         int value = knownLevels.value;
         var levelToDelete = knownLevels.options[value].text;
+        reader.DeleteJson(levelToDelete);
+
         int next_value = (value + 1) % knownLevels.options.Count;
         var next_level = knownLevels.options[next_value].text;
         if(next_level == "Empty")
         {
             ClearLevel();
             generateLevel.Load();
-            return;
         }
-
-        reader.saveName = next_level;
-        generateLevel.Load();
-        reader.DeleteJson(levelToDelete);
-        UpdateKnownLevels();
-        DisplaySaveName(reader.saveName);
+        else
+        {
+            UpdateKnownLevels();
+            reader.saveName = next_level;
+            foreach (var option in knownLevels.options)
+            {
+                if(option.text == levelToDelete)
+                {
+                    reader.saveName = levelToDelete; // this happens when you couldnt delete the level. Maybe player tried to delete developer level in build game
+                    break;
+                }
+            }
+            generateLevel.Load();
+            DisplaySaveName(reader.saveName);
+        }
     }
 
     public void OnCancelDelete()

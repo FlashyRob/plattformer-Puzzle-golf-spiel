@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7884328538241235604}
   - component: {fileID: 6701270880474825274}
   - component: {fileID: -8963720716041763118}
+  - component: {fileID: 6223658043235989760}
   m_Layer: 0
   m_Name: PlayerStart
   m_TagString: Ground
@@ -100,3 +101,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c81ff8afa87e2c24a9b3e714978c14e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6223658043235989760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117498632530358600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaffbe1cc3476dd45acd6a0d2d4038c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blocktype: playerstart
