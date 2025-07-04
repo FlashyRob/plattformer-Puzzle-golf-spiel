@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1092805067088491294}
   - component: {fileID: 2485752577369044303}
   - component: {fileID: 1998937415447715085}
-  - component: {fileID: 3224055632393038386}
   m_Layer: 0
   m_Name: wire block curve
   m_TagString: Ground
@@ -136,19 +135,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &3224055632393038386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3045567924508101824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b6c1bab4e1858b45b381a3afc939326, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
 --- !u!1 &6021443421646568915
 GameObject:
   m_ObjectHideFlags: 0
