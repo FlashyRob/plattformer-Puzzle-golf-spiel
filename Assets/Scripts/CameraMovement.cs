@@ -36,9 +36,19 @@ public class CameraFollow : MonoBehaviour
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
             transform.position += new Vector3(horizontal * 0.09f, vertical * 0.09f, 0);
-        } else
+        } 
+        else 
         {
             Vector3 targetPosition = target.position + offset;
+            targetPosition.x = Mathf.Clamp(targetPosition.x, 31.4f, 116.6f);
+            if (generateLevel.playMode)
+            {
+                targetPosition.y = Mathf.Clamp(targetPosition.y, 18.6f, 109.4f);
+            }
+            else
+            {
+                targetPosition.y = Mathf.Clamp(targetPosition.y, 17.4f, 110.6f);
+            }
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
         }
     }
