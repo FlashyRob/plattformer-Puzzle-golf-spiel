@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 public class JSONReader : MonoBehaviour
 {
@@ -53,7 +54,11 @@ public class JSONReader : MonoBehaviour
         update = FindAnyObjectByType<Updates>();
         levelCreatorUI = FindAnyObjectByType<LevelCreatorUI>();
 
-        InvokeRepeating("SaveSaveFile", 5, 30);
+        // Only auto save in creation mode
+        if (!FindAnyObjectByType<GenerateLevel>().playMode)
+        {
+            InvokeRepeating("SaveSaveFile", 5, 30);
+        }
     }
 
     public void ClearLevel()
@@ -214,6 +219,15 @@ public class JSONReader : MonoBehaviour
 
     public void SaveSaveFile(bool pauseUpdateLoop = false)
     {
+        if(IsDeveloperLevel(saveName) && !Application.isEditor && levelCreatorUI.levelSaved)
+        {
+            // in build mode having a developer level open that has not been changed should not lead to a (copy) copy via auto save.
+            return; 
+        }
+        if (IsDeveloperLevel(saveName) && !Application.isEditor && saveName != "tmp")
+        {
+            saveName = saveName + "(copy)";
+        }
         if (pauseUpdateLoop) // allows us to force a save if the user presses the button
         {
             update.updateLoop = false;
@@ -269,6 +283,26 @@ public class JSONReader : MonoBehaviour
     private string resourcesFolderPath = "Assets/Resources/JSONLevelFiles/";
     private void SaveJson(string levelName, string json)
     {
+        if (Application.isEditor)
+        {
+            if(!IsDeveloperLevel(saveName) && IsUserLevel(saveName))
+            {
+                SaveToPersistent(levelName, json); // if the file aready exists and is in users persistent, we overwrite there.
+            }
+            else
+            {
+                // runing in unity editor saves to Resources as those are "developer" levels.
+                SaveToResources(levelName, json);
+            }
+        }
+        else // in Build always save to persistent (appdata/locallow/unitygames/ThisGameName)
+        {
+            SaveToPersistent(levelName, json);
+        }
+    }
+
+    private void SaveToResources(string levelName, string json)
+    {
 #if UNITY_EDITOR
         if (Application.isEditor)
         {
@@ -278,44 +312,67 @@ public class JSONReader : MonoBehaviour
             Debug.Log("Saved level to Resources folder: " + path);
 
             // IMPORTANT: In Editor, refresh AssetDatabase so Unity notices the new file
-#if UNITY_EDITOR
+
             UnityEditor.AssetDatabase.ImportAsset(resourcesFolderPath + levelName + ".json");
             UnityEditor.AssetDatabase.Refresh();
-#endif
+
             return;
         }
 #endif
-
+    }
+    private void SaveToPersistent(string levelName, string json)
+    {
         // Save to persistentDataPath in builds
         string savePath = Path.Combine(Application.persistentDataPath, levelName + ".json");
         File.WriteAllText(savePath, json);
         Debug.Log("Saved level to persistent data path: " + savePath);
     }
 
+
+
     public void DeleteJson(string levelName)
     {
-#if UNITY_EDITOR
-        if (Application.isEditor)
-        {
-            // Delete from Resources folder in Editor mode
-            string path = Path.Combine(resourcesFolderPath, levelName + ".json");
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-                Debug.Log("Deleted level from Resources folder: " + path);
 
-                // Refresh AssetDatabase so Unity notices the file is gone
-                UnityEditor.AssetDatabase.DeleteAsset(resourcesFolderPath + levelName + ".json");
-                UnityEditor.AssetDatabase.Refresh();
+        if (IsDeveloperLevel(levelName)){
+            if (Application.isEditor)
+            {
+                DeleteFromPersistent(levelName); // also deletes the level by the same name from users persistent. This shouldnt really happen though
+                DeleteFromResources(levelName);
             }
             else
             {
-                Debug.LogWarning("Level not found in Resources folder: " + path);
+                Debug.Log("Build cannot delete developer levels");
             }
-            return;
+        }
+        else if(IsUserLevel(levelName))
+        {
+            DeleteFromPersistent(levelName);
+        }
+    }
+
+    private void DeleteFromResources(string levelName)
+    {
+#if UNITY_EDITOR
+        // Delete from Resources folder in Editor mode
+        string path = Path.Combine(resourcesFolderPath, levelName + ".json");
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("Deleted level from Resources folder: " + path);
+
+            // Refresh AssetDatabase so Unity notices the file is gone
+            UnityEditor.AssetDatabase.DeleteAsset(resourcesFolderPath + levelName + ".json");
+            UnityEditor.AssetDatabase.Refresh();
+        }
+        else
+        {
+            Debug.LogWarning("Level not found in Resources folder: " + path);
         }
 #endif
+    }
 
+    private void DeleteFromPersistent(string levelName)
+    {
         // Delete from persistentDataPath in builds
         string savePath = Path.Combine(Application.persistentDataPath, levelName + ".json");
         if (File.Exists(savePath))
@@ -340,11 +397,20 @@ public class JSONReader : MonoBehaviour
         }
     }
 
-    public List<string> GetAllLevels()
+    public bool IsDeveloperLevel(string levelname)
+    {
+        return GetDeveloperLevels().Contains(levelname);
+    }
+
+    public bool IsUserLevel(string levelname)
+    {
+        return GetUserLevels().Contains(levelname);
+    }
+
+    private List<string> GetUserLevels()
     {
         var levels = new List<string>();
-
-        // 1. Get player saves from persistent data
+        // Get player saves from persistent data
         string persistentPath = Application.persistentDataPath;
         if (Directory.Exists(persistentPath))
         {
@@ -353,8 +419,13 @@ public class JSONReader : MonoBehaviour
                 levels.Add(Path.GetFileNameWithoutExtension(file));
             }
         }
+        return levels;
+    }
 
-        // 2. Load all level TextAssets from Resources/JSONLevelFiles
+    private List<string> GetDeveloperLevels()
+    {
+        var levels = new List<string>();
+        // Load all level TextAssets from Resources/JSONLevelFiles
         TextAsset[] resourcesLevels = Resources.LoadAll<TextAsset>("JSONLevelFiles");
         foreach (var ta in resourcesLevels)
         {
@@ -363,6 +434,18 @@ public class JSONReader : MonoBehaviour
         }
 
         return levels;
+    }
+
+    public List<string> GetAllLevels()
+    {
+        var developerLevels = GetDeveloperLevels();
+        var userLevels = GetUserLevels();
+
+        // Merge the two lists while avoiding duplicates
+        return developerLevels
+            .Concat(userLevels)
+            .Distinct()
+            .ToList();
     }
 
 

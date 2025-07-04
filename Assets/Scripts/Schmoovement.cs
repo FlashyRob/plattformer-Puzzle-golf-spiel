@@ -25,6 +25,7 @@ public class Schmoovement : MonoBehaviour
     [HideInInspector]
     public Vector2 PushBoost;
     public bool gettingBoosted = false;
+    private float wallStickTimer = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -46,6 +47,8 @@ public class Schmoovement : MonoBehaviour
     private Vector2 playerVel;
     void Update() // Update is called once per frame
     {
+        wallStickTimer -= Time.deltaTime;
+
         inputHorizontalAxis = Input.GetAxis("Horizontal"); // key a pressed = -1 ; key d pressed = 1 ; no key pressed = 0
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -104,11 +107,11 @@ public class Schmoovement : MonoBehaviour
                 }
 
                 if (Walled)
-                {
+                {  
                     jumpVelocity = 10;
                     wallSlideCooldown = 0.1f; // blocks slide for 0.1 seconds
                     aircontroldamper = 0.3f;
-
+                   
                     if (collidex > myx)
                     {
                         // The wall is to the right
@@ -133,7 +136,14 @@ public class Schmoovement : MonoBehaviour
                         if (Input.GetKey(KeyCode.A))
                         {
                             horizontalPush = 0;
-                            slidecontroldamper = 2;
+                            if (wallStickTimer < 0)
+                            {
+                                slidecontroldamper = 0;
+                            }
+                            else
+                            {
+                                slidecontroldamper = 2;
+                            }
                         }
                         if (Input.GetKey(KeyCode.D))
                         {
@@ -150,7 +160,14 @@ public class Schmoovement : MonoBehaviour
                         if (Input.GetKey(KeyCode.D))
                         {
                             horizontalPush = 0;
-                            slidecontroldamper = 2;
+                            if (wallStickTimer < 0)
+                            {
+                                slidecontroldamper = 0;
+                            }
+                            else
+                            {
+                                slidecontroldamper = 2;
+                            }
                         }
 
                         if (Input.GetKey(KeyCode.A))
@@ -167,7 +184,12 @@ public class Schmoovement : MonoBehaviour
                 }
             }
         }
-            
+
+        if (wallStickTimer < 100 && wallStickTimer > 50)
+        {
+            wallStickTimer = 100;
+        }
+
         verticalVelocity = jumpVelocity + playerVel.y;
 
         if (inputKeyDownSpace >= 1 && secondJump && !Walled && !Grounded && verticalVelocity > 6)
@@ -313,6 +335,11 @@ public class Schmoovement : MonoBehaviour
                                              // we check the collision normal to see which direction the ground hit us from
             horizontalPush = 0;
             aircontroldamper = 1;
+            if (Mathf.Abs(normal.x) > 0.5f)
+            {
+                // The vector mostly points in x or -x direction. So we've hit a wall
+                wallStickTimer = 3f;
+            }
         }
     }
     
@@ -346,7 +373,7 @@ public class Schmoovement : MonoBehaviour
             ContactPoint2D contact = coll.contacts[0];
             Vector2 normal = contact.normal; // has length of 1
                                              // we check the collision normal to see which direction the ground hit us from
-            if (normal.y > 0.5f)
+            if (normal.y > 0.5f !&& transform.position.y > contact.point.y)
             {
                 // the normal vector mostly points up. The ground has hit us from below.
                 GroundedTimer = 8;
@@ -397,7 +424,9 @@ public class Schmoovement : MonoBehaviour
             if (Walled)
             {
                 Walled = false;
-                if(wallSlideCooldown == 0)
+                wallStickTimer = 100;
+
+                if (wallSlideCooldown == 0)
                 {
                     horizontalPush = 0;
                 }
