@@ -159,7 +159,7 @@ public class ScannerinoCrocodilo : MonoBehaviour
                             }
                             else
                             {
-                                if (update.GetBlock(nIndex).type.Contains("wire_"))
+                                if (update.GetBlock(nIndex).type.Contains("wire"))
                                 {
                                     nextScanns.Add(nIndex);
 
