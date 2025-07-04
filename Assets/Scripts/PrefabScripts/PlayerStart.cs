@@ -14,7 +14,7 @@ public class PlayerStart : MonoBehaviour
             player.gameObject.SetActive(false);
             player.transform.position = transform.position + new Vector3(0,0.5f, 0);
             player.gameObject.SetActive(true);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         else
         {
@@ -26,15 +26,18 @@ public class PlayerStart : MonoBehaviour
             }
             else
             {
-                // we are not the only instace :(
-                Debug.Log("Destroy previous instance");
-                // we have some killing to do :)
-                Destroy(instance.gameObject);
-                var reader = FindAnyObjectByType<JSONReader>();
-                var position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
-                if (reader)
+                if(instance != this)
                 {
-                    reader.RemoveBlock(position.GetIndexFromXY(instance.transform.position));
+                    // we are not the only instace :(
+                    Debug.Log("Destroy previous instance");
+                    // we have some killing to do :)
+                    Destroy(instance.gameObject);
+                    var reader = FindAnyObjectByType<JSONReader>();
+                    var position = FindAnyObjectByType<CheckWheatherTwoBlocksAreConnected>();
+                    if (reader)
+                    {
+                        reader.RemoveBlock(position.GetIndexFromXY(instance.transform.position));
+                    }
                 }
                 instance = this;
             }

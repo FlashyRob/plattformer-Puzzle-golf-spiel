@@ -49,6 +49,7 @@ public class LevelEditor : MonoBehaviour
         "button",
         "Terrain (16x16) 1_15",
         "Box",
+        "SpikeBox",
         "MoveablePlatformHorizontal",
         "MoveablePlatformVertical",
         "dot",
