@@ -106,7 +106,7 @@ public class Schmoovement : MonoBehaviour
                 if (Walled)
                 {
                     jumpVelocity = 11.5f;
-                    wallSlideCooldown = 0.1f; // blocks slide for 0.05 seconds
+                    wallSlideCooldown = 0.15f; // blocks slide for 0.15 seconds
                     aircontroldamper = 0.8f;
 
                     if (collidex > myx)
