@@ -111,12 +111,12 @@ public class Schmoovement : MonoBehaviour
 
                     if (collidex > myx)
                     {
-                        // The wall is to the left
-                        horizontalPush = 2;
+                        // The wall is to the right
+                        horizontalPush = -2;
                     }
                     else
                     {
-                        // The wall is to the right
+                        // The wall is to the left
                         horizontalPush = 2;
                     }
                 }
