@@ -105,19 +105,19 @@ public class Schmoovement : MonoBehaviour
 
                 if (Walled)
                 {
-                    jumpVelocity = 11.5f;
-                    wallSlideCooldown = 0.15f; // blocks slide for 0.15 seconds
-                    aircontroldamper = 0.8f;
+                    jumpVelocity = 10;
+                    wallSlideCooldown = 0.1f; // blocks slide for 0.1 seconds
+                    aircontroldamper = 0.3f;
 
                     if (collidex > myx)
                     {
-                        // The wall is to the left
-                        horizontalPush = -3.7f;
+                        // The wall is to the right
+                        horizontalPush = -2;
                     }
                     else
                     {
-                        // The wall is to the right
-                        horizontalPush = 3.7f;
+                        // The wall is to the left
+                        horizontalPush = 2;
                     }
                 }
             }
@@ -189,11 +189,16 @@ public class Schmoovement : MonoBehaviour
             aircontroldamper = 1;
         }
 
-        horizontalPush = horizontalPush * 0.95f;
+        horizontalPush = horizontalPush * 0.97f;
 
-        if (horizontalPush < 0.5 && horizontalPush > -0.5)
+        if (horizontalPush < 0.5 && horizontalPush > -0.5 && (inputKeyD || inputKeyA))
         {
             horizontalPush = 0;
+            if(aircontroldamper == 0.3f)
+            {
+                aircontroldamper = 0.6f;
+            }
+
         }
 
         if (Walled && !Grounded && wallSlideCooldown <= 0)
