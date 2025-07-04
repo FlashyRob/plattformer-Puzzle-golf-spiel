@@ -10,7 +10,7 @@ public class LevelEditor : MonoBehaviour
 {
     private GameObject[] block;
     private GameObject[] textures;
-    private GameObject hud;
+    public GameObject hud;
     public string editorMode = "place";
     public Vector3 mousePos;
     public Vector3 mousePosOld;
