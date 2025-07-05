@@ -745,11 +745,15 @@ public class Updates : MonoBehaviour
                 {
                     EditBlockActiveSide(i, 1, true);
                     EditBlockActiveSide(i, 3, true);
+
+                    EditVisualActive(i, 1);
                 }
                 else
                 {
                     EditBlockActiveSide(i, 1, false);
                     EditBlockActiveSide(i, 3, false);
+
+                    EditVisualActive(i, 0);
                 }
             }
         }
