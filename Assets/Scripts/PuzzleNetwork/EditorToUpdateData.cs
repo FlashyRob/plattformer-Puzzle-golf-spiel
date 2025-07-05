@@ -66,7 +66,7 @@ public class EditorToUpdateData : MonoBehaviour
                 directionsInput = new int[4] { 0, 1, 0, 1 };
                 directionsOutput = new int[4] { 0, 1, 0, 1 };
                 break;
-            case "wire block":
+            case "wire_block":
                 directionsInput = new int[4] { 0, 1, 0, 1 };
                 directionsOutput = new int[4] { 0, 1, 0, 1 };
                 break;
@@ -74,7 +74,7 @@ public class EditorToUpdateData : MonoBehaviour
                 directionsInput = new int[4] { 1, 1, 0, 0 };
                 directionsOutput = new int[4] { 1, 1, 0, 0 };
                 break;
-            case "wire block curve":
+            case "wire_block curve":
                 directionsInput = new int[4] { 1, 1, 0, 0 };
                 directionsOutput = new int[4] { 1, 1, 0, 0 };
                 break;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2485752577369044303}
   - component: {fileID: 1998937415447715085}
   m_Layer: 0
-  m_Name: wire block
+  m_Name: wire_block curve
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,7 +145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2422435840645854101}
   - component: {fileID: 5257776069136855598}
-  - component: {fileID: 7792193801960919998}
+  - component: {fileID: 5811704966974263714}
   m_Layer: 0
   m_Name: wire
   m_TagString: Untagged
@@ -212,7 +212,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 68c4257d5b919ec418ab869461d45b3d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6b27ec0bca8e53642bba1d807f2cdbab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -223,7 +223,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7792193801960919998
+--- !u!114 &5811704966974263714
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

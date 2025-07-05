@@ -108,8 +108,8 @@ public class LevelEditor : MonoBehaviour
 
         "pressureplate",
 
-        "wire block",
-        "wire block curve",
+        "wire_block",
+        "wire_block curve",
 
 
 
