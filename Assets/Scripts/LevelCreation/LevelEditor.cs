@@ -46,6 +46,7 @@ public class LevelEditor : MonoBehaviour
         "lever",
         "cross",
         "condensator",
+        "toggle",
         "button",
         "Terrain (16x16) 1_15",
         "Box",

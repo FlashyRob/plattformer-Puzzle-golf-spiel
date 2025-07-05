@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.AssetImporters;
 
 public class Updates : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class Updates : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (updateLoop)
         {
@@ -195,7 +196,7 @@ public class Updates : MonoBehaviour
     public bool isActive(int index, int side)
     {
         blockData thisBlock = GetBlock(index);
-        var l = thisBlock.activeSides[(side + thisBlock.direction) % 4];
+        var l = thisBlock.activeSides[(4 + side - thisBlock.direction) % 4];
         return (l);
     }
 
@@ -450,17 +451,15 @@ public class Updates : MonoBehaviour
 
         if (block.state == 1)
         {
-            EditBlockActiveSide(i, 0, true);
+
             EditBlockActiveSide(i, 1, true);
-            EditBlockActiveSide(i, 2, true);
-            EditBlockActiveSide(i, 3, true);
+
         }
         else
         {
-            EditBlockActiveSide(i, 0, false);
+
             EditBlockActiveSide(i, 1, false);
-            EditBlockActiveSide(i, 2, false);
-            EditBlockActiveSide(i, 3, false);
+
         }
     }
 
@@ -678,7 +677,7 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
 
-            EditBlockState(i, 300);
+            EditBlockState(i, 50);
 
         }
         else
