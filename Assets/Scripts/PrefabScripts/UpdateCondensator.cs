@@ -28,7 +28,7 @@ public class UpdateCondensator : MonoBehaviour
 
         if (block.state != oldState)
         {
-            int stage = Mathf.CeilToInt((float)block.state / 50.0f * 14);
+            int stage = Mathf.CeilToInt((float)block.state / 60.0f * 14);
             Debug.Log(stage);
             if (stage == 0)
             {

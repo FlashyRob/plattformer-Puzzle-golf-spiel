@@ -699,7 +699,7 @@ public class Updates : MonoBehaviour
             EditBlockActiveSide(i, 1, true);
             EditBlockActiveSide(i, 3, true);
 
-            EditBlockState(i, 50);
+            EditBlockState(i, 60);
 
         }
         else
