@@ -24,6 +24,8 @@ public class Updates : MonoBehaviour
             reader = gameObject.AddComponent<JSONReader>();
         }
 
+        
+
     }
 
     // Update is called once per frame
@@ -57,7 +59,13 @@ public class Updates : MonoBehaviour
                     case "wire_t":
                         HandleWireT(block.index, block);
                         break;
+                    case "wire_block t":
+                        HandleWireT(block.index, block);
+                        break;
                     case "wire_cross":
+                        HandelWireCross(block.index, block);
+                        break;
+                    case "wire_block cross":
                         HandelWireCross(block.index, block);
                         break;
                     case "and_gate":
@@ -238,26 +246,40 @@ public class Updates : MonoBehaviour
     {
         if (block.state == 1)
         {
-           SetVisualActive(i, 1);
             EditBlockActiveSide(i, 1, true);
+
+            SetVisualActive(i, 1);
+            
         }
         else
         {
-            SetVisualActive(i, 0);
             EditBlockActiveSide(i, 1, false);
+
+            SetVisualActive(i, 0);
+            if(IsAnyConnectionActive(block, 1))
+            {
+                SetVisualActive(i, 1);
+            }
         }
     }
     public void HandleButton(int i, blockData block)
     {
         if (block.state == 1)
         {
-            SetVisualActive(i, 1);
             EditBlockActiveSide(i, 1, true);
+
+            SetVisualActive(i, 1);
+
         }
         else
         {
-            SetVisualActive(i, 0);
             EditBlockActiveSide(i, 1, false);
+
+            SetVisualActive(i, 0);
+            if (IsAnyConnectionActive(block, 1))
+            {
+                SetVisualActive(i, 1);
+            }
         }
     }
 

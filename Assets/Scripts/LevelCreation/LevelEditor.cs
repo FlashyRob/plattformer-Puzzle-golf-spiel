@@ -111,6 +111,8 @@ public class LevelEditor : MonoBehaviour
 
         "wire_block",
         "wire_block curve",
+        "wire_block t",
+        "wire_block cross",
 
 
 
