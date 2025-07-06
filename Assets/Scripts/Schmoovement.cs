@@ -27,6 +27,7 @@ public class Schmoovement : MonoBehaviour
     public bool gettingBoosted = false;
     private float wallStickTimer = 0;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -135,7 +136,7 @@ public class Schmoovement : MonoBehaviour
 
                         if (Input.GetKey(KeyCode.A))
                         {
-                            horizontalPush = 0;
+                            //horizontalPush = 0;
                             if (wallStickTimer < 0)
                             {
                                 slidecontroldamper = 0;
@@ -159,7 +160,7 @@ public class Schmoovement : MonoBehaviour
 
                         if (Input.GetKey(KeyCode.D))
                         {
-                            horizontalPush = 0;
+                            //horizontalPush = 0;
                             if (wallStickTimer < 0)
                             {
                                 slidecontroldamper = 0;
