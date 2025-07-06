@@ -48,7 +48,12 @@ public class LevelEditor : MonoBehaviour
         "condensator",
         "toggle",
         "button",
+
+        "Terrain (16x16) 1_14",
         "Terrain (16x16) 1_15",
+        "Terrain (16x16) 1_16",
+
+
         "Box",
         "SpikeBox",
         "MoveablePlatformHorizontal",
@@ -81,6 +86,15 @@ public class LevelEditor : MonoBehaviour
         "Terrain (16x16) 1_2",
         "Terrain (16x16) 1_3",
         "Terrain (16x16) 1_4",
+        "Terrain (16x16) 1_17",
+        "Terrain (16x16) 1_18",
+        "Terrain (16x16) 1_19",
+        "Terrain (16x16) 1_20",
+        "Terrain (16x16) 1_21",
+        "Terrain (16x16) 1_34",
+        "Terrain (16x16) 1_35",
+        "Terrain (16x16) 1_36",
+
 
         "Terrain (16x16) 1_27",
         "Terrain (16x16) 1_28",
@@ -114,12 +128,90 @@ public class LevelEditor : MonoBehaviour
         "wire_block t",
         "wire_block cross",
 
+        "Terrain (16x16) 1_8",
+        "Terrain (16x16) 1_9",
+        "Terrain (16x16) 1_22",
+        "Terrain (16x16) 1_23",
+        "Terrain (16x16) 1_24",
+        "Terrain (16x16) 1_25",
+        "Terrain (16x16) 1_26",
+        "Terrain (16x16) 1_37",
+        "Terrain (16x16) 1_38",
+        "Terrain (16x16) 1_39",
+        "Terrain (16x16) 1_5",
+        "Terrain (16x16) 1_6",
+        "Terrain (16x16) 1_7",
+
+
+
+        "Terrain (16x16) 1_31",
+        "Terrain (16x16) 1_32",
+        "Terrain (16x16) 1_33",
+
+        "Terrain (16x16) 1_43",
+        "Terrain (16x16) 1_44",
+        "Terrain (16x16) 1_45",
+
+        "Terrain (16x16) 1_51",
+        "Terrain (16x16) 1_52",
+        "Terrain (16x16) 1_53",
+        "Terrain (16x16) 1_54",
+        "Terrain (16x16) 1_55",
+        "Terrain (16x16) 1_70",
+        "Terrain (16x16) 1_71",
+        "Terrain (16x16) 1_72",
+        "Terrain (16x16) 1_73",
+        "Terrain (16x16) 1_74",
+        "Terrain (16x16) 1_87",
+        "Terrain (16x16) 1_88",
+        "Terrain (16x16) 1_89",
+
+
+        "Terrain (16x16) 1_101",
+        "Terrain (16x16) 1_102",
+        "Terrain (16x16) 1_103",
+        "Terrain (16x16) 1_104",
+        "Terrain (16x16) 1_105",
+        "Terrain (16x16) 1_119",
+        "Terrain (16x16) 1_120",
+        "Terrain (16x16) 1_121",
+        "Terrain (16x16) 1_122",
+        "Terrain (16x16) 1_123",
+        "Terrain (16x16) 1_135",
+        "Terrain (16x16) 1_136",
+        "Terrain (16x16) 1_137",
+
+        "Water",
+
+        "Terrain (16x16) 1_106",
+        "Terrain (16x16) 1_107",
+        "Terrain (16x16) 1_108",
+        "Terrain (16x16) 1_109",
+        "Terrain (16x16) 1_124",
+        "Terrain (16x16) 1_125",
+        "Terrain (16x16) 1_126",
+        "Terrain (16x16) 1_127",
+        "Terrain (16x16) 1_138",
+        "Terrain (16x16) 1_139",
+        "Terrain (16x16) 1_140",
+
+        "Terrain (16x16) 1_110",
+        "Terrain (16x16) 1_111",
+        "Terrain (16x16) 1_112",
+        "Terrain (16x16) 1_113",
+        "Terrain (16x16) 1_128",
+        "Terrain (16x16) 1_129",
+        "Terrain (16x16) 1_130",
+        "Terrain (16x16) 1_131",
+        "Terrain (16x16) 1_141",
+        "Terrain (16x16) 1_142",
+        "Terrain (16x16) 1_143",
 
 
 
 
-
-    }; 
+    };
+    
     private int[] materialRotations;
     private GameObject[] materialObjects;
     private int[] materialCounts = new int[] {
