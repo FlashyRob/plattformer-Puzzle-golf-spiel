@@ -168,9 +168,11 @@ public class LevelCreatorUI : MonoBehaviour
         Debug.Log("Application Quit. (Only works in build)");
         Application.Quit();
         return;
+        /*
         var reader = FindAnyObjectByType<JSONReader>();
         SelectedLevelPersistent.Instance.level = reader.saveName;
         SceneManager.LoadScene("MainMenu");
+        */
     }
 
     public void LevelSaved()

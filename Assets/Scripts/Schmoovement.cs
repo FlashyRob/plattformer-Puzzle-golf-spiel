@@ -20,7 +20,7 @@ public class Schmoovement : MonoBehaviour
     public float moveSpeed = 5;
     public float platformJump;
     private float wallSlideCooldown = 0f;
-    private bool StayingOnGround = false;
+    public bool StayingOnGround;
     private Push push;
     [HideInInspector]
     public Vector2 PushBoost;
@@ -36,6 +36,8 @@ public class Schmoovement : MonoBehaviour
         capsule2d = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         push = FindAnyObjectByType<Push>();
+
+
     }
 
     private float inputHorizontalAxis;
